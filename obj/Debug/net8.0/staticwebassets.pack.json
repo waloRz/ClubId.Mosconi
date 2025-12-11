@@ -1,0 +1,153 @@
+{
+  "Files": [
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\fotosp\\foto1.jpeg",
+      "PackagePath": "staticwebassets\\fotosp\\foto1.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\fotosp\\foto2.jpeg",
+      "PackagePath": "staticwebassets\\fotosp\\foto2.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\17Octubre_255112455.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\17Octubre_255112455.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\AtlCastilla_254644976.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\AtlCastilla_254644976.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\CASTAÑARES222_255126244.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\CASTAÑARES222_255126244.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\Castañares244_255640348.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\Castañares244_255640348.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\Convento_253423373.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\Convento_253423373.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\DepMiguelOrtiz_254058688.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\DepMiguelOrtiz_254058688.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\ElPilar_250115755.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\ElPilar_250115755.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LaBorjaDiaz2_250507433.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LaBorjaDiaz2_250507433.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LaCuadra_253344652.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LaCuadra_253344652.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosDuendes5_251011744.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LosDuendes5_251011744.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosKkoyotes4_250434801.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LosKkoyotes4_250434801.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\0e0934d8-3adf-4960-a697-68d4f7a39cc9.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\0e0934d8-3adf-4960-a697-68d4f7a39cc9.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\1c8e197b-62b9-4302-b70f-14f41126ec59.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\1c8e197b-62b9-4302-b70f-14f41126ec59.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\32e506cf-956f-4ff8-ac8f-f8251f3e1e54.jpg",
+      "PackagePath": "staticwebassets\\uploads\\32e506cf-956f-4ff8-ac8f-f8251f3e1e54.jpg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\3a8d3f0c-0cd4-48b2-b4d1-d4a99e410bc2.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\3a8d3f0c-0cd4-48b2-b4d1-d4a99e410bc2.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\43badcfd-106b-4d05-98ce-cb48671278de.jpg",
+      "PackagePath": "staticwebassets\\uploads\\43badcfd-106b-4d05-98ce-cb48671278de.jpg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\4d0097fd-6407-44d8-9d97-f11fa53770d5.png",
+      "PackagePath": "staticwebassets\\uploads\\4d0097fd-6407-44d8-9d97-f11fa53770d5.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\6fc53778-65f3-4a0a-a152-82be8fe5ad28.png",
+      "PackagePath": "staticwebassets\\uploads\\6fc53778-65f3-4a0a-a152-82be8fe5ad28.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\877ddf40-e16b-44c8-8da6-df01589e3336.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\877ddf40-e16b-44c8-8da6-df01589e3336.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\9f849eba-687b-4a72-8f98-16999199c11e.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\9f849eba-687b-4a72-8f98-16999199c11e.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\c9e31f7c-8770-40b2-9a35-e7798c1ce224.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\c9e31f7c-8770-40b2-9a35-e7798c1ce224.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\cebe2c5c-f850-4181-93cd-e37b115c6b2c.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\cebe2c5c-f850-4181-93cd-e37b115c6b2c.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\d0649ec3-42f2-4cbd-969b-1246a08b9400.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\d0649ec3-42f2-4cbd-969b-1246a08b9400.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\d07838fa-dc32-42e1-bb62-db66e35f2987.jpg",
+      "PackagePath": "staticwebassets\\uploads\\d07838fa-dc32-42e1-bb62-db66e35f2987.jpg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\d55d239f-bf2d-4ec2-9bd5-3cf7d852795c.jpg",
+      "PackagePath": "staticwebassets\\uploads\\d55d239f-bf2d-4ec2-9bd5-3cf7d852795c.jpg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\d94b646d-87e3-43dc-866f-05ea29f7b201.png",
+      "PackagePath": "staticwebassets\\uploads\\d94b646d-87e3-43dc-866f-05ea29f7b201.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\e00ad4bb-b936-42ee-b19a-f7d8ab9d70f0.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\e00ad4bb-b936-42ee-b19a-f7d8ab9d70f0.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\eaf88878-2383-40fc-8c33-b69ce32fdd5f.jpg",
+      "PackagePath": "staticwebassets\\uploads\\eaf88878-2383-40fc-8c33-b69ce32fdd5f.jpg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\fb14519e-c239-4b92-bfec-00ae685aefd9.JPG",
+      "PackagePath": "staticwebassets\\uploads\\fb14519e-c239-4b92-bfec-00ae685aefd9.JPG"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.ClubId.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.ClubId.props",
+      "PackagePath": "build\\ClubId.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.ClubId.props",
+      "PackagePath": "buildMultiTargeting\\ClubId.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.ClubId.props",
+      "PackagePath": "buildTransitive\\ClubId.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

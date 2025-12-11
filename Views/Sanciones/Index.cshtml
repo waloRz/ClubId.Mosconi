@@ -1,0 +1,130 @@
+
+@* NOTA: Asegurate de cambiar 'ClubId.Models.BoletinSancion' 
+   por el nombre real de tu clase/entidad que guarda el boletín.
+*@
+
+@using ClubId.Data
+@using Microsoft.AspNetCore.Mvc.Filters
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@using ClubId.Services;
+
+ @model IEnumerable<ClubId.Models.ViewModels.BoletinSancionesViewModel>
+
+@{
+    ViewData["Title"] = "Historial de Boletines";
+}
+
+<div class="container py-4">
+    
+    @* Encabezado con Botón de Crear *@
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary fw-bold">Gestión de Boletines</h2>
+            <p class="text-muted mb-0">Acá podés ver, editar o crear nuevos informes de sanciones.</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm">
+            <i class="bi bi-plus-lg"></i> + Nuevo Boletín
+        </a>
+    </div>
+
+    @* Tarjeta contenedora de la Grilla *@
+    <div class="card shadow border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle mb-0" id="tablaBoletines">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Fecha Publicación</th>
+                            <th>Nro. Fecha</th>
+                            <th>Categoría</th>
+                            <th>Info / Comunicado</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 fw-bold text-dark">
+                                        @* Formato dd/MM/yyyy *@
+                                        @item.FechaBoletin.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary rounded-pill">Fecha #@item.NroFecha</span>
+                                    </td>
+                                    <td>
+                                            @item.nombreCat
+                                    </td>
+                                    <td class="text-muted small">
+                                        @* Truncamos el texto si es muy largo para no romper la tabla *@
+                                        @if (!string.IsNullOrEmpty(item.Comunicado) && item.Comunicado.Length > 50)
+                                        {
+                                            @:@item.Comunicado.Substring(0, 50)...
+                                        }
+                                        else
+                                        {
+                                            @item.Comunicado
+                                        }
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="btn-group" role="group">
+                                            @* Botón VER (Detalle) *@
+                                            <a asp-action="GenerarBoletin" asp-route-id="@item.IdSanciones" class="btn btn-outline-info btn-sm" title="GenerarBoletin">
+                                                Generar PDF
+                                            </a>
+                                                @* <a asp-action="GenerarCarnet" asp-route-idpjxe="@p.idjugadorxEquipo" asp-route-idjugador="0"  class="btn btn-sm btn-outline-secondary">🪪 PDF</a> *@
+                                            @* Botón MODIFICAR *@
+                                            <a asp-action="Edit" asp-route-id="@item.IdSanciones" class="btn btn-outline-warning btn-sm" title="Editar / Corregir">
+                                                Modificar
+                                            </a>
+                                            @* Opcional: Botón Eliminar *@
+                                            <a asp-action="Delete" asp-route-id="@item.IdSanciones" class="btn btn-outline-danger btn-sm" title="Eliminar">
+                                            Eliminar</a> 
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <h4>No hay boletines cargados todavía.</h4>
+                                    <p>¡Dale al botón de "Nuevo Boletín" para arrancar!</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* Opcional: DataTables para convertir la tabla simple en una Grilla poderosa 
+       (Búsqueda, Paginación y Ordenamiento automático) *@
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Solo activamos DataTables si hay datos
+            if ($('#tablaBoletines tbody tr').length > 0 && !$('#tablaBoletines td[colspan]').length) {
+                $('#tablaBoletines').DataTable({
+                    language: {
+                       url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+                        // Español automático
+                    },
+                    order: [[0, 'asc']], // Ordenar por fecha (primera columna) descendente- desc
+                    pageLength: 10 
+                });
+            }
+        });
+    </script>
+}

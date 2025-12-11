@@ -1,0 +1,66 @@
+@model ClubId.Models.ViewModels.EquipoViewModel
+
+@{ ViewData["Title"] = "Nuevo Equipo"; }
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>Alta de Equipo</h4>
+        </div>
+        <div class="card-body">
+            @* IMPORTANTE: enctype="multipart/form-data" para subir archivos *@
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    @* 1. NOMBRE Y CATEGORIA *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="NombreEq" class="form-label"></label>
+                        <input asp-for="NombreEq" class="form-control" />
+                        <span asp-validation-for="NombreEq" class="text-danger fw-bold"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdCategoria" class="form-label"></label>
+                        <select asp-for="IdCategoria" class ="form-select" asp-items="ViewBag.IdCategoria">
+                              <option value="">-- Seleccione Categoría --</option> 
+                        </select>
+                         <span asp-validation-for="IdCategoria" class="text-danger"></span>
+                    </div>
+
+                    @* 2. DELEGADO Y CELULAR *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Delegado" class="form-label"></label>
+                        <input asp-for="Delegado" class="form-control" />
+                        <span asp-validation-for="Delegado" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Celular" class="form-label"></label>
+                        <input asp-for="Celular" class="form-control" placeholder="Ej: 387-1234569" />
+                        <span asp-validation-for="Celular" class="text-danger"></span>
+                    </div>
+
+                    @* 3. ESTADO Y FOTO *@
+                    <div class="col-md-4 mb-3 d-flex align-items-center">
+                        <div class="form-check form-switch fs-5">
+                            <input class="form-check-input" type="checkbox" asp-for="Estado" checked>
+                            <label class="form-check-label" asp-for="Estado">Equipo Activo</label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8 mb-3">
+                        <label asp-for="FotoEq" class="form-label"></label>
+                        <input asp-for="FotoEq" type="file" class="form-control" accept="image/*" />
+                        <span asp-validation-for="FotoEq" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success">Guardar Equipo</button>
+                    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts { @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} }

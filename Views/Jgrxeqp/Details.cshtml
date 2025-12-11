@@ -1,0 +1,52 @@
+
+@using ClubId.Data
+@model ClubId.Models.ViewModels.JugadorDetallesViewModel
+
+@{
+  ViewData["Title"] = "Detalle";
+}
+
+<h2>Detalle</h2>
+<div class="row g-3">
+  <div class="col-md-3">
+
+    @if (!string.IsNullOrWhiteSpace(@Model.Foto))
+    { <img src="@Model.Foto" class="img-thumbnail" alt="foto" /> }
+    else
+    { <div class="border rounded p-5 text-center text-muted">Sin foto</div> }
+  </div>
+
+  <div class="col-md-3">
+    <dl class="row">
+    <dt class="col-sm-3">Carnet</dt><dd class="col-sm-9">@Model.JugadorId</dd>
+      <dt class="col-sm-3">Nombre</dt><dd class="col-sm-9">@Model.Nombre</dd>
+      <dt class="col-sm-3">Apellido</dt><dd class="col-sm-9">@Model.Apellido</dd>
+      <dt class="col-sm-3">DNI</dt><dd class="col-sm-9">@Model.Dni</dd>
+      <dt class="col-sm-3">F. Nac.</dt><dd class="col-sm-9">@Model.FechaNac.ToString("dd/MM/yyyy")</dd>
+      <dt class="col-sm-3">Activo</dt><dd class="col-sm-9">@((Model.Activo) ? "Sí" : "No")</dd>
+    </dl>
+  </div>
+  
+   <div class="col-md-3">
+    <table>
+     <tr>
+        <th  class="col-sm-3">Equipo</th>
+        <th  class="col-sm-3">Fecha</th>
+    </tr>    
+     @{  foreach (var  p in Model.HistorialEquipos)
+        {
+    <tr>
+      
+        <th>@p.NombreEquipo</th>
+        <th>@p.FechaRecibo.ToShortDateString()</th>
+    </tr> 
+        } 
+      }
+ </table>
+     </div>
+     <div class="col-md-12">
+    <a asp-action="Edit" asp-route-id="@Model.JugadorId" class="btn btn-primary">Editar</a>    
+   <a asp-action="GenerarCarnet" asp-route-idjugador="@Model.JugadorId"  asp-route-idpjxe="0" class="btn btn-outline-secondary">Descargar carnet PDF</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+  </div>
+</div>

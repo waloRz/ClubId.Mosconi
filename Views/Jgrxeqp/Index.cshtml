@@ -1,0 +1,64 @@
+﻿@using ClubId.Data
+@using Microsoft.AspNetCore.Mvc.Filters
+@using Microsoft.EntityFrameworkCore
+@model IEnumerable<ClubId.Models.ViewModels.JugadorPorEquipoViewModel>
+
+
+@{
+  ViewData["Title"] = "Jugadores";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Jugadores</h2>
+  <a asp-action="Create" class="btn btn-primary">➕ Nuevo jugador</a>
+</div>
+<form method="get" class="row g-2 mb-3">
+  <div class="col-sm-6 col-md-4">
+    <input class="form-control" type="search" name="q" value="@(ViewBag.Query ?? "")" placeholder="Buscar por nombre, DNI o Carnet" />
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+  </div>
+</form>
+<table class="table table-striped align-middle">
+  <thead>
+    <tr>
+      <th>Nro Carnet</th>
+      <th>Foto</th>
+      <th>Apellido, Nombre</th>
+      <th>DNI</th>
+      <th>Equipo</th>      
+      <th>Categoria</th>
+      <th>F. Recibo</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+           
+  @{  foreach (var  p in Model)
+  {
+    <tr>
+      <td align="center">@p.Idjugador</td>
+      <td>
+        @if (!string.IsNullOrWhiteSpace(p.Foto))
+        { <img src="@p.Foto" class="avatar" alt="foto" /> }
+        else
+        { <span class="badge bg-secondary">Sin foto</span> }
+      </td>
+      <td><a asp-action="Details" asp-route-id="@p.Idjugador">@p.Apellido, @p.Nombre</a></td>
+      <td>@p.Dni</td>
+      <td>@p.NombreEq</td>  
+      <td>@p.NombreCat</td>    
+      <td>@p.FechaRecibo.ToShortDateString()</td>    
+      @* <td>@(p.Activo ? "Sí" : "No")</td> *@
+      <td class="text-nowrap">
+        <a asp-action="Edit" asp-route-id="@p.idjugadorxEquipo" class="btn btn-sm btn-outline-primary">Editar</a>
+        <a asp-action="Pase" asp-route-id="@p.idjugadorxEquipo" class="btn btn-sm btn-outline-info">PASE</a>        
+        <a asp-action="GenerarCarnet" asp-route-idpjxe="@p.idjugadorxEquipo" asp-route-idjugador="0"  class="btn btn-sm btn-outline-secondary">🪪 PDF</a>
+        <a asp-controller="Sanciones" asp-action="HistorialJugador" asp-route-id="@p.Idjugador" class="btn btn-sm btn-outline-danger">SANCIONES</a>
+      </td>
+    </tr>
+  }
+  
+  }
+  </tbody>
+</table>
