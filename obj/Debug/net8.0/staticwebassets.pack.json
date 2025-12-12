@@ -29,16 +29,40 @@
       "PackagePath": "staticwebassets\\imagenes\\equipos\\Castañares244_255640348.png"
     },
     {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\Chachapoyas_252511685.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\Chachapoyas_252511685.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\ConventoJrs_252523651.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\ConventoJrs_252523651.png"
+    },
+    {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\Convento_253423373.png",
       "PackagePath": "staticwebassets\\imagenes\\equipos\\Convento_253423373.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\DepCastañares_252545948.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\DepCastañares_252545948.png"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\DepMiguelOrtiz_254058688.png",
       "PackagePath": "staticwebassets\\imagenes\\equipos\\DepMiguelOrtiz_254058688.png"
     },
     {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\DepMilord_251802865.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\DepMilord_251802865.png"
+    },
+    {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\ElPilar_250115755.png",
       "PackagePath": "staticwebassets\\imagenes\\equipos\\ElPilar_250115755.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\JuanManuelRosas_252423048.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\JuanManuelRosas_252423048.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\JuanPabloII2_252722705.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\JuanPabloII2_252722705.png"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LaBorjaDiaz2_250507433.png",
@@ -49,6 +73,22 @@
       "PackagePath": "staticwebassets\\imagenes\\equipos\\LaCuadra_253344652.png"
     },
     {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LaDorrego_252653981.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LaDorrego_252653981.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LaLeyenda_251641100.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LaLeyenda_251641100.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LaPandilla_252446956.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LaPandilla_252446956.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosAmigos480_250217593.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LosAmigos480_250217593.png"
+    },
+    {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosDuendes5_251011744.png",
       "PackagePath": "staticwebassets\\imagenes\\equipos\\LosDuendes5_251011744.png"
     },
@@ -57,8 +97,36 @@
       "PackagePath": "staticwebassets\\imagenes\\equipos\\LosKkoyotes4_250434801.png"
     },
     {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosPichikateros_252639617.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LosPichikateros_252639617.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosPuchosLocos_250317175.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LosPuchosLocos_250317175.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosXeneixes_252631220.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LosXeneixes_252631220.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\PELADOS_251724257.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\PELADOS_251724257.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\Yelma_252605735.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\Yelma_252605735.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\la28_252704209.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\la28_252704209.png"
+    },
+    {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\068c2abd-da46-46a9-8d44-cdc7c868382c.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\068c2abd-da46-46a9-8d44-cdc7c868382c.jpeg"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\0e0934d8-3adf-4960-a697-68d4f7a39cc9.jpeg",
@@ -67,6 +135,10 @@
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\1c8e197b-62b9-4302-b70f-14f41126ec59.jpeg",
       "PackagePath": "staticwebassets\\uploads\\1c8e197b-62b9-4302-b70f-14f41126ec59.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\2163a8a0-31e5-4b04-a38b-70558ac803b3.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\2163a8a0-31e5-4b04-a38b-70558ac803b3.jpeg"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\32e506cf-956f-4ff8-ac8f-f8251f3e1e54.jpg",
@@ -83,6 +155,14 @@
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\4d0097fd-6407-44d8-9d97-f11fa53770d5.png",
       "PackagePath": "staticwebassets\\uploads\\4d0097fd-6407-44d8-9d97-f11fa53770d5.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\5f6c6d95-1be9-4090-be37-8b41c3c6a209.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\5f6c6d95-1be9-4090-be37-8b41c3c6a209.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\67ded8fc-03a9-415a-a999-6cf6d0e1f5f8.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\67ded8fc-03a9-415a-a999-6cf6d0e1f5f8.jpeg"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\6fc53778-65f3-4a0a-a152-82be8fe5ad28.png",

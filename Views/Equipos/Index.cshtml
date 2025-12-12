@@ -29,7 +29,7 @@
                     <td>
                         @if (!string.IsNullOrEmpty(item.FotoEq))
                         {
-                            <img src="@item.FotoEq" class="border border-light" style="width: 65px; height: 70px; object-fit: cover;" />
+                            <img src="@item.FotoEq" class="border border-light" style="width: 65px; height: 70px; object-fit: contain;" />
                         }
                         else
                         {
@@ -38,7 +38,7 @@
                     </td>
                     <td class="fw-bold">@item.NombreEq</td>
                     <td>
-                        <span class="badge bg-info text-dark">
+                        <span class="badge bg-info text-dark fs-6">
                             @Html.DisplayFor(modelItem => item.NombreCategoria)
                         </span>
                     </td>

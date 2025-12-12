@@ -166,8 +166,8 @@ public class SancionItem
    
       public void Compose(IDocumentContainer container)
         {
-          var document = Document.Create(container =>             // COMENTAR ACA Y ABAJO PARA GENERAR EL PDF
-            {                       // COMENTAR ACA PARA GENERAR EL PDF
+        //   var document = Document.Create(container =>             // COMENTAR ACA Y ABAJO PARA GENERAR EL PDF
+        //     {                       // COMENTAR ACA PARA GENERAR EL PDF
                 container.Page(page =>
                 {
                     page.Size(PageSizes.A4);
@@ -184,8 +184,8 @@ public class SancionItem
                         x.TotalPages();
                     });
                 });
-            });            // COMENTAR ACA Y ABAJO PARA GENERAR EL PDF
-           document.ShowInCompanion();          // COMENTAR ACA PARA GENERAR EL PDF
+        //     });            // COMENTAR ACA Y ABAJO PARA GENERAR EL PDF
+        //    document.ShowInCompanion();          // COMENTAR ACA PARA GENERAR EL PDF
        }
     }
 

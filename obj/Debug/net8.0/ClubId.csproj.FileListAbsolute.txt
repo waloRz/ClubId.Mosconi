@@ -148,3 +148,4 @@ G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\runtimes\win-x86\native\libstdc++
 G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\runtimes\win-x86\native\libwinpthread-1.dll
 G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\runtimes\win-x86\native\qpdf.dll
 G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\runtimes\win-x86\native\zlib1.dll
+G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\ClubId.sourcelink.json

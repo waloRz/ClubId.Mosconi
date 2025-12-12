@@ -8,6 +8,7 @@ public class JugadorDetallesViewModel
 {
     public int JugadorId { get; set; }    
     public string? Nombre { get; set; }
+    public int idJxEdit   { get; set; }
     public string Apellido { get; set; } = null!;
     public string? Dni { get; set; }
     public string? Foto { get; set; }

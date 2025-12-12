@@ -4,138 +4,178 @@
 @model ClubId.Models.ViewModels.JugadorPorEquipoViewModel
 
 @{
-  ViewData["Title"] = "Pase jugador";
+    ViewData["Title"] = "Pase de Jugador";
 }
 
-<h2>Tranferencia jugador</h2>
-<form asp-action="Pase" method="post" enctype="multipart/form-data" class="mt-3">
-  <input type="hidden" asp-for="idjugadorxEquipo" />
- 
-<div class="row g-3">
-  <div class="col-md-6">
-    <label asp-for="Nombre" class="form-label"></label>
-    <input asp-for="Nombre" class="form-control" readonly/>
-    <span asp-validation-for="Nombre" class="text-danger"></span>
-  </div>
-  <div class="col-md-6">
-    <label asp-for="Apellido" class="form-label"></label>
-    <input asp-for="Apellido" class="form-control" readonly/>
-    <span asp-validation-for="Apellido" class="text-danger"></span>
-  </div>
-<div class="col-md-3">
-    <label asp-for="Dni" class="form-label"></label>
-    
-    @* MODIFICADO: Agregamos id, oninput y maxlength *@
-    <input asp-for="Dni" class="form-control" id="DniInput" 
-           oninput="formatAndValidateDni(this)" maxlength="10" 
-           placeholder="XX.XXX.XXX" />
-           
-    <span asp-validation-for="Dni" class="text-danger"></span>
-</div>
-  <div class="col-md-4">
-    <label asp-for="FechaNac" class="form-label">Fecha Nacimiento</label>
-    <input asp-for="FechaNac" class="form-control" type="date" readonly/>
-  </div>
-  <div class="col-md-4">
-    <label asp-for="FechaRecibo" class="form-label">Fecha del Pase</label>
-    <input asp-for="FechaRecibo" class="form-control" type="date" />
-  </div>
-     <div class="form-group col-md-4">
-        <label asp-for="IdCategoria" class="control-label">Categoría</label>
-        <select asp-for="IdCategoria" class="form-control" asp-items="@Model.ListaCategoria">
-            <option value="@Model.NombreCat">Seleccione una CATEGORIA</option>
-        </select>
-        <span asp-validation-for="IdCategoria" class="text-danger"></span>
-    </div>
-  <div class="form-group col-md-4">
-        <label asp-for="IdEquipo" class="control-label">Equipo</label>
-        <select asp-for="IdEquipo" class="form-control" asp-items="@Model.ListaEquipos">
-            <option value="@Model.NombreEq">Seleccione un EQUIPO</option>
-        </select>
-        <span asp-validation-for="IdEquipo" class="text-danger"></span>     
-    </div>
+<div class="container py-4">
+    <h2 class="mb-4 text-warning">
+        <i class="bi bi-arrow-left-right me-2"></i> Transferencia de Jugador
+    </h2>
+    <p class="text-muted">Revise los datos del jugador y complete la nueva **Categoría** y **Equipo** para realizar el pase.</p>
 
-  <div class="col-md-3 form-check mt-4">
-    <input asp-for="Activo" class="form-check-input" />
-    <label asp-for="Activo" class="form-check-label"></label>
-  </div>
-  <div class="col-md-8">
-    <label class="form-label">Foto</label>
-    <input type="file" value="@Model.Foto"  name="photo" class="form-control" />
-  </div>
-   <div class="col-md-4">
-    @if (!string.IsNullOrWhiteSpace(@Model.Foto))
-    { <img src="@Model.Foto" class="img-thumbnail" alt="foto" style="max-width: 300px; max-height: 300px; object-fit: cover;" /> }
-    else
-    { <div class="border rounded p-5 text-center text-muted">Sin foto</div> }
-  </div>
-</div>
+    <form asp-action="Pase" method="post" enctype="multipart/form-data" class="mt-4">
+        <input type="hidden" asp-for="idjugadorxEquipo" />
+        <input type="hidden" asp-for="Foto" />
+        
+        <div class="row g-4">
 
-  <div class="mt-3">
-    <button class="btn btn-primary" type="submit">Guardar cambios</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-  </div>
-</form>
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-person-circle"></i> Datos Actuales del Jugador</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            
+                            <div class="col-md-6">
+                                <label asp-for="Nombre" class="form-label fw-semibold"></label>
+                                <input asp-for="Nombre" class="form-control" readonly/>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Apellido" class="form-label fw-semibold"></label>
+                                <input asp-for="Apellido" class="form-control" readonly/>
+                            </div>
+                            
+                            <div class="col-12 mt-3 mb-3 border-bottom pb-3">
+                                <a asp-action="HistorialJugador" asp-controller="Sanciones" 
+                                   asp-route-id="@Model.Idjugador" 
+                                   target="_blank" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-list-columns-reverse me-2"></i> Ver Historial de Sanciones
+                                </a>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Dni" class="form-label fw-semibold"></label>
+                                <input asp-for="Dni" class="form-control" readonly placeholder="XX.XXX.XXX" />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="FechaNac" class="form-label fw-semibold">Fecha Nacimiento</label>
+                                <input asp-for="FechaNac" class="form-control" type="date" readonly/>
+                            </div>
+
+                            <div class="col-12 mt-4 pt-3 border-top">
+                                <label class="form-label d-block fw-semibold text-muted">Foto Actual</label>
+                                <div class="p-2 border rounded bg-white text-center shadow-sm">
+                                    @if (!string.IsNullOrWhiteSpace(@Model.Foto))
+                                    { 
+                                        <img src="@Model.Foto" class="img-fluid rounded" alt="foto actual" 
+                                             style="max-height: 250px; min-width: 150px; object-fit: contain; background-color: #fff;"/> 
+                                    }
+                                    else
+                                    { 
+                                        <div class="d-flex align-items-center justify-content-center text-muted" 
+                                             style="height: 150px; width: 100%; background-color: #e9ecef;">
+                                            <i class="bi bi-person-bounding-box fs-1"></i>
+                                        </div> 
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-lg h-100 border-warning border-3">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-calendar-event"></i> Datos del Nuevo Fichaje</h5>
+                    </div>
+                    <div class="card-body bg-warning bg-opacity-10">
+                        <div class="row g-3">
+
+                            <div class="col-12">
+                                <label asp-for="FechaRecibo" class="form-label fw-semibold fs-5 text-warning-emphasis">Fecha del Pase / Fichaje</label>
+                                <input asp-for="FechaRecibo" class="form-control form-control-lg" type="date" required />
+                                <span asp-validation-for="FechaRecibo" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="IdCategoria" class="control-label fw-semibold">Nueva Categoría</label>
+                                <select asp-for="IdCategoria" class="form-select" asp-items="@Model.ListaCategoria">
+                                    <option value="">Seleccione una CATEGORIA</option>
+                                </select>
+                                <span asp-validation-for="IdCategoria" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="IdEquipo" class="control-label fw-semibold">Nuevo Equipo</label>
+                                <select asp-for="IdEquipo" class="form-select" asp-items="@Model.ListaEquipos">
+                                    <option value="">Seleccione un EQUIPO</option>
+                                </select>
+                                <span asp-validation-for="IdEquipo" class="text-danger"></span>     
+                            </div>
+
+                            <div class="col-12 mt-4 pt-3 border-top border-warning">
+                                <h6 class="mb-3 fw-bold text-dark">Estado Post-Transferencia</h6>
+                                <div class="form-check form-switch p-3 bg-white border rounded">
+                                    <input class="form-check-input ms-0 me-3" type="checkbox" asp-for="Activo" role="switch" id="ActivoSwitch" />
+                                    <label class="form-check-label fw-bold" for="ActivoSwitch">
+                                        @Html.DisplayNameFor(model => model.Activo)
+                                        <small class="d-block text-muted fw-normal">Marque si el jugador debe estar activo en el nuevo equipo.</small>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 mt-4 pt-3 border-top">
+                <a asp-action="Index" class="btn btn-secondary btn-lg me-2">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+                <button class="btn btn-warning btn-lg text-dark fw-bold" type="submit">
+                    <i class="bi bi-send-fill"></i> Realizar Transferencia
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    @* <script src="~/lib/jquery/dist/jquery.min.js"></script>  *@
-    @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> *@
-     @* Asegúrate de que jQuery esté cargado *@
-    
     <script>
-        // Función para aplicar el formato del DNI (mantener tu código original)
-        @* function formatAndValidateDni(input) {
-            // ... (Tu lógica de formato de DNI aquí) ...
+        // Función para aplicar el formato del DNI (aunque es readonly, la mantenemos por si la necesitas en otro lado)
+        function formatAndValidateDni(input) {
+            // ... (Lógica de formato de DNI) ...
             let dniValue = input.value.replace(/\D/g, '');
             let formattedDni = '';
             
-            if (dniValue.length > 0) {
-                formattedDni += dniValue.substring(0, 2);
-            }
-            if (dniValue.length > 2) {
-                formattedDni += '.' + dniValue.substring(2, 5);
-            }
-            if (dniValue.length > 5) {
-                formattedDni += '.' + dniValue.substring(5, 8);
-            }
+            if (dniValue.length > 0) formattedDni += dniValue.substring(0, 2);
+            if (dniValue.length > 2) formattedDni += '.' + dniValue.substring(2, 5);
+            if (dniValue.length > 5) formattedDni += '.' + dniValue.substring(5, 8);
+            if (formattedDni.length > 10) formattedDni = formattedDni.substring(0, 10);
 
-            if (formattedDni.length > 10) {
-                formattedDni = formattedDni.substring(0, 10);
-            }
             input.value = formattedDni;
-        } *@
+        }
 
         // --- LÓGICA DE CASCADA DE DROPDOWNS ---
         $(document).ready(function () {
-            // 1. Obtener las referencias a los selects
             const categoriaSelect = $('#IdCategoria');
             const equipoSelect = $('#IdEquipo');
 
-            // 2. Manejar el evento 'change' del select de Categoría
             categoriaSelect.change(function () {
                 const categoriaId = $(this).val();
                 
-                // Limpiar y deshabilitar el select de Equipo mientras carga
+                // UX: Mostrar cargando
                 equipoSelect.empty().prop('disabled', true);
-                equipoSelect.append('<option value="">Cargando...</option>');
+                equipoSelect.append('<option value="">Buscando equipos...</option>');
 
                 if (categoriaId) {
-                    // Realizar llamada AJAX
                     $.ajax({
-                        url: '@Url.Action("GetEquiposPorCategoria", "Jgrxeqp")', // Asegúrate que el Controller sea "Jugador"
+                        url: '@Url.Action("GetEquiposPorCategoria", "Jgrxeqp")', 
                         type: 'GET',
                         data: { idCategoria: categoriaId },
                         dataType: 'json',
                         success: function (data) {
-                            // Limpiar y agregar la opción por defecto
                             equipoSelect.empty().prop('disabled', false);
                             equipoSelect.append('<option value="">Seleccione un EQUIPO</option>');
 
                             if (data.length > 0) {
-                                // Agregar los nuevos equipos recibidos del Controller
                                 $.each(data, function (key, equipo) {
+                                    // Asegúrate de usar 'value' y 'text'
                                     equipoSelect.append('<option value="' + equipo.value + '">' + equipo.text + '</option>');
                                 });
                             } else {
@@ -148,18 +188,18 @@
                         }
                     });
                 } else {
-                    // Si no se selecciona Categoría, limpiar el select de Equipo
                     equipoSelect.empty().prop('disabled', false);
                     equipoSelect.append('<option value="">Seleccione un EQUIPO</option>');
                 }
             });
 
-            // Si se carga la página con una categoría seleccionada (ej. en edición), forzar el cambio.
+            // LÓGICA CORREGIDA PARA PRESERVAR SELECCIÓN AL VOLVER DE ERROR (POST)
             if (categoriaSelect.val() !== "") {
-                 categoriaSelect.trigger('change');
-            }
+                 if (equipoSelect.children('option').length <= 1) {
+                     categoriaSelect.trigger('change');
+                 }
+            }            
             
-            // Si estás usando jQuery Validation
             $.validator.unobtrusive.parse(document);
         });
     </script>

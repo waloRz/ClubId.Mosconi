@@ -21,8 +21,8 @@ namespace ClubId.Services
 
         public void Compose(IDocumentContainer container)
         {
-            var document = Document.Create(container =>
-            {
+            //var document = Document.Create(container =>  // COMENTAR ACA PARA GENERAR EL PDF
+           // {                                                                               // COMENTAR ACA
                 container.Page(page =>
                     {
                         // Ajusta el tamaño de la página para que se asemeje a un carnet, por ejemplo, A5 en horizontal
@@ -171,12 +171,11 @@ namespace ClubId.Services
                                     });
                             });
                     });
-
-            });
+            //}); // COMENTAR ACA PARA GENERAR EL PDF
            
-             document.ShowInCompanion();
+             //document.ShowInCompanion(); // COMENTAR ACA PARA GENERAR EL PDF
          
-        }
+        } 
     
     }
 }

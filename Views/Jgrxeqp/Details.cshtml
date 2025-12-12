@@ -1,52 +1,118 @@
 
+@using Microsoft.AspNetCore.Mvc.Filters
+@using Microsoft.EntityFrameworkCore
 @using ClubId.Data
 @model ClubId.Models.ViewModels.JugadorDetallesViewModel
 
 @{
-  ViewData["Title"] = "Detalle";
+    ViewData["Title"] = "Detalle del Jugador";
 }
 
-<h2>Detalle</h2>
-<div class="row g-3">
-  <div class="col-md-3">
+<div class="container py-4">
+    <h2 class="text-primary mb-4 fw-bold">Detalles del Jugador: @Model.Nombre @Model.Apellido</h2>
 
-    @if (!string.IsNullOrWhiteSpace(@Model.Foto))
-    { <img src="@Model.Foto" class="img-thumbnail" alt="foto" /> }
-    else
-    { <div class="border rounded p-5 text-center text-muted">Sin foto</div> }
-  </div>
+    <div class="row g-4">
+        
+        <div class="col-lg-4 col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Información Personal</h5>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="mb-3 text-center">
+                        @if (!string.IsNullOrWhiteSpace(@Model.Foto))
+                        { 
+                            <img src="@Model.Foto" class="img-fluid rounded-circle border border-5 border-light-subtle" 
+                                 alt="Foto de @Model.Nombre" 
+                                 style="width: 150px; height: 150px; object-fit: cover; margin-bottom: 15px;" /> 
+                        }
+                        else
+                        { 
+                            <div class="border rounded-circle p-5 text-center text-muted bg-light mx-auto" 
+                                 style="width: 150px; height: 150px; line-height: 50px;">
+                                <i class="bi bi-person-fill" style="font-size: 3rem;"></i>
+                            </div> 
+                        }
+                        <h4 class="mt-2">@Model.Nombre @Model.Apellido</h4>
+                        <p class="text-muted">Carnet #@Model.JugadorId</p>
+                    </div>
 
-  <div class="col-md-3">
-    <dl class="row">
-    <dt class="col-sm-3">Carnet</dt><dd class="col-sm-9">@Model.JugadorId</dd>
-      <dt class="col-sm-3">Nombre</dt><dd class="col-sm-9">@Model.Nombre</dd>
-      <dt class="col-sm-3">Apellido</dt><dd class="col-sm-9">@Model.Apellido</dd>
-      <dt class="col-sm-3">DNI</dt><dd class="col-sm-9">@Model.Dni</dd>
-      <dt class="col-sm-3">F. Nac.</dt><dd class="col-sm-9">@Model.FechaNac.ToString("dd/MM/yyyy")</dd>
-      <dt class="col-sm-3">Activo</dt><dd class="col-sm-9">@((Model.Activo) ? "Sí" : "No")</dd>
-    </dl>
-  </div>
-  
-   <div class="col-md-3">
-    <table>
-     <tr>
-        <th  class="col-sm-3">Equipo</th>
-        <th  class="col-sm-3">Fecha</th>
-    </tr>    
-     @{  foreach (var  p in Model.HistorialEquipos)
-        {
-    <tr>
-      
-        <th>@p.NombreEquipo</th>
-        <th>@p.FechaRecibo.ToShortDateString()</th>
-    </tr> 
-        } 
-      }
- </table>
-     </div>
-     <div class="col-md-12">
-    <a asp-action="Edit" asp-route-id="@Model.JugadorId" class="btn btn-primary">Editar</a>    
-   <a asp-action="GenerarCarnet" asp-route-idjugador="@Model.JugadorId"  asp-route-idpjxe="0" class="btn btn-outline-secondary">Descargar carnet PDF</a>
-    <a asp-action="Index" class="btn btn-secondary">Volver</a>
-  </div>
+                    <dl class="row small border-top pt-3">
+                        <dt class="col-sm-4 text-secondary">DNI:</dt>
+                        <dd class="col-sm-8 fw-semibold">@Model.Dni</dd>
+                        
+                        <dt class="col-sm-4 text-secondary">Nacimiento:</dt>
+                        <dd class="col-sm-8 fw-semibold">@Model.FechaNac.ToString("dd/MM/yyyy")</dd>
+                        
+                        <dt class="col-sm-4 text-secondary">Estado:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Activo)
+                            {
+                                <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger"><i class="bi bi-x-circle-fill"></i> Inactivo</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8 col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Historial de Pertenencia a Equipos</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Equipo</th>
+                                    <th>Categoría</th>
+                                    <th style="width: 120px;">Fecha de Recibo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.HistorialEquipos != null && Model.HistorialEquipos.Any())
+                                {
+                                    @foreach (var p in Model.HistorialEquipos.OrderByDescending(x => x.FechaRecibo))
+                                    {
+                                        <tr>
+                                            <td class="ps-3 fw-semibold">@p.NombreEquipo</td>
+                                            <td><span class="badge bg-info text-dark">@p.nombreCat</span></td>
+                                            <td>@p.FechaRecibo.ToShortDateString()</td>
+                                        </tr> 
+                                    } 
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted py-4">
+                                            Este jugador no tiene un historial de equipos registrado.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 mt-4 pt-3 border-top">
+            <a asp-action="Edit" asp-route-id="@Model.idJxEdit" class="btn btn-warning me-2">
+                <i class="bi bi-pencil-square"></i> Editar Información
+            </a> 
+            <a asp-action="GenerarCarnet" asp-route-idjugador="@Model.JugadorId" asp-route-idpjxe="0" class="btn btn-outline-info me-2">
+                <i class="bi bi-file-pdf"></i> Descargar Carnet PDF
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver al Listado
+            </a>
+        </div>
+    </div>
 </div>

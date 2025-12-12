@@ -40,7 +40,7 @@
       <td align="center">@p.Idjugador</td>
       <td>
         @if (!string.IsNullOrWhiteSpace(p.Foto))
-        { <img src="@p.Foto" class="avatar" alt="foto" /> }
+        { <img src="@p.Foto" class="avatar" alt="foto" style="width: 70px; height: 80px; object-fit: contain;" /> }
         else
         { <span class="badge bg-secondary">Sin foto</span> }
       </td>

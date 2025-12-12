@@ -82,9 +82,11 @@ namespace ClubId.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var jugador = await _context.Jugadores
-         .Include(j => j.Jgrxequipos)
-             .ThenInclude(je => je.IdEquipoNavigation)
-         .FirstOrDefaultAsync(m => m.Idjugador == id);
+                                    .Include(j => j.Jgrxequipos)
+                                        .ThenInclude(je => je.IdEquipoNavigation)
+                                    .Include(j => j.Jgrxequipos)
+                                        .ThenInclude(je => je.IdCategoriasNavigation)
+                                    .FirstOrDefaultAsync(m => m.Idjugador == id);
 
             if (jugador == null)
             {
@@ -96,6 +98,7 @@ namespace ClubId.Controllers
                 JugadorId = jugador.Idjugador,
                 Nombre = jugador.Nombre,
                 Apellido = jugador.Apellido,
+                idJxEdit = jugador.Jgrxequipos.Last().IdJxE,
                 Dni = jugador.Dni,
                 Activo = jugador.Activo,
                 Foto = jugador.Foto,
@@ -107,7 +110,7 @@ namespace ClubId.Controllers
                         NombreEquipo = je.IdEquipoNavigation.NombreEq,
                   //      FechaInscripcion = je.FechaInscripcion,
                         idJxE = je.IdJxE,
-                        // nombreCat = je.IdCategoriaNavigation.NombreCat,
+                        nombreCat = je.IdCategoriasNavigation.NombreCat,
                         FechaRecibo = je.FechaRecibo
                     })
                     .OrderByDescending(e => e.FechaInscripcion) // Opcional: ordenar por fecha más reciente
@@ -365,6 +368,7 @@ namespace ClubId.Controllers
             var viewModel = new JugadorPorEquipoViewModel
             {
                 idjugadorxEquipo = id,
+                Idjugador = player.Idjugador,
                 Nombre = player.IdjugadorNavigation.Nombre,
                 Apellido = player.IdjugadorNavigation.Apellido,
                 Dni = player.IdjugadorNavigation.Dni,
