@@ -54,7 +54,7 @@
                   <input class="form-check-input" type="checkbox" asp-for="Activo" role="switch" id="ActivoSwitch" />
                   <label class="form-check-label fw-semibold" for="ActivoSwitch">
                     @Html.DisplayNameFor(model => model.Activo)
-                    (<span class="text-muted">Estado actual: @(Model.Activo ? "Activo" : "Inactivo")</span>)
+                    (<span class="text-muted">Estado actual: @(Model.Activo ? "Activo" : "Inactivo/Sancionado ")</span>)
                   </label>
                   <span asp-validation-for="Activo" class="text-danger"></span>
                 </div>

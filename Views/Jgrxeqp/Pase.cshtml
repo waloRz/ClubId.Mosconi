@@ -125,9 +125,9 @@
                 <a asp-action="Index" class="btn btn-secondary btn-lg me-2">
                     <i class="bi bi-x-circle"></i> Cancelar
                 </a>
-                <button class="btn btn-warning btn-lg text-dark fw-bold" type="submit">
-                    <i class="bi bi-send-fill"></i> Realizar Transferencia
-                </button>
+<button id="btnTransferir" class="btn btn-warning btn-lg text-dark fw-bold" type="submit" disabled>
+    <i class="bi bi-send-fill"></i> Realizar Transferencia
+</button>
             </div>
         </div>
     </form>
@@ -198,9 +198,55 @@
                  if (equipoSelect.children('option').length <= 1) {
                      categoriaSelect.trigger('change');
                  }
-            }            
+            } 
             
             $.validator.unobtrusive.parse(document);
+       // });
+
+        // 1. Elementos a vigilar
+        const inputsVigilados = $('#IdCategoria, #IdEquipo, #FechaRecibo');
+        const btnTransferir = $('#btnTransferir');
+
+        // 2. Guardamos los valores iniciales al cargar la página
+        let valoresIniciales = {
+            categoria: $('#IdCategoria').val(),
+            equipo: $('#IdEquipo').val(),
+            fecha: $('#FechaRecibo').val()
+        };
+
+        // 3. Función que verifica si hubo cambios
+        function verificarCambios() {
+            const catActual = $('#IdCategoria').val();
+            const eqActual = $('#IdEquipo').val();
+            const fechaActual = $('#FechaRecibo').val();
+
+            // Verificamos si algún valor es diferente al inicial
+            const cambioCategoria = catActual !== valoresIniciales.categoria;
+            const cambioEquipo = eqActual !== valoresIniciales.equipo;
+            const cambioFecha = fechaActual !== valoresIniciales.fecha;
+            
+            // Validamos que los campos obligatorios no estén vacíos
+            // (Especialmente importante si cambias de categoría y el equipo queda vacío momentáneamente)
+            const camposCompletos = catActual !== "" && eqActual !== "" && fechaActual !== "";
+
+            // Lógica final: Debe haber al menos un cambio Y los campos deben estar llenos
+            if ((cambioCategoria || cambioEquipo || cambioFecha) && camposCompletos) {
+                btnTransferir.prop('disabled', false); // Habilitar
+            } else {
+                btnTransferir.prop('disabled', true);  // Deshabilitar
+            }
+        }
+
+        // 4. Ejecutar la verificación cada vez que el usuario toque algo
+        inputsVigilados.on('change keyup input', function() {
+            verificarCambios();
         });
+
+        // NOTA: Como tienes un AJAX que cambia el select de Equipo, 
+        // debemos asegurarnos de que la validación se ejecute también después de que el AJAX termine.
+        // Agrega una llamada a verificarCambios() dentro del 'success' de tu AJAX existente si es necesario,
+        // aunque el evento 'change' del usuario al seleccionar el nuevo equipo debería ser suficiente.
+    });
+
     </script>
 }

@@ -53,6 +53,10 @@
       "PackagePath": "staticwebassets\\imagenes\\equipos\\DepMilord_251802865.png"
     },
     {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\DepPilar_251527225.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\DepPilar_251527225.png"
+    },
+    {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\ElPilar_250115755.png",
       "PackagePath": "staticwebassets\\imagenes\\equipos\\ElPilar_250115755.png"
     },
@@ -81,8 +85,16 @@
       "PackagePath": "staticwebassets\\imagenes\\equipos\\LaLeyenda_251641100.png"
     },
     {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LaMadridNorte_250653447.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LaMadridNorte_250653447.png"
+    },
+    {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LaPandilla_252446956.png",
       "PackagePath": "staticwebassets\\imagenes\\equipos\\LaPandilla_252446956.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LaTamayo_250629588.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LaTamayo_250629588.png"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosAmigos480_250217593.png",
@@ -97,6 +109,10 @@
       "PackagePath": "staticwebassets\\imagenes\\equipos\\LosKkoyotes4_250434801.png"
     },
     {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosMismosdeSiempre_254446288.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LosMismosdeSiempre_254446288.png"
+    },
+    {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosPichikateros_252639617.png",
       "PackagePath": "staticwebassets\\imagenes\\equipos\\LosPichikateros_252639617.png"
     },
@@ -105,12 +121,20 @@
       "PackagePath": "staticwebassets\\imagenes\\equipos\\LosPuchosLocos_250317175.png"
     },
     {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosVikingos_250554362.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\LosVikingos_250554362.png"
+    },
+    {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\LosXeneixes_252631220.png",
       "PackagePath": "staticwebassets\\imagenes\\equipos\\LosXeneixes_252631220.png"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\PELADOS_251724257.png",
       "PackagePath": "staticwebassets\\imagenes\\equipos\\PELADOS_251724257.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\VillaBelgrano_250611153.png",
+      "PackagePath": "staticwebassets\\imagenes\\equipos\\VillaBelgrano_250611153.png"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\imagenes\\equipos\\Yelma_252605735.png",
@@ -167,6 +191,10 @@
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\6fc53778-65f3-4a0a-a152-82be8fe5ad28.png",
       "PackagePath": "staticwebassets\\uploads\\6fc53778-65f3-4a0a-a152-82be8fe5ad28.png"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\75528b7f-8e42-48c0-8160-6dcd2da810da.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\75528b7f-8e42-48c0-8160-6dcd2da810da.jpeg"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\877ddf40-e16b-44c8-8da6-df01589e3336.jpeg",

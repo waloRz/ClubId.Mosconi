@@ -128,7 +128,9 @@ namespace ClubId.Controllers
            //     FechaInscripcion = DateTime.Today,
                 FechaRecibo = DateTime.Today,
 
-                ListaCategoria = await _context.Categorias.Select(e => new SelectListItem
+                ListaCategoria = await _context.Categorias
+                 .Where(e => e.EstadoCat == true)
+                .Select(e => new SelectListItem
                 {
                     Value = e.IdCategorias.ToString(),
                     Text = e.NombreCat
@@ -152,8 +154,9 @@ namespace ClubId.Controllers
                 FechaNac = DateTime.Today,             
                 FechaRecibo = DateTime.Today,
 
-                ListaCategoria = await _context.Categorias.Select(e => new SelectListItem
-                {
+                ListaCategoria = await _context.Categorias               
+                .Select(e => new SelectListItem
+                { 
                     Value = e.IdCategorias.ToString(),
                     Text = e.NombreCat
                 }).ToListAsync(),
@@ -381,7 +384,9 @@ namespace ClubId.Controllers
                 Activo = player.IdjugadorNavigation.Activo,
                 Foto = player.IdjugadorNavigation.Foto,
 
-                ListaCategoria = await _context.Categorias.Select(e => new SelectListItem
+                ListaCategoria = await _context.Categorias
+                 .Where(e => e.EstadoCat == true)
+                .Select(e => new SelectListItem
                 {
                     Value = e.IdCategorias.ToString(),
                     Text = e.NombreCat
@@ -400,6 +405,7 @@ namespace ClubId.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Pase(int id, JugadorPorEquipoViewModel input, IFormFile? photo)
         {
+
             if (id != input.idjugadorxEquipo) return NotFound();
             if (!ModelState.IsValid) return View(input);
 
@@ -412,6 +418,24 @@ namespace ClubId.Controllers
 
             if (player == null) return NotFound();
 
+    // VALIDACIÓN DE DUPLICADOS:
+    // Si la categoría, el equipo y la fecha son idénticos a lo que ya tiene, es un error.
+    // (Ajusta la lógica si permites re-fichajes en el mismo equipo en diferente fecha, pero 
+    //  generalmente una transferencia implica cambio de equipo o categoría).
+    
+    bool esMismoEquipo = input.IdEquipo == player.IdEquipo;
+    bool esMismaCategoria = input.IdCategoria == player.IdCategorias;
+    // Compara fecha solo si es relevante para tu lógica de negocio evitar duplicados por fecha
+    // bool esMismaFecha = input.FechaRecibo == player.FechaRecibo; 
+
+    if (esMismoEquipo && esMismaCategoria) 
+    {
+        ModelState.AddModelError("", "No se puede realizar el pase: El jugador ya pertenece a este Equipo y Categoría.");
+        // Necesitas recargar las listas para volver a mostrar la vista
+        // input.ListaCategoria = ... 
+        // input.ListaEquipos = ...
+        return View(input);
+    }
 
             if (photo != null && photo.Length > 0)
             {
