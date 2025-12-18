@@ -19,7 +19,7 @@ public class CrearJugadorViewModel
     [RegularExpression(@"^\d{2}\.\d{3}\.\d{3}$", 
     ErrorMessage = "El DNI debe tener el formato XX.XXX.XXX (ej. 12.345.678).")]
     public string Dni { get; set; } = null!;
-    public DateTime FechaNac { get; set; }
+    public DateOnly FechaNac { get; set; }
     public bool Activo { get; set; }
     public string? Foto { get; set; }
     public int IdEquipo { get; set; }

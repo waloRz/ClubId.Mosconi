@@ -69,7 +69,7 @@ namespace ClubId.Controllers
                     NombreCat = je.IdCategoriasNavigation.NombreCat,
                     NombreEq = je.IdEquipoNavigation.NombreEq
                 });
-                query = query.Where(vm => vm.Nombre.Contains(q) || vm.Apellido.Contains(q) || vm.Dni.Contains(q) || vm.Idjugador.ToString() == q );
+                query = query.Where(vm => vm.Nombre.Contains(q) || vm.Apellido.Contains(q) || vm.Dni.Contains(q) || vm.Idjugador.ToString() == q);
             }
             query = query
                 .OrderByDescending(vm => vm.FechaRecibo)
@@ -100,6 +100,7 @@ namespace ClubId.Controllers
                 Apellido = jugador.Apellido,
                 idJxEdit = jugador.Jgrxequipos.Last().IdJxE,
                 Dni = jugador.Dni,
+                FechaNac = jugador.FechaNac,
                 Activo = jugador.Activo,
                 Foto = jugador.Foto,
                 HistorialEquipos = jugador.Jgrxequipos
@@ -108,7 +109,7 @@ namespace ClubId.Controllers
                     {//viewModel - TABLA DEL dataSet
                         EquipoId = je.IdEquipoNavigation.IdEquipo,
                         NombreEquipo = je.IdEquipoNavigation.NombreEq,
-                  //      FechaInscripcion = je.FechaInscripcion,
+                        //      FechaInscripcion = je.FechaInscripcion,
                         idJxE = je.IdJxE,
                         nombreCat = je.IdCategoriasNavigation.NombreCat,
                         FechaRecibo = je.FechaRecibo
@@ -124,8 +125,8 @@ namespace ClubId.Controllers
         {
             var viewModel = new CrearJugadorViewModel
             {
-                FechaNac = DateTime.Today,
-           //     FechaInscripcion = DateTime.Today,
+                FechaNac = DateOnly.FromDateTime(DateTime.Today),
+                //     FechaInscripcion = DateTime.Today,
                 FechaRecibo = DateTime.Today,
 
                 ListaCategoria = await _context.Categorias
@@ -151,12 +152,12 @@ namespace ClubId.Controllers
         {
             var viewModel = new CrearJugadorViewModel
             {
-                FechaNac = DateTime.Today,             
+                FechaNac = DateOnly.FromDateTime(DateTime.Today),
                 FechaRecibo = DateTime.Today,
 
-                ListaCategoria = await _context.Categorias               
+                ListaCategoria = await _context.Categorias
                 .Select(e => new SelectListItem
-                { 
+                {
                     Value = e.IdCategorias.ToString(),
                     Text = e.NombreCat
                 }).ToListAsync(),
@@ -188,8 +189,8 @@ namespace ClubId.Controllers
 
                 if (photo != null && photo.Length > 0)
                 {
-                    var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);                                       
-                    var relPath = Path.Combine("uploads", fileName); 
+                    var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
+                    var relPath = Path.Combine("uploads", fileName);
                     var absPath = Path.Combine(_env.WebRootPath, relPath);
                     Directory.CreateDirectory(Path.GetDirectoryName(absPath)!);
                     using var stream = new FileStream(absPath, FileMode.Create);
@@ -215,7 +216,7 @@ namespace ClubId.Controllers
                 {
                     Idjugador = nuevoJugador.Idjugador,
                     IdEquipo = model.IdEquipo,
-                    IdCategorias = model.IdCategoria,                    
+                    IdCategorias = model.IdCategoria,
                     FechaRecibo = DateTime.Now
                 };
 
@@ -235,7 +236,7 @@ namespace ClubId.Controllers
                 .Include(j => j.IdjugadorNavigation)
                     .Include(j => j.IdCategoriasNavigation)
                 .OrderByDescending(x => x.FechaRecibo).FirstOrDefaultAsync(m => m.IdJxE == idpjxe || m.Idjugador == idjugador);
-                //.FirstOrDefaultAsync(m => m.IdJxE == idpjxe || m.Idjugador == idjugador);
+            //.FirstOrDefaultAsync(m => m.IdJxE == idpjxe || m.Idjugador == idjugador);
 
             if (jugador == null)
             {
@@ -259,7 +260,20 @@ namespace ClubId.Controllers
 
             byte[] pdfBytes = document.GeneratePdf();
 
-            return File(pdfBytes, "application/pdf", $"Carnet_{jugador.IdjugadorNavigation.Idjugador}_{jugador.IdjugadorNavigation.Apellido}_{jugador.IdjugadorNavigation.Nombre.Replace(" ", "_")}.pdf");
+            //return File(pdfBytes, "application/pdf", $"Carnet_{jugador.IdjugadorNavigation.Idjugador}_{jugador.IdjugadorNavigation.Apellido}_{jugador.IdjugadorNavigation.Nombre.Replace(" ", "_")}.pdf");
+            // 4. CAMBIO CLAVE: Configurar el header para visualización "Inline"
+            // Esto le dice al navegador: "Muéstralo, no lo guardes todavía"
+            // También definimos un nombre de archivo por si el usuario decide guardarlo después
+            var contentDisposition = new System.Net.Mime.ContentDisposition
+            {
+                FileName = $"Carnet_{jugador.IdjugadorNavigation.Idjugador}_{jugador.IdjugadorNavigation.Apellido}_{jugador.IdjugadorNavigation.Nombre.Replace(" ", "_")}.pdf", // O el nombre que quieras
+                Inline = true  // <--- ESTO ES LO IMPORTANTE (true = ver, false = descargar)
+            };
+
+            Response.Headers.Append("Content-Disposition", contentDisposition.ToString());
+
+            // 5. Retornar el archivo (sin poner el nombre de archivo aquí, ya lo pusimos en el header)
+            return File(pdfBytes, "application/pdf");
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -277,6 +291,7 @@ namespace ClubId.Controllers
             var viewModel = new JugadorPorEquipoViewModel
             {
                 idjugadorxEquipo = id,
+                NroCarnetOld = player.IdjugadorNavigation.NroCarnetOld,
                 Nombre = player.IdjugadorNavigation.Nombre,
                 Apellido = player.IdjugadorNavigation.Apellido,
                 Dni = player.IdjugadorNavigation.Dni,
@@ -418,24 +433,24 @@ namespace ClubId.Controllers
 
             if (player == null) return NotFound();
 
-    // VALIDACIÓN DE DUPLICADOS:
-    // Si la categoría, el equipo y la fecha son idénticos a lo que ya tiene, es un error.
-    // (Ajusta la lógica si permites re-fichajes en el mismo equipo en diferente fecha, pero 
-    //  generalmente una transferencia implica cambio de equipo o categoría).
-    
-    bool esMismoEquipo = input.IdEquipo == player.IdEquipo;
-    bool esMismaCategoria = input.IdCategoria == player.IdCategorias;
-    // Compara fecha solo si es relevante para tu lógica de negocio evitar duplicados por fecha
-    // bool esMismaFecha = input.FechaRecibo == player.FechaRecibo; 
+            // VALIDACIÓN DE DUPLICADOS:
+            // Si la categoría, el equipo y la fecha son idénticos a lo que ya tiene, es un error.
+            // (Ajusta la lógica si permites re-fichajes en el mismo equipo en diferente fecha, pero 
+            //  generalmente una transferencia implica cambio de equipo o categoría).
 
-    if (esMismoEquipo && esMismaCategoria) 
-    {
-        ModelState.AddModelError("", "No se puede realizar el pase: El jugador ya pertenece a este Equipo y Categoría.");
-        // Necesitas recargar las listas para volver a mostrar la vista
-        // input.ListaCategoria = ... 
-        // input.ListaEquipos = ...
-        return View(input);
-    }
+            bool esMismoEquipo = input.IdEquipo == player.IdEquipo;
+            bool esMismaCategoria = input.IdCategoria == player.IdCategorias;
+            // Compara fecha solo si es relevante para tu lógica de negocio evitar duplicados por fecha
+            // bool esMismaFecha = input.FechaRecibo == player.FechaRecibo; 
+
+            if (esMismoEquipo && esMismaCategoria)
+            {
+                ModelState.AddModelError("", "No se puede realizar el pase: El jugador ya pertenece a este Equipo y Categoría.");
+                // Necesitas recargar las listas para volver a mostrar la vista
+                // input.ListaCategoria = ... 
+                // input.ListaEquipos = ...
+                return View(input);
+            }
 
             if (photo != null && photo.Length > 0)
             {
@@ -447,47 +462,47 @@ namespace ClubId.Controllers
                 await photo.CopyToAsync(stream);
                 player.IdjugadorNavigation.Foto = "/" + relPath.Replace('\\', '/');     //JUGADOR
             }
-                             
-           var registroIntermedio = new Jgrxequipo
-                {
-                    Idjugador = player.IdjugadorNavigation.Idjugador,
-                    IdEquipo =   input.IdEquipo,
-                    IdCategorias = input.IdCategoria,
-                 //   FechaInscripcion = DateTime.Now,
-                    FechaRecibo =input.FechaRecibo
-                };
 
-                _context.Jgrxequipos.Add(registroIntermedio);
-                await _context.SaveChangesAsync();
+            var registroIntermedio = new Jgrxequipo
+            {
+                Idjugador = player.IdjugadorNavigation.Idjugador,
+                IdEquipo = input.IdEquipo,
+                IdCategorias = input.IdCategoria,
+                //   FechaInscripcion = DateTime.Now,
+                FechaRecibo = input.FechaRecibo
+            };
+
+            _context.Jgrxequipos.Add(registroIntermedio);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
 
-[HttpGet]
-public async Task<JsonResult> GetEquiposPorCategoria(int idCategoria)
-{
-    // Asegurarse de que el IdCategoria sea válido
-    if (idCategoria == 0)
-    {
-        return Json(new List<object>()); // Devuelve una lista vacía si no hay categoría
-    }
-
-    // 1. Obtener los equipos filtrados por el IdCategoria
-    // Asumo que tu entidad Equipo tiene la FK IdCategoria
-    var equiposFiltrados = await _context.Equipos
-        .Where(e => e.IdCategoria == idCategoria && e.Estado == true)
-        .Select(e => new 
+        [HttpGet]
+        public async Task<JsonResult> GetEquiposPorCategoria(int idCategoria)
         {
-            value = e.IdEquipo,
-            text = e.NombreEq 
-        })
-        .OrderBy(e => e.text)
-        .ToListAsync();
+            // Asegurarse de que el IdCategoria sea válido
+            if (idCategoria == 0)
+            {
+                return Json(new List<object>()); // Devuelve una lista vacía si no hay categoría
+            }
 
-    // 2. Devolver la lista como JSON.
-    // El objeto anónimo { value, text } es lo que jQuery espera para llenar un select.
-    return Json(equiposFiltrados);
-}
+            // 1. Obtener los equipos filtrados por el IdCategoria
+            // Asumo que tu entidad Equipo tiene la FK IdCategoria
+            var equiposFiltrados = await _context.Equipos
+                .Where(e => e.IdCategoria == idCategoria && e.Estado == true)
+                .Select(e => new
+                {
+                    value = e.IdEquipo,
+                    text = e.NombreEq
+                })
+                .OrderBy(e => e.text)
+                .ToListAsync();
+
+            // 2. Devolver la lista como JSON.
+            // El objeto anónimo { value, text } es lo que jQuery espera para llenar un select.
+            return Json(equiposFiltrados);
+        }
     }
 }

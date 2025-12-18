@@ -7,6 +7,8 @@ public class JugadorPorEquipoViewModel
 {
     public int Idjugador { get; set; }
 
+    public int? NroCarnetOld{ get; set; }
+
     public int idjugadorxEquipo { get; set; }
 
     public string Nombre { get; set; } = null!;
@@ -17,7 +19,7 @@ public class JugadorPorEquipoViewModel
     ErrorMessage = "El DNI debe tener el formato XX.XXX.XXX (ej. 12.345.678).")]
     public string Dni { get; set; } = null!;
 
-    public DateTime FechaNac { get; set; }
+    public DateOnly FechaNac { get; set; }
 
     public bool Activo { get; set; }
 

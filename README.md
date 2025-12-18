@@ -22,6 +22,9 @@ dotnet restore
 2. Ejecutar:
 ```bash
 dotnet run
+#  para ejecutarla y realice cambios en caliente
+dotnet watch run
+ 
 ```
 La app usa `EnsureCreated()` y creará las tablas automáticamente en la base `clubid` si tiene permisos.
 
@@ -33,6 +36,11 @@ dotnet add package Microsoft.EntityFrameworkCore.Tools
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
+<!-- comando para la actualizacion de los models, segun un cambio en la estructura de la DB -->
+dotnet ef dbcontext scaffold "Server=localhost;Database=ligabd;port=3306;Uid=root;Pwd=root;" Pomelo.EntityFrameworkCore.MySql -o Models --force
+
+<!-- para publicar el proyecto y se genere un .exe del cual se pueda ejecutar -->
+dotnet publish --configuration Release --runtime win-x64 --self-contained true
 
 Endpoints útiles:
 - `/Players`

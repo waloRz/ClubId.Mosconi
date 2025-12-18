@@ -7,7 +7,7 @@ namespace ClubId.Models.ViewModels
         public string NombreCompleto { get; set; } // Nombre + Apellido
         public string Dni { get; set; }
         public string Carnet { get; set; } // NroCarnet
-        public DateTime? FechaNacimiento { get; set; }
+        public DateOnly? FechaNacimiento { get; set; }
         public string? FotoUrl { get; set; } // Si guardas la ruta, sino usaremos un placeholder
 
         // --- Cuerpo: Historial de Sanciones ---

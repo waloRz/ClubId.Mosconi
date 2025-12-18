@@ -134,7 +134,7 @@ namespace ClubId.Services
                                             dataRow.RelativeItem(1)
                                                 .Column(infoColumn =>
                                                 {
-                                                    infoColumn.Item().Text($"CARNET N°: {Model.JugadorId}").Bold();
+                                                    infoColumn.Item().Text($"CARNET N°:  {Model.nombreCat.First()}- {Model.JugadorId}").Bold();
 
                                                     infoColumn.Item().PaddingTop(7).Text($"CATEGORIA:");
                                                     infoColumn.Item().PaddingTop(3).Text(Model.nombreCat.ToUpper()).Bold()

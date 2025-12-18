@@ -12,7 +12,7 @@ public class JugadorDetallesViewModel
     public string Apellido { get; set; } = null!;
     public string? Dni { get; set; }
     public string? Foto { get; set; }
-    public DateTime FechaNac { get; set; }    
+    public DateOnly FechaNac { get; set; }    
      public bool Activo { get; set; }
     public ICollection<EquipoDetallesViewModel> HistorialEquipos { get; set; }
 }

@@ -46,7 +46,7 @@ public partial class LigabdContext : DbContext
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=localhost;database=ligabd;port=3306;uid=root;pwd=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -276,7 +276,9 @@ public partial class LigabdContext : DbContext
         {
             entity.HasKey(e => e.Idjugador).HasName("PRIMARY");
 
-            entity.ToTable("jugadores", tb => tb.HasComment("datos del jugador"));
+            entity
+                .ToTable("jugadores", tb => tb.HasComment("datos del jugador"))
+                .UseCollation("utf8mb4_spanish2_ci");
 
             entity.Property(e => e.Idjugador).HasColumnName("idjugador");
             entity.Property(e => e.Activo).HasColumnName("activo");
@@ -286,16 +288,17 @@ public partial class LigabdContext : DbContext
             entity.Property(e => e.Dni)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("''")
-                .HasColumnName("dni");
-            entity.Property(e => e.FechaNac)
-                .HasColumnType("datetime")
-                .HasColumnName("fechaNac");
+                .HasColumnName("dni")
+                .UseCollation("utf8mb4_0900_ai_ci");
+            entity.Property(e => e.FechaNac).HasColumnName("fechaNac");
             entity.Property(e => e.Foto)
                 .HasMaxLength(255)
-                .HasColumnName("foto");
+                .HasColumnName("foto")
+                .UseCollation("utf8mb4_0900_ai_ci");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .HasColumnName("nombre");
+            entity.Property(e => e.NroCarnetOld).HasColumnName("nroCarnetOld");
         });
 
         modelBuilder.Entity<Login>(entity =>

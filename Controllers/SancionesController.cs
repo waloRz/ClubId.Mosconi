@@ -119,7 +119,9 @@ public async Task<IActionResult> Index()
                                             .ThenInclude(e => e.IdEquipoNavigation)
                                         .FirstOrDefaultAsync(b => b.IdSanciones == id);
 
-            var categorias = await _context.Categorias.ToListAsync();               
+            var categorias = await _context.Categorias
+            .Where(b => b.EstadoCat)
+            .ToListAsync();               
             ViewData["IdCategoria"] = new SelectList(categorias, "IdCategorias", "NombreCat",boletin.IdCategorias);
            
             if (boletin == null) return NotFound();
@@ -284,7 +286,20 @@ public async Task<IActionResult> Index()
      var documento = new ReporteBoletin(datosPdf);
      byte[] pdfBytes = documento.GeneratePdf();
 
-     return File(pdfBytes, "application/pdf", $"Boletin_{viewModel.NroFecha}_{viewModel.nombreCat}.pdf");
+     //return File(pdfBytes, "application/pdf", $"Boletin_{viewModel.NroFecha}_{viewModel.nombreCat}.pdf");
+        // 4. CAMBIO CLAVE: Configurar el header para visualización "Inline"
+            // Esto le dice al navegador: "Muéstralo, no lo guardes todavía"
+            // También definimos un nombre de archivo por si el usuario decide guardarlo después
+            var contentDisposition = new System.Net.Mime.ContentDisposition
+            {
+                FileName =  $"Boletin_{viewModel.NroFecha}_{viewModel.nombreCat}.pdf", // O el nombre que quieras
+                Inline = true  // <--- ESTO ES LO IMPORTANTE (true = ver, false = descargar)
+            };
+
+            Response.Headers.Append("Content-Disposition", contentDisposition.ToString());
+
+            // 5. Retornar el archivo (sin poner el nombre de archivo aquí, ya lo pusimos en el header)
+            return File(pdfBytes, "application/pdf");
 } 
    
     //************************************************************************************************************************************
@@ -293,7 +308,9 @@ public async Task<IActionResult> Index()
     public async Task<IActionResult> Create()
     
     {
-       var categorias = await _context.Categorias.ToListAsync();               
+       var categorias = await _context.Categorias
+       .Where(b => b.EstadoCat)
+       .ToListAsync();               
       ViewData["IdCategoria"] = new SelectList(categorias, "IdCategorias", "NombreCat"); 
 
         var viewModel = new SancionCreacionViewModel();

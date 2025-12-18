@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "3a0OkR/+y/L18gQiHjerOhDjPPu+4RpmGbm1gN2kMtk=",
+  "Hash": "Lh+7DmAEI/K4Xpxw0MRkea2W5qiaVdkdShnHb1K2Eds=",
   "Source": "ClubId",
   "BasePath": "_content/ClubId",
   "Mode": "Default",
@@ -965,6 +965,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\877ddf40-e16b-44c8-8da6-df01589e3336.jpeg"
+    },
+    {
+      "Identity": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\9794660c-1755-42fa-b72a-2d610a6b78fd.jpeg",
+      "SourceId": "ClubId",
+      "SourceType": "Discovered",
+      "ContentRoot": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\",
+      "BasePath": "_content/ClubId",
+      "RelativePath": "uploads/9794660c-1755-42fa-b72a-2d610a6b78fd.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\9794660c-1755-42fa-b72a-2d610a6b78fd.jpeg"
     },
     {
       "Identity": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\9f849eba-687b-4a72-8f98-16999199c11e.jpeg",
