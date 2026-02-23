@@ -111,7 +111,7 @@ namespace ClubId.Controllers
                         NombreEquipo = je.IdEquipoNavigation.NombreEq,
                         //      FechaInscripcion = je.FechaInscripcion,
                         idJxE = je.IdJxE,
-                        nombreCat = je.IdCategoriasNavigation.NombreCat,
+                        NombreCat = je.IdCategoriasNavigation.NombreCat,
                         FechaRecibo = je.FechaRecibo
                     })
                     .OrderByDescending(e => e.FechaInscripcion) // Opcional: ordenar por fecha más reciente
@@ -251,7 +251,7 @@ namespace ClubId.Controllers
                 Foto = jugador.IdjugadorNavigation.Foto,
                 Dni = jugador.IdjugadorNavigation.Dni,
                 NombreEquipo = jugador.IdEquipoNavigation.NombreEq,
-                nombreCat = jugador.IdCategoriasNavigation.NombreCat,
+                NombreCat = jugador.IdCategoriasNavigation.NombreCat,
                 FechaNac = jugador.IdjugadorNavigation.FechaNac,
                 FechaRecibo = jugador.FechaRecibo
             };
@@ -323,6 +323,8 @@ namespace ClubId.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, JugadorPorEquipoViewModel input, IFormFile? photo)
         {
+
+            
             if (id != input.idjugadorxEquipo) return NotFound();
             if (!ModelState.IsValid) return View(input);
 
@@ -373,54 +375,69 @@ namespace ClubId.Controllers
         }
 
         // pase o transferencia de equipo/categoria
-        public async Task<IActionResult> Pase(int id)
-        {
-            var player = await _context.Jgrxequipos
-         .Include(j => j.IdjugadorNavigation)
-             .Include(je => je.IdEquipoNavigation)
-             .Include(c => c.IdCategoriasNavigation)
-         .FirstOrDefaultAsync(m => m.IdJxE == id);
+       public async Task<IActionResult> Pase(int id)
+{
+    var player = await _context.Jgrxequipos
+        .Include(j => j.IdjugadorNavigation)
+        .Include(je => je.IdEquipoNavigation)
+        .Include(c => c.IdCategoriasNavigation)
+        .FirstOrDefaultAsync(m => m.IdJxE == id);
 
-            if (player == null) return NotFound();
+    if (player == null) return NotFound();
 
-            var viewModel = new JugadorPorEquipoViewModel
+    var viewModel = new JugadorPorEquipoViewModel
+    {
+        idjugadorxEquipo = id,
+        Idjugador = player.Idjugador,
+        Nombre = player.IdjugadorNavigation.Nombre,
+        Apellido = player.IdjugadorNavigation.Apellido,
+        Dni = player.IdjugadorNavigation.Dni,
+        FechaNac = player.IdjugadorNavigation.FechaNac,
+        FechaRecibo = DateTime.Now,
+        IdEquipo = player.IdEquipoNavigation.IdEquipo,
+        NombreEq = player.IdEquipoNavigation.NombreEq,
+        IdCategoria = player.IdCategoriasNavigation.IdCategorias,
+        NombreCat = player.IdCategoriasNavigation.NombreCat,
+        Activo = player.IdjugadorNavigation.Activo,
+        Foto = player.IdjugadorNavigation.Foto,
+
+        ListaCategoria = await _context.Categorias
+            .Where(e => e.EstadoCat == true)
+            .Select(e => new SelectListItem
             {
-                idjugadorxEquipo = id,
-                Idjugador = player.Idjugador,
-                Nombre = player.IdjugadorNavigation.Nombre,
-                Apellido = player.IdjugadorNavigation.Apellido,
-                Dni = player.IdjugadorNavigation.Dni,
-                FechaNac = player.IdjugadorNavigation.FechaNac,
-                FechaRecibo = DateTime.Now,
-                IdEquipo = player.IdEquipoNavigation.IdEquipo,
-                NombreEq = player.IdEquipoNavigation.NombreEq,
-                IdCategoria = player.IdCategoriasNavigation.IdCategorias,
-                NombreCat = player.IdCategoriasNavigation.NombreCat,
-                Activo = player.IdjugadorNavigation.Activo,
-                Foto = player.IdjugadorNavigation.Foto,
+                Value = e.IdCategorias.ToString(),
+                Text = e.NombreCat
+            }).ToListAsync(),
 
-                ListaCategoria = await _context.Categorias
-                 .Where(e => e.EstadoCat == true)
-                .Select(e => new SelectListItem
-                {
-                    Value = e.IdCategorias.ToString(),
-                    Text = e.NombreCat
-                }).ToListAsync(),
+        ListaEquipos = await _context.Equipos.Select(e => new SelectListItem
+        {
+            Value = e.IdEquipo.ToString(),
+            Text = e.NombreEq
+        }).ToListAsync()
+    };
 
-                ListaEquipos = await _context.Equipos.Select(e => new SelectListItem
-                {
-                    Value = e.IdEquipo.ToString(),
-                    Text = e.NombreEq
-                }).ToListAsync()
-            };
-            return View(viewModel);
-        }
+    // --- AQUÍ VA LA NUEVA LÓGICA DE SANCIÓN ---
+    // Buscamos si el jugador tiene alguna sanción que contenga "SUSPENDIDO" o "EXPULSADO"
+    var sancionActiva = await _context.Jueqxsancions
+        .Include(s => s.IdSancionesNavigation)
+        .Where(s => s.Idjugador == viewModel.Idjugador && 
+                   (s.Sancion.Contains("SUSPENDIDO") || s.Sancion.Contains("EXPULSADO")))
+        .OrderByDescending(s => s.IdSancionesNavigation.Fecha)
+        .FirstOrDefaultAsync();
+
+    if (sancionActiva != null)
+    {
+        // Guardamos el texto de la sanción en el ViewModel para que la Vista lo muestre
+        viewModel.MensajeSancion = sancionActiva.Sancion;
+    }
+
+    return View(viewModel);
+}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Pase(int id, JugadorPorEquipoViewModel input, IFormFile? photo)
-        {
-
+        {                      
             if (id != input.idjugadorxEquipo) return NotFound();
             if (!ModelState.IsValid) return View(input);
 
@@ -468,7 +485,6 @@ namespace ClubId.Controllers
                 Idjugador = player.IdjugadorNavigation.Idjugador,
                 IdEquipo = input.IdEquipo,
                 IdCategorias = input.IdCategoria,
-                //   FechaInscripcion = DateTime.Now,
                 FechaRecibo = input.FechaRecibo
             };
 

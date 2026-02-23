@@ -254,7 +254,7 @@ public partial class LigabdContext : DbContext
                 .HasColumnType("text")
                 .HasColumnName("informe");
             entity.Property(e => e.Sancion)
-                .HasMaxLength(25)
+                .HasMaxLength(120)
                 .HasColumnName("sancion");
 
             entity.HasOne(d => d.IdEquipoNavigation).WithMany(p => p.Jueqxsancions)

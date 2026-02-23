@@ -48,27 +48,19 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td class="ps-4 fw-bold text-dark">
-                                        @* Formato dd/MM/yyyy *@
-                                        @item.FechaBoletin.ToString("dd/MM/yyyy")
+                                    <td class="ps-4 fw-bold text-dark" data-order="@item.FechaBoletin.ToString("yyyyMMdd")">
+                                    @item.FechaBoletin.ToString("dd/MM/yyyy")
                                     </td>
                                     <td>
                                         <span class="badge bg-secondary rounded-pill">Fecha #@item.NroFecha</span>
                                     </td>
                                     <td>
-                                            @item.nombreCat
+                                            @item.NombreCat
                                     </td>
-                                    <td class="text-muted small">
-                                        @* Truncamos el texto si es muy largo para no romper la tabla *@
-                                        @if (!string.IsNullOrEmpty(item.Comunicado) && item.Comunicado.Length > 50)
-                                        {
-                                            @:@item.Comunicado.Substring(0, 50)...
-                                        }
-                                        else
-                                        {
-                                            @item.Comunicado
-                                        }
-                                    </td>
+                                    <td class="text-muted small text-truncate" style="max-width: 250px;" title="@item.Comunicado">
+    @item.Comunicado
+</td>
+                                    
                                     <td class="text-end pe-4">
                                         <div class="btn-group" role="group">
                                             @* Botón VER (Detalle) *@
@@ -112,19 +104,5 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            // Solo activamos DataTables si hay datos
-            if ($('#tablaBoletines tbody tr').length > 0 && !$('#tablaBoletines td[colspan]').length) {
-                $('#tablaBoletines').DataTable({
-                    language: {
-                       url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
-                        // Español automático
-                    },
-                    order: [[0, 'asc']], // Ordenar por fecha (primera columna) descendente- desc
-                    pageLength: 10 
-                });
-            }
-        });
-    </script>
+    
 }

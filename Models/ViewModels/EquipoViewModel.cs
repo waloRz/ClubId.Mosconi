@@ -17,7 +17,7 @@ namespace ClubId.Models.ViewModels
         public int IdCategoria { get; set; } // FK
 
         [ForeignKey("IdCategoria")]
-        public virtual Categoria IdCategoriaNavigation { get; set; } = null!;// Propiedad de navegación
+        public virtual Categoria IdCategoriaNavigation { get; set; } = null!; // Propiedad de navegación
 
         [Display(Name = "Nombre del Categoria")]
         public string? NombreCategoria  { get; set; } 

@@ -75,22 +75,16 @@ namespace ClubId.Controllers
             if (existeNombre)
             {                          
                 ModelState.AddModelError("NombreEq", "¡Ese nombre de equipo ya existe en esta categoria!");            
-            }
-      
-
+            }      
+    
+    //remuevo el IdCategoriaNavigation porque viene null y da un error en el modelo
+    ModelState.Remove("IdCategoriaNavigation");
           // 2. Si el ModelState NO es válido después de la validación
     if (!ModelState.IsValid)
-    {
-        // Limpiamos las propiedades de navegación y calculadas que causan InvalidOperationException
-        // (Aunque para CREATE es menos frecuente, es buena práctica si hay errores)
-        //ModelState.Remove("IdCategoriaNavigation"); 
-        //ModelState.Remove("NombreCategoria"); 
-      
+    {            
        var categorias = await _context.Categorias.ToListAsync();                    
-        ViewData["IdCategoria"] = new SelectList(categorias, "IdCategorias", "NombreCat",viewModel.IdCategoria);
-         
-         return View(viewModel);
-     
+        ViewData["IdCategoria"] = new SelectList(categorias, "IdCategorias", "NombreCat",viewModel.IdCategoria);         
+         return View(viewModel);     
     }
 
         // 3. MAPEO DE VIEWMODEL A ENTIDAD DB

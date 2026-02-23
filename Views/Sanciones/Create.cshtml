@@ -196,28 +196,27 @@ Usamos Select2 para la búsqueda avanzada de jugadores. *@
                 }
             });
 
-
             // 1. Inicializar Select2 para la búsqueda AJAX
-            $('#JugadorSearch').select2({
-                placeholder: "Buscá por Apellido, Nombre o DNI... ¡Vamos!",
-                minimumInputLength: 3, // Empezar a buscar después de 3 caracteres
-                // theme: 'bootstrap-5', // Descomentar si usas el tema de Bootstrap 5 para Select2
-                ajax: {
-                    url: '@Url.Action("BuscarJugadores", "Sanciones")', dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            term: params.term
-                        };
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data.results // El controlador devuelve { results: [...] }
-                        };
-                    },
-                    cache: true
-                }
-            });
+          $('#JugadorSearch').select2({
+    placeholder: "Buscá por Apellido, Nombre o DNI...",
+    minimumInputLength: 3,
+    ajax: {
+        url: '@Url.Action("BuscarJugadores", "Sanciones")',
+        dataType: 'json',
+        delay: 300, // Un poquito más de espera para que termine de escribir
+        data: function (params) {
+            return {
+                term: params.term.trim() // Limpiamos espacios al inicio/final
+            };
+        },
+        processResults: function (data) {
+            return {
+                results: data.results
+            };
+        },
+        cache: true
+    }
+});
 
             $('#EquipoSearch').select2({
                 placeholder: "Escribí el nombre del equipo...",

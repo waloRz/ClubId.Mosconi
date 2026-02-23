@@ -37,9 +37,11 @@ public class JugadorPorEquipoViewModel
     public string? FotoEq { get; set; }
 
     public DateTime FechaRecibo { get; set; }
+    public string? MensajeSancion { get; set; } // mensaje de advertencia
 
     public int IdCategoria { get; set; }
     public string? NombreCat { get; set; } = null!;
     public IEnumerable<SelectListItem>? ListaCategoria { get; set; }
     public IEnumerable<SelectListItem>? ListaEquipos { get; set; }
+
 }

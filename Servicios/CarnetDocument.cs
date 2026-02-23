@@ -38,7 +38,7 @@ namespace ClubId.Services
                         .Row(row =>
                         {
                             // Left side of the carnet (Front)
-                            var Categoria = Model.nombreCat;
+                            var Categoria = Model.NombreCat;
                             var color = "";
                             if (Categoria != "SUPER-60")
                             {
@@ -134,10 +134,10 @@ namespace ClubId.Services
                                             dataRow.RelativeItem(1)
                                                 .Column(infoColumn =>
                                                 {
-                                                    infoColumn.Item().Text($"CARNET N°:  {Model.nombreCat.First()}- {Model.JugadorId}").Bold();
+                                                    infoColumn.Item().Text($"CARNET N°:  {Model.NombreCat.First()}- {Model.JugadorId}").Bold();
 
                                                     infoColumn.Item().PaddingTop(7).Text($"CATEGORIA:");
-                                                    infoColumn.Item().PaddingTop(3).Text(Model.nombreCat.ToUpper()).Bold()
+                                                    infoColumn.Item().PaddingTop(3).Text(Model.NombreCat.ToUpper()).Bold()
                                                         .FontSize(12).AlignCenter();
                                                     infoColumn.Item().PaddingTop(8).Text("EQUIPO");
                                                     infoColumn.Item().PaddingTop(3).Text(Model.NombreEquipo.ToUpper()).Bold()

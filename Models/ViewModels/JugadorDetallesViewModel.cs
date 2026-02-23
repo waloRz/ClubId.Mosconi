@@ -14,15 +14,15 @@ public class JugadorDetallesViewModel
     public string? Foto { get; set; }
     public DateOnly FechaNac { get; set; }    
      public bool Activo { get; set; }
-    public ICollection<EquipoDetallesViewModel> HistorialEquipos { get; set; }
+    public ICollection<EquipoDetallesViewModel> HistorialEquipos { get; set; } = new List<EquipoDetallesViewModel>();
 }
 
 public class EquipoDetallesViewModel
 {
     public int EquipoId { get; set; }
     public int idJxE { get; set; }
-    public string NombreEquipo { get; set; }
-    public string nombreCat { get; set; }
+    public string NombreEquipo { get; set; } = string.Empty;
+    public string NombreCat { get; set; } = string.Empty;
     public DateTime FechaInscripcion { get; set; }
     public DateTime FechaRecibo { get; set; }
 }

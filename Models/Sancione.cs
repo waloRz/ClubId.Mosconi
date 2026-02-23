@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClubId.Models;
 
@@ -9,11 +10,13 @@ public partial class Sancione
 
     public DateTime Fecha { get; set; }
 
+    [Display(Name = "Categoría")]
+    [Required(ErrorMessage = "La categoría es obligatoria.")]
     public int IdCategorias { get; set; }
 
     public int NroFecha { get; set; }
 
-    public string? Comunicado { get; set; }
+    public string Comunicado { get; set; }= null!;
 
     public virtual Categoria IdCategoriasNavigation { get; set; } = null!;
 

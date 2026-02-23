@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\fotosp\\favicon.ico",
+      "PackagePath": "staticwebassets\\fotosp\\favicon.ico"
+    },
+    {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\fotosp\\foto1.jpeg",
       "PackagePath": "staticwebassets\\fotosp\\foto1.jpeg"
     },
@@ -155,6 +159,10 @@
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\0e0934d8-3adf-4960-a697-68d4f7a39cc9.jpeg",
       "PackagePath": "staticwebassets\\uploads\\0e0934d8-3adf-4960-a697-68d4f7a39cc9.jpeg"
+    },
+    {
+      "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\12e476bc-18aa-45c2-8feb-2545bbfe6834.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\12e476bc-18aa-45c2-8feb-2545bbfe6834.jpeg"
     },
     {
       "Id": "G:\\Proyectos Web\\ClubId_MySQL\\wwwroot\\uploads\\1c8e197b-62b9-4302-b70f-14f41126ec59.jpeg",

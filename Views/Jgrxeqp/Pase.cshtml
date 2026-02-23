@@ -13,6 +13,23 @@
     </h2>
     <p class="text-muted">Revise los datos del jugador y complete la nueva **Categoría** y **Equipo** para realizar el pase.</p>
 
+    @if (!string.IsNullOrEmpty(Model.MensajeSancion))
+{
+    <div class="alert alert-danger shadow-lg border-start border-5 border-danger d-flex align-items-center animate__animated animate__pulse animate__infinite" role="alert">
+        <i class="bi bi-exclamation-octagon-fill fs-1 me-3"></i>
+        <div>
+            <h4 class="alert-heading fw-bold mb-1">¡JUGADOR CON SANCIÓN ACTIVA!</h4>
+     <p class="mb-0 fs-5">
+    <span>El jugador se encuentra actualmente: <strong>@Model.MensajeSancion.ToUpper()</strong>.</span>
+    <br />
+    <span class="text-dark opacity-75 small">
+        <i class="bi bi-info-circle me-1"></i> Tenga en cuenta que el pase no anula la sanción del boletín.
+    </span>
+</p>
+        </div>
+    </div>
+}
+
     <form asp-action="Pase" method="post" enctype="multipart/form-data" class="mt-4">
         <input type="hidden" asp-for="idjugadorxEquipo" />
         <input type="hidden" asp-for="Foto" />

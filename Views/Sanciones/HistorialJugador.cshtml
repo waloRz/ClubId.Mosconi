@@ -94,8 +94,8 @@
                                         @item.Informe
                                     </td>
                                     <td class="text-end pe-4">
-                                        @* Botón REPORTE que pediste *@
-                                        <a asp-action="DescargarPdf" asp-controller="Sanciones" asp-route-id="@item.IdSancion" 
+                                        @* Botón REPORTE  *@
+                                        <a asp-action="GenerarBoletin" asp-controller="Sanciones" asp-route-id="@item.IdSancion" 
                                            class="btn btn-outline-danger btn-sm" target="_blank">
                                             <i class="bi bi-file-earmark-pdf-fill"></i> Reporte
                                         </a>

@@ -21,6 +21,24 @@
             input.value = formattedDni;
         }
 
+
+
+
+        $(document).ready(function () {
+            // Solo activamos DataTables si hay datos
+            if ($('#tablaBoletines tbody tr').length > 0 && !$('#tablaBoletines td[colspan]').length) {
+                $('#tablaBoletines').DataTable({
+                    language: {
+                       url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+                        // Español automático
+                    },
+                    order: [[0, 'desc']], // Ordenar por fecha (primera columna) descendente- desc
+                    pageLength: 10 
+                });
+            }
+        });
+
+
         // // --- LÓGICA DE CASCADA DE DROPDOWNS ---
         // $(document).ready(function () {
         //     // 1. Obtener las referencias a los selects

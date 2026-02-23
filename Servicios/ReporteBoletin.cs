@@ -11,19 +11,18 @@ namespace ClubId.Services
 // 1. Definimos el Modelo de Datos (ViewModel)
 public class BoletinSancionesModel
 {
-    public string FechaTexto { get; set; } // "Martes 18 de Noviembre del 2025"
-    public string Categoria { get; set; }  // "VETERANOS"
-    
-    public string NroFecha { get; set; }   // "FECHA 4"
+    public required string FechaTexto { get; set; } // "Martes 18 de Noviembre del 2025"
+    public required string Categoria { get; set; }  // "VETERANOS"    
+    public required string NroFecha { get; set; }   // "FECHA 4"
     public List<SancionItem> Sanciones { get; set; } = new List<SancionItem>();
 }
 
 public class SancionItem
 {
-    public string Club { get; set; }
-    public string Jugador { get; set; } //nombre
-    public string Carnet { get; set; }
-    public string Sancion { get; set; }
+    public required string Club { get; set; }
+    public required string Jugador { get; set; } //nombre
+    public required string Carnet { get; set; }
+    public required string Sancion { get; set; }
 }
 
     // 2. Definimos el Documento
