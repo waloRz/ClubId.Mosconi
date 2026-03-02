@@ -500,6 +500,8 @@ public async Task<IActionResult> DeleteConfirmed(int id)
     
     return RedirectToAction(nameof(Index));
 }
-    }
-    
+
+ 
+
+    }     
 }

@@ -108,5 +108,54 @@ namespace ClubId.Controllers
     return File(pdfBytes, "application/pdf");
 }
     
+
+public async Task<IActionResult> GenerarReporteInhabilitados(DateTime FechaDesde, DateTime FechaHasta, int idCategoria)
+{
+    // Reemplazo de la línea que daba error:
+    var todosLosSancionados = await _context.Jueqxsancions
+        .Include(s => s.IdjugadorNavigation)
+        .Include(s => s.IdSancionesNavigation)
+        .Where(s => s.IdSancionesNavigation.Fecha >= FechaDesde && 
+                    s.IdSancionesNavigation.Fecha <= FechaHasta &&
+                    s.IdSancionesNavigation.IdCategorias == idCategoria) // Ajusta según tu relación
+        .Select(s => new SancionReporteDto
+        {
+            Equipo = s.IdEquipoNavigation.NombreEq,  // IdjugadorNavigation. .Equipo, // Ajusta según tu modelo
+            NombreCompleto = s.IdjugadorNavigation.Apellido + ", " + s.IdjugadorNavigation.Nombre,
+            Carnet = s.IdjugadorNavigation.Dni,
+            NroFecha = s.IdSancionesNavigation.NroFecha,
+            FechaBoletin = s.IdSancionesNavigation.Fecha.ToString("dd/MM/yyyy"),
+            SancionTexto = s.Sancion
+        })
+        .ToListAsync();
+
+    // Ahora filtramos solo los que NO pueden jugar
+    var inhabilitados = todosLosSancionados
+        .Where(s => s.SancionTexto.ToUpper().Contains("SUSPENDIDO") || 
+                    s.SancionTexto.ToUpper().Contains("EXPULSADO"))
+        .ToList();
+
+    var nombreCat = _context.Categorias.Find(idCategoria)?.NombreCat ?? "Todas";
+
+    var document = new ReporteInhabilitadosDocument(inhabilitados, FechaDesde, FechaHasta, nombreCat);
+    byte[] pdfBytes = document.GeneratePdf();
+
+    return File(pdfBytes, "application/pdf");// return File(pdfBytes, "application/pdf", $"Inhabilitados_{nombreCat}.pdf");
+}
+
+public async Task<IActionResult> GenerarReporte()
+{
+    var viewModel = new FiltroReporteViewModel
+    {
+        ListaCategorias = await _context.Categorias
+            .Where(c => c.EstadoCat == true)
+            .Select(c => new SelectListItem {
+                Value = c.IdCategorias.ToString(),
+                Text = c.NombreCat
+            }).ToListAsync()
+    };
+    return View(viewModel);
+}
+
     }
 }

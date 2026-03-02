@@ -94,11 +94,6 @@ G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Wo
 G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\staticwebassets.build.json
 G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\staticwebassets.development.json
-G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\staticwebassets\msbuild.ClubId.Microsoft.AspNetCore.StaticWebAssets.props
-G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\staticwebassets\msbuild.build.ClubId.props
-G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.ClubId.props
-G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.ClubId.props
-G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\staticwebassets.pack.json
 G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\scopedcss\bundle\ClubId.styles.css
 G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\ClubId.csproj.Up2Date
 G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\ClubId.dll
@@ -149,3 +144,11 @@ G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\runtimes\win-x86\native\libwinpth
 G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\runtimes\win-x86\native\qpdf.dll
 G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\runtimes\win-x86\native\zlib1.dll
 G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\ClubId.sourcelink.json
+G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\ClubId.staticwebassets.endpoints.json
+G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\rpswa.dswa.cache.json
+G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\rjimswa.dswa.cache.json
+G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\staticwebassets.build.json.cache
+G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\swae.build.ex.cache

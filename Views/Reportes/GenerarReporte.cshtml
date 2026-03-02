@@ -1,0 +1,90 @@
+@model ClubId.Models.ViewModels.FiltroReporteViewModel
+
+@{
+    ViewData["Title"] = "Reporte de Inhabilitados";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-danger text-white py-3">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="bi bi-file-earmark-pdf-fill me-2"></i> 
+                        Reporte de Jugadores Inhabilitados
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted">
+                        Seleccione el rango de fechas de los boletines y la categoría para generar el listado de 
+                        <strong>Suspendidos y Expulsados</strong>.
+                    </p>
+                    <hr />
+
+                    <form id="formReporte" asp-action="GenerarReporteInhabilitados" method="get" target="_blank">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fecha Desde</label>
+                                <input type="date" asp-for="FechaDesde" class="form-control" 
+                                       value="@Model.FechaDesde.ToString("yyyy-MM-dd")" id="desde" />
+                                               
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fecha Hasta</label>
+                                <input type="date" asp-for="FechaHasta" class="form-control" 
+                                       value="@Model.FechaHasta.ToString("yyyy-MM-dd")" id="hasta" />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Categoría</label>
+                                <select asp-for="IdCategoria" asp-items="Model.ListaCategorias" class="form-select shadow-sm" id="categoria">
+                                    <option value="">-- Seleccione una Categoría --</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-danger btn-lg fw-bold shadow">
+                                        <i class="bi bi-printer-fill me-2"></i> Generar PDF de Inhabilitados
+                                    </button>
+                                    <a asp-action="Index" class="btn btn-outline-secondary">
+                                        Volver al Panel
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-light text-center py-3">
+                    <small class="text-danger fw-bold">
+                        <i class="bi bi-info-circle"></i> Solo se incluirán jugadores con sanción de SUSPENDIDO o EXPULSADO.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $('#formReporte').on('submit', function (e) {
+                const desde = $('#desde').val();
+                const hasta = $('#hasta').val();
+                const cat = $('#categoria').val();
+
+                if (!desde || !hasta || !cat) {
+                    e.preventDefault(); // Detiene el envío
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Campos incompletos',
+                        text: 'Por favor, seleccione las fechas y una categoría para continuar.',
+                        confirmButtonColor: '#dc3545'
+                    });
+                }
+            });
+        });
+    </script>
+}
