@@ -6,8 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 // DB: MySQL (Pomelo). For testing locally you can also switch to UseSqlite.
 // Replace user/password/database/host as needed in appsettings.json.
 var conn = builder.Configuration.GetConnectionString("MySqlConnection");
+
 builder.Services.AddDbContext<LigabdContext>(options =>
-    options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
+{
+    // Cambiamos UseMySql por UseNpgsql y apuntamos a la nueva conexión
+    options.UseNpgsql(builder.Configuration.GetConnectionString("SupabaseConnection"));
+});
+
+// builder.Services.AddDbContext<LigabdContext>(options =>
+//     options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
 builder.Services.AddControllersWithViews();
 

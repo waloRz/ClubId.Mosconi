@@ -45,19 +45,19 @@ public partial class LigabdContext : DbContext
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;database=ligabd;port=3306;uid=root;pwd=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
+//     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+// // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//         => optionsBuilder.UseMySql("server=localhost;database=ligabd;port=3306;uid=root;pwd=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
+      //  modelBuilder
+           // .UseCollation("utf8mb4_0900_ai_ci")
+           // .HasCharSet("utf8mb4");
 
         modelBuilder.Entity<Categoria>(entity =>
         {
-            entity.HasKey(e => e.IdCategorias).HasName("PRIMARY");
+            entity.HasKey(e => e.IdCategorias).HasName("PK_Categorias");
 
             entity.ToTable("categorias");
 
@@ -70,7 +70,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Equipo>(entity =>
         {
-            entity.HasKey(e => e.IdEquipo).HasName("PRIMARY");
+            entity.HasKey(e => e.IdEquipo).HasName("PK_Equipos");
 
             entity.ToTable("equipos", tb => tb.HasComment("Equipos de la Liga, el cual tiene una foranea que me lleva a la categoria donde juega"));
 
@@ -101,7 +101,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Equipoxpartido>(entity =>
         {
-            entity.HasKey(e => e.IdExP).HasName("PRIMARY");
+            entity.HasKey(e => e.IdExP).HasName("PK_Equipoxpartidos");
 
             entity.ToTable("equipoxpartido");
 
@@ -136,7 +136,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Equipoxtorneo>(entity =>
         {
-            entity.HasKey(e => e.IdExT).HasName("PRIMARY");
+            entity.HasKey(e => e.IdExT).HasName("PK_Equipoxtorneos");
 
             entity.ToTable("equipoxtorneo", tb => tb.HasComment("los equipos que jugan X torneo"));
 
@@ -182,7 +182,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Fecha>(entity =>
         {
-            entity.HasKey(e => e.IdFecha).HasName("PRIMARY");
+            entity.HasKey(e => e.IdFecha).HasName("PK_Fechas");
 
             entity.ToTable("fechas", tb => tb.HasComment("son las fechas de los torneos, su tamaño esta dado por la cantidad de equipos que tenga el torneo\r\n"));
 
@@ -203,7 +203,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Jgrxequipo>(entity =>
         {
-            entity.HasKey(e => e.IdJxE).HasName("PRIMARY");
+            entity.HasKey(e => e.IdJxE).HasName("PK_Jgrxequipos");
 
             entity.ToTable("jgrxequipo", tb => tb.HasComment("el jugador Y en el equipo X con FK de las talblas equipos y de jugadores"));
 
@@ -215,7 +215,7 @@ public partial class LigabdContext : DbContext
 
             entity.Property(e => e.IdJxE).HasColumnName("idJxE");
             entity.Property(e => e.FechaRecibo)
-                .HasColumnType("datetime")
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("fechaRecibo");
             entity.Property(e => e.IdCategorias).HasColumnName("idCategorias");
             entity.Property(e => e.IdEquipo).HasColumnName("idEquipo");
@@ -236,7 +236,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Jueqxsancion>(entity =>
         {
-            entity.HasKey(e => e.IdJexS).HasName("PRIMARY");
+            entity.HasKey(e => e.IdJexS).HasName("PK_Jueqxsancion");
 
             entity.ToTable("jueqxsancion");
 
@@ -274,11 +274,11 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Jugadore>(entity =>
         {
-            entity.HasKey(e => e.Idjugador).HasName("PRIMARY");
+            entity.HasKey(e => e.Idjugador).HasName("PK_Jugadores");
 
             entity
-                .ToTable("jugadores", tb => tb.HasComment("datos del jugador"))
-                .UseCollation("utf8mb4_spanish2_ci");
+                .ToTable("jugadores", tb => tb.HasComment("datos del jugador"));
+              //  .UseCollation("utf8mb4_spanish2_ci");
 
             entity.Property(e => e.Idjugador).HasColumnName("idjugador");
             entity.Property(e => e.Activo).HasColumnName("activo");
@@ -288,13 +288,13 @@ public partial class LigabdContext : DbContext
             entity.Property(e => e.Dni)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("''")
-                .HasColumnName("dni")
-                .UseCollation("utf8mb4_0900_ai_ci");
+                .HasColumnName("dni");
+              //  .UseCollation("utf8mb4_0900_ai_ci");
             entity.Property(e => e.FechaNac).HasColumnName("fechaNac");
             entity.Property(e => e.Foto)
                 .HasMaxLength(255)
-                .HasColumnName("foto")
-                .UseCollation("utf8mb4_0900_ai_ci");
+                .HasColumnName("foto");
+             //   .UseCollation("utf8mb4_0900_ai_ci");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .HasColumnName("nombre");
@@ -303,7 +303,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Login>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PK_Login");
 
             entity.ToTable("login");
 
@@ -322,7 +322,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Partido>(entity =>
         {
-            entity.HasKey(e => e.IdPartido).HasName("PRIMARY");
+            entity.HasKey(e => e.IdPartido).HasName("PK_Partidos");
 
             entity.ToTable("partidos", tb => tb.HasComment("todos los partido de la fecha"));
 
@@ -344,11 +344,11 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Player>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PK_Players");
 
             entity.ToTable("players");
 
-            entity.Property(e => e.BirthDate).HasColumnType("datetime");
+            entity.Property(e => e.BirthDate).HasColumnType("timestamp without time zone");
             entity.Property(e => e.Dni).HasMaxLength(15);
             entity.Property(e => e.FirstName).HasMaxLength(15);
             entity.Property(e => e.LastName).HasMaxLength(15);
@@ -358,7 +358,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Sancione>(entity =>
         {
-            entity.HasKey(e => e.IdSanciones).HasName("PRIMARY");
+            entity.HasKey(e => e.IdSanciones).HasName("PK_Sanciones");
 
             entity.ToTable("sanciones");
 
@@ -366,7 +366,7 @@ public partial class LigabdContext : DbContext
 
             entity.Property(e => e.IdSanciones).HasColumnName("idSanciones");
             entity.Property(e => e.Comunicado).HasColumnType("text");
-            entity.Property(e => e.Fecha).HasColumnType("datetime");
+            entity.Property(e => e.Fecha).HasColumnType("timestamp without time zone");
             entity.Property(e => e.IdCategorias).HasColumnName("idCategorias");
 
             entity.HasOne(d => d.IdCategoriasNavigation).WithMany(p => p.Sanciones)
@@ -377,7 +377,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Torneo>(entity =>
         {
-            entity.HasKey(e => e.IdTorneo).HasName("PRIMARY");
+            entity.HasKey(e => e.IdTorneo).HasName("PK_Torneos");
 
             entity.ToTable("torneos");
 
@@ -399,7 +399,7 @@ public partial class LigabdContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PK_Usuarios");
 
             entity.ToTable("usuarios");
 
