@@ -5,65 +5,70 @@ using ClubId.Models;
 
 namespace ClubId.Services
 {
-    public class ReporteInhabilitadosDocument : IDocument
+   public class ReporteInhabilitadosDocument : IDocument
+{
+    private readonly List<SancionReporteDto> _datos;
+    private readonly DateTime _desde;
+    private readonly DateTime _hasta;
+    private readonly string _categoria;
+    private readonly string _webRootPath; // Nueva variable para la ruta física
+
+    public ReporteInhabilitadosDocument(List<SancionReporteDto> datos, DateTime desde, DateTime hasta, string categoria, string webRootPath)
     {
-        private readonly List<SancionReporteDto> _datos;
-        private readonly DateTime _desde;
-        private readonly DateTime _hasta;
-        private readonly string _categoria;
-        private readonly string _rutaLogo = "G:/Proyectos Web/ClubId_MySQL/Image/escudoLiga.png";
+        _datos = datos;
+        _desde = desde;
+        _hasta = hasta;
+        _categoria = categoria;
+        _webRootPath = webRootPath; // Recibimos la ruta desde el controlador
+    }
 
-        public ReporteInhabilitadosDocument(List<SancionReporteDto> datos, DateTime desde, DateTime hasta, string categoria)
+    public void Compose(IDocumentContainer container)
+    {
+        container.Page(page =>
         {
-            _datos = datos;
-            _desde = desde;
-            _hasta = hasta;
-            _categoria = categoria;
-        }
+            page.Margin(30);
+            page.Header().Element(ComposeHeader);
+            page.Content().Element(ComposeContent);
+            page.Footer().Element(ComposeFooter);
+        });
+    }
 
-        public void Compose(IDocumentContainer container)
+    void ComposeHeader(IContainer container)
+    {
+        // Construimos la ruta física real combinando carpetas
+        var rutaAbsolutaLogo = Path.Combine(_webRootPath, "imgFijas", "escudoLiga.png");
+
+        container.Row(row =>
         {
-            container.Page(page =>
+            // Logo
+            row.RelativeItem(2).Column(c =>
             {
-                page.Margin(30);
-                page.Header().Element(ComposeHeader);
-                page.Content().Element(ComposeContent);
-                page.Footer().Element(ComposeFooter);
+                // Ahora File.Exists funcionará porque la ruta es absoluta (C:\...)
+                if (System.IO.File.Exists(rutaAbsolutaLogo))
+                    c.Item().Width(70).Image(rutaAbsolutaLogo);
+                else
+                    c.Item().Text("LOGO NO ENCONTRADO").FontSize(8).Italic();
             });
-        }
 
-        void ComposeHeader(IContainer container)
-        {
-            container.Row(row =>
+            // Títulos centrales
+            row.RelativeItem(6).Column(col =>
             {
-                // Logo
-                row.RelativeItem(2).Column(c =>
-                {
-                    if (System.IO.File.Exists(_rutaLogo))
-                        c.Item().Width(70).Image(_rutaLogo);
-                    else
-                        c.Item().Text("LOGO").FontSize(10).Italic();
+                col.Item().AlignCenter().Text("ASOCIACION DEL NORTE DE VETERANOS").FontSize(14).Bold().FontColor("#A386C5");
+                col.Item().AlignCenter().Text("Y SENIOR DE FUTBOL – SALTA").FontSize(12).Bold().FontColor("#A386C5");
+                
+                col.Item().PaddingTop(5).AlignCenter().Text("BOLETÍN DE JUGADORES INHABILITADOS").FontSize(16).Bold().FontColor(Colors.Red.Medium);
+                
+                col.Item().AlignCenter().Text(text => {
+                    text.Span("Categoría: ").FontSize(11);
+                    text.Span(_categoria).FontSize(12).Bold();
                 });
-
-                // Títulos centrales
-                row.RelativeItem(6).Column(col =>
-                {
-                    col.Item().AlignCenter().Text("ASOCIACION DEL NORTE DE VETERANOS").FontSize(14).Bold().FontColor("#A386C5");
-                    col.Item().AlignCenter().Text("Y SENIOR DE FUTBOL – SALTA").FontSize(12).Bold().FontColor("#A386C5");
-                    
-                    col.Item().PaddingTop(5).AlignCenter().Text("BOLETÍN DE JUGADORES INHABILITADOS").FontSize(16).Bold().FontColor(Colors.Red.Medium);
-                    
-                    col.Item().AlignCenter().Text(text => {
-                        text.Span("Categoría: ").FontSize(11);
-                        text.Span(_categoria).FontSize(12).Bold();
-                    });
-                    col.Item().AlignCenter().Text($"Periodo: {_desde:dd/MM/yyyy} al {_hasta:dd/MM/yyyy}").FontSize(10).Italic();
-                });
-
-                // Icono de advertencia
-                row.RelativeItem(2).AlignRight().Text("⚠️").FontSize(35);
+                col.Item().AlignCenter().Text($"Periodo: {_desde:dd/MM/yyyy} al {_hasta:dd/MM/yyyy}").FontSize(10).Italic();
             });
-        }
+
+            // Icono de advertencia
+            row.RelativeItem(2).AlignRight().Text("⚠️").FontSize(35);
+        });
+    }
 
         void ComposeContent(IContainer container)
         {

@@ -23,6 +23,7 @@ namespace ClubId.Controllers
         private readonly LigabdContext _context;
         private readonly IWebHostEnvironment _env;
 
+
         public SancionesController(LigabdContext context, IWebHostEnvironment env)
         {
             _context = context;
@@ -284,8 +285,11 @@ namespace ClubId.Controllers
                 }).ToList()
             };
 
+// Obtenemos la ruta física de wwwroot (ej: "C:/Proyectos/ClubId/wwwroot")
+        string webRootPath = _env.WebRootPath;
+        
             // --- 3. GENERAR PDF ---   
-            var documento = new ReporteBoletin(datosPdf);
+            var documento = new ReporteBoletin(datosPdf,webRootPath);
             byte[] pdfBytes = documento.GeneratePdf();
 
             //return File(pdfBytes, "application/pdf", $"Boletin_{viewModel.NroFecha}_{viewModel.nombreCat}.pdf");

@@ -29,17 +29,19 @@ public class SancionItem
     public class ReporteBoletin : IDocument
     {
         public BoletinSancionesModel Model { get; }
+        private readonly string _pathImagenes; // Variable para guardar la ruta
 
+        public ReporteBoletin(BoletinSancionesModel model, string pathImagenes)
+    {
+        Model = model;
+        _pathImagenes = pathImagenes; // Recibimos la ruta física de wwwroot
+    }
         // Colores extraídos de la imagen
         private static readonly string ColorVioleta = "#730D73"; // Tono lila/violeta suave
         private static readonly string ColorRojo = "#D32F2F";
         private static readonly string ColorNaranja = "#F57C00"; // Naranja para las líneas
         private static readonly string ColorAzulClub = "#1976D2";
 
-        public ReporteBoletin(BoletinSancionesModel model)
-        {
-            Model = model;
-        }
 
     public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
    
@@ -47,9 +49,10 @@ public class SancionItem
         void ComposeHeader(IContainer container)
         {
             container.Row(row =>
-            {
-                // 1. Logo Izquierda
-               row.ConstantItem(110).Image("G:/Proyectos Web/ClubId_MySQL/Image/escudoLiga.png"); // REEMPLAZAR CON TU LOGO: .Image("logo.png")
+            {               
+               // 1. Logo Izquierda - Combinamos la ruta base con el nombre del archivo
+              var rutaEscudo = Path.Combine(_pathImagenes, "imgFijas", "escudoLiga.png");
+                 row.ConstantItem(110).Image(rutaEscudo);
 
                 // 2. Texto Central
                 row.RelativeItem().PaddingLeft(20).PaddingRight(5).Column(col =>
@@ -76,8 +79,9 @@ public class SancionItem
                     });
                 });
 
-                // 3. Imagen Tarjeta Roja Derecha (Opcional, basado en la imagen)
-               row.ConstantItem(110).AlignRight().Image("G:/Proyectos Web/ClubId_MySQL/Image/tarjetaRoja.png"); // REEMPLAZAR: .Image("tarjeta.png")
+                // 3. Imagen Tarjeta Roja Derecha
+            var rutaTarjeta = Path.Combine(_pathImagenes, "imgFijas", "tarjetaRoja.png");
+            row.ConstantItem(110).AlignRight().Image(rutaTarjeta);
             });
         }
 

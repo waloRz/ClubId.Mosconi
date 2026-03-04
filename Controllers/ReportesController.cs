@@ -101,8 +101,10 @@ namespace ClubId.Controllers
         .Select(c => c.NombreCat)
         .FirstOrDefaultAsync();
 
-    // Generar PDF con QuestPDF
-    var document = new ReporteSancionadosDocument(sancionados, desde, hasta, categoriaNombre ?? "VETERANOS");
+    // Generar PDF con QuestPDF   
+    
+    var document = new ReporteSancionadosDocument(sancionados, desde, hasta, categoriaNombre ?? "VETERANOS", _env.WebRootPath);
+
     byte[] pdfBytes = document.GeneratePdf();
 
     return File(pdfBytes, "application/pdf");
@@ -111,6 +113,9 @@ namespace ClubId.Controllers
 
 public async Task<IActionResult> GenerarReporteInhabilitados(DateTime FechaDesde, DateTime FechaHasta, int idCategoria)
 {
+    // Inyecta IWebHostEnvironment _env en el constructor de tu controlador
+    string carpetaWWWRoot = _env.WebRootPath;
+    
     // Reemplazo de la línea que daba error:
     var todosLosSancionados = await _context.Jueqxsancions
         .Include(s => s.IdjugadorNavigation)
@@ -136,11 +141,14 @@ public async Task<IActionResult> GenerarReporteInhabilitados(DateTime FechaDesde
         .ToList();
 
     var nombreCat = _context.Categorias.Find(idCategoria)?.NombreCat ?? "Todas";
+// Pasamos la ruta como último parámetro
+    var document = new ReporteInhabilitadosDocument(inhabilitados, FechaDesde, FechaHasta, nombreCat, carpetaWWWRoot);
 
-    var document = new ReporteInhabilitadosDocument(inhabilitados, FechaDesde, FechaHasta, nombreCat);
+   
     byte[] pdfBytes = document.GeneratePdf();
-
-    return File(pdfBytes, "application/pdf");// return File(pdfBytes, "application/pdf", $"Inhabilitados_{nombreCat}.pdf");
+    
+    return File(pdfBytes, "application/pdf");
+ //  return File(pdfBytes, "application/pdf");// return File(pdfBytes, "application/pdf", $"Inhabilitados_{nombreCat}.pdf");
 }
 
 public async Task<IActionResult> GenerarReporte()

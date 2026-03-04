@@ -96,13 +96,55 @@
     </div>
 </div>
 
+
+
+
 @section Scripts {
-    @* Opcional: DataTables para convertir la tabla simple en una Grilla poderosa 
-       (Búsqueda, Paginación y Ordenamiento automático) *@
-    
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
+    @* 1. Carga de librerías externas *@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-    
+    <script>
+        $(document).ready(function () {
+            // Inicialización de la tabla
+            $('#tablaBoletines').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+                },
+                "responsive": true,
+                "dom": '<"d-flex justify-content-between align-items-center p-3"f>rt<"d-flex justify-content-between align-items-center p-3"ip>',
+                "pageLength": 10,
+                "order": [[0, "desc"]] // Ordenar por fecha por defecto
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
+    <style>
+        /* Estilo para la cabecera con el degradado del Navbar */
+        #tablaBoletines thead th {
+            background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%) !important;
+            color: white !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border: none;
+        }
+
+        /* Suavizar los bordes de la tarjeta para que combine con el estilo moderno */
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Ajuste para el buscador de DataTables */
+        .dataTables_filter input {
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+        }
+    </style>
 }

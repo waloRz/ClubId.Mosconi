@@ -1,5 +1,6 @@
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\appsettings.json
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.staticwebassets.runtime.json
+g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.staticwebassets.endpoints.json
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\LatoFont\Lato-Black.ttf
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\LatoFont\Lato-BlackItalic.ttf
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\LatoFont\Lato-Bold.ttf
@@ -44,6 +45,8 @@ g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\Microsoft.Extensions.Logging.Ab
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\Microsoft.Extensions.Options.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\Mono.TextTemplating.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\MySqlConnector.dll
+g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\Npgsql.dll
+g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\QuestPDF.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\System.CodeDom.dll
@@ -127,6 +130,7 @@ g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\runtimes\win-x86\native\libwinp
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\runtimes\win-x86\native\qpdf.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\runtimes\win-x86\native\zlib1.dll
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.csproj.AssemblyReference.cache
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\rpswa.dswa.cache.json
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.GeneratedMSBuildEditorConfig.editorconfig
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.AssemblyInfoInputs.cache
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.AssemblyInfo.cs
@@ -135,14 +139,15 @@ g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.MvcApplicationPartsAssem
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.RazorAssemblyInfo.cache
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.RazorAssemblyInfo.cs
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.sourcelink.json
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.build.json
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.development.json
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets\msbuild.ClubId.Microsoft.AspNetCore.StaticWebAssets.props
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets\msbuild.build.ClubId.props
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets\msbuild.buildMultiTargeting.ClubId.props
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets\msbuild.buildTransitive.ClubId.props
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.pack.json
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\rjimswa.dswa.cache.json
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\rjsmrazor.dswa.cache.json
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\rjsmcshtml.dswa.cache.json
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\scopedcss\bundle\ClubId.styles.css
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.build.json
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.build.json.cache
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.development.json
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.build.endpoints.json
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\swae.build.ex.cache
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.csproj.Up2Date
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.dll
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\refint\ClubId.dll

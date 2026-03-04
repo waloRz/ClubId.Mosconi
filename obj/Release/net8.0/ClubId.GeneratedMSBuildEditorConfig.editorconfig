@@ -11,105 +11,105 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ClubId
 build_property.RootNamespace = ClubId
-build_property.ProjectDir = G:\Proyectos Web\ClubId_MySQL\
+build_property.ProjectDir = g:\Proyectos Web\ClubId_MySQL\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = G:\Proyectos Web\ClubId_MySQL
+build_property.MSBuildProjectDirectory = g:\Proyectos Web\ClubId_MySQL
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Categorias/Create.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Categorias/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Categorias/Edit.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Categorias/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Categorias/Index.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Categorias/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Equipos/Create.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Equipos/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXF1aXBvc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Equipos/Edit.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Equipos/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXF1aXBvc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Equipos/Index.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Equipos/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXF1aXBvc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Create.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSmdyeGVxcFxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Details.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSmdyeGVxcFxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Edit.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSmdyeGVxcFxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Index.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSmdyeGVxcFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Pase.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Jgrxeqp/Pase.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSmdyeGVxcFxQYXNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Reportes/GenerarReporte.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Reportes/GenerarReporte.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0ZXNcR2VuZXJhclJlcG9ydGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Reportes/Index.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Reportes/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0ZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Reportes/Sancionados.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Reportes/Sancionados.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0ZXNcU2FuY2lvbmFkb3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Sanciones/Create.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Sanciones/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuY2lvbmVzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Sanciones/Delete.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Sanciones/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuY2lvbmVzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Sanciones/HistorialJugador.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Sanciones/HistorialJugador.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuY2lvbmVzXEhpc3RvcmlhbEp1Z2Fkb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Sanciones/Index.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Sanciones/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuY2lvbmVzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Shared/Error.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Shared/_Layout.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/Shared/_ValidationScriptsPartial.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/_ViewImports.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/Proyectos Web/ClubId_MySQL/Views/_ViewStart.cshtml]
+[g:/Proyectos Web/ClubId_MySQL/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

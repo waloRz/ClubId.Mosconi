@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "G:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj": {}
+    "g:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj": {}
   },
   "projects": {
-    "G:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj": {
+    "g:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj",
+        "projectUniqueName": "g:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj",
         "projectName": "ClubId",
-        "projectPath": "G:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj",
+        "projectPath": "g:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj",
         "packagesPath": "C:\\Users\\MRodriguez\\.nuget\\packages\\",
-        "outputPath": "G:\\Proyectos Web\\ClubId_MySQL\\obj\\",
+        "outputPath": "g:\\Proyectos Web\\ClubId_MySQL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\MRodriguez\\AppData\\Roaming\\NuGet\\NuGet.Config"
