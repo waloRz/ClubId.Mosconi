@@ -154,3 +154,4 @@ G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\refint\ClubId.dll
 G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\ClubId.pdb
 G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\ClubId.genruntimeconfig.cache
 G:\Proyectos Web\ClubId_MySQL\obj\Debug\net8.0\ref\ClubId.dll
+G:\Proyectos Web\ClubId_MySQL\bin\Debug\net8.0\SixLabors.ImageSharp.dll

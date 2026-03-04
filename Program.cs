@@ -1,30 +1,33 @@
 using ClubId.Data;
+using ClubId.Services; // IMPORTANTE: Agregá este using para que reconozca la carpeta Services
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DB: MySQL (Pomelo). For testing locally you can also switch to UseSqlite.
-// Replace user/password/database/host as needed in appsettings.json.
-var conn = builder.Configuration.GetConnectionString("MySqlConnection");
+// --- SECCIÓN DE SERVICIOS ---
 
+// 1. Configuración de Base de Datos
 builder.Services.AddDbContext<LigabdContext>(options =>
 {
-    // Cambiamos UseMySql por UseNpgsql y apuntamos a la nueva conexión
     options.UseNpgsql(builder.Configuration.GetConnectionString("SupabaseConnection"));
 });
 
-// builder.Services.AddDbContext<LigabdContext>(options =>
-//     options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
+// 2. Registro de tu nuevo Servicio de Imágenes (AQUÍ VA)
+builder.Services.AddScoped<IImageService, ImageService>();
 
+// 3. Configuración de Controladores y Vistas
 builder.Services.AddControllersWithViews();
+
+// --- FIN DE SECCIÓN DE SERVICIOS ---
 
 var app = builder.Build();
 
-// Create DB schema if it doesn't exist (no migrations required to start)
+// ... El resto de tu código (Middlewares y Rutas) queda igual ...
+
+// Create DB schema
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<LigabdContext>();
-    //db.Database.EnsureCreated();
 }
 
 if (!app.Environment.IsDevelopment())

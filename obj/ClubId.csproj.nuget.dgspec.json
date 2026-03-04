@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "g:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj": {}
+    "G:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj": {}
   },
   "projects": {
-    "g:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj": {
+    "G:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "g:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj",
+        "projectUniqueName": "G:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj",
         "projectName": "ClubId",
-        "projectPath": "g:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj",
+        "projectPath": "G:\\Proyectos Web\\ClubId_MySQL\\ClubId.csproj",
         "packagesPath": "C:\\Users\\MRodriguez\\.nuget\\packages\\",
-        "outputPath": "g:\\Proyectos Web\\ClubId_MySQL\\obj\\",
+        "outputPath": "G:\\Proyectos Web\\ClubId_MySQL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\MRodriguez\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -75,6 +75,10 @@
             "QuestPDF": {
               "target": "Package",
               "version": "[2025.7.2, )"
+            },
+            "SixLabors.ImageSharp": {
+              "target": "Package",
+              "version": "[3.1.12, )"
             }
           },
           "imports": [

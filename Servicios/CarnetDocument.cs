@@ -11,10 +11,12 @@ namespace ClubId.Services
     public class CarnetDocument : IDocument
     {
         public JugadorCarnetViewModel Model { get; }
+        private readonly string _webRootPath;
 
-        public CarnetDocument(JugadorCarnetViewModel model)
+        public CarnetDocument(JugadorCarnetViewModel model, string webRootPath)
         {
             Model = model;
+            _webRootPath = webRootPath;
         }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
@@ -101,8 +103,7 @@ namespace ClubId.Services
                             row.ConstantItem(10); // Separador entre los dos carnets
 
                             // Lado derecho del carnet.
-                            //  var Categoria = Model.nombreCat; 
-                            //var color = "";
+
                             if (Categoria != "SUPER-60")
                             {
                                 color = Colors.Red.Medium;
@@ -146,18 +147,19 @@ namespace ClubId.Services
 
                                             //     dataRow.ConstantItem(10);
 
-                                            string imagePath = "G:/Proyectos Web/ClubId_MySQL/wwwroot/" + Model.Foto;
-                                            bool imageExists = File.Exists(imagePath);
+                                            // 1. Construimos la ruta dinámica. 
+                                            // Model.Foto ahora solo tiene el nombre (ej: "archivo.webp")
+                                            string imagePath = Path.Combine(_webRootPath, "fotosPerfiles", Model.Foto ?? "");
+                                            bool imageExists = !string.IsNullOrEmpty(Model.Foto) && File.Exists(imagePath);
 
                                             if (imageExists)
                                             {
-                                                // Player's photo
                                                 dataRow.RelativeItem()
                                                     .Width(130)
                                                     .Height(105)
                                                     .PaddingLeft(10)
-                                                 .Image(imagePath)
-                                                .FitUnproportionally();
+                                                    .Image(imagePath)
+                                                    .FitUnproportionally(); // O FitWidth() si quieres mantener el ratio
                                             }
                                             else
                                             {
@@ -166,8 +168,9 @@ namespace ClubId.Services
                                                     .Height(100)
                                                     .PaddingVertical(35)
                                                     .PaddingLeft(15)
-                                                .ShowIf(!imageExists)
-                                                .Text("Imagen no disponible");
+                                                    .Text("Foto no disponible")
+                                                    .FontSize(8)
+                                                    .Italic();
                                             }
                                         });
                                 });

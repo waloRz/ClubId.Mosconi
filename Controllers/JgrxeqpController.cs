@@ -9,16 +9,19 @@ using ClubId.Services;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
+
 namespace ClubId.Controllers
 {
     public class JgrxeqpController : Controller
     {
         private readonly LigabdContext _context;   //CONTEXTO 
+        private readonly IImageService _imageService;
         private readonly IWebHostEnvironment _env;
 
-        public JgrxeqpController(LigabdContext context, IWebHostEnvironment env)
+        public JgrxeqpController(IImageService imageService, LigabdContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _imageService = imageService;
             QuestPDF.Settings.License = LicenseType.Community;
             _env = env;
         }
@@ -148,85 +151,70 @@ namespace ClubId.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CrearJugadorViewModel model, IFormFile? photo) //tomo la el objeto de la clase players y la foto para subirla a uploads       
+        public async Task<IActionResult> Create(CrearJugadorViewModel model, IFormFile? photo)
         {
-            var viewModel = new CrearJugadorViewModel
+            // 1. Preparar el ViewModel de vuelta por si algo falla (recargar listas)
+            var viewModelError = new CrearJugadorViewModel
             {
-                FechaNac = DateOnly.FromDateTime(DateTime.Today),
-                FechaRecibo = DateTime.Today,
-
-                ListaCategoria = await _context.Categorias
-                .Select(e => new SelectListItem
-                {
-                    Value = e.IdCategorias.ToString(),
-                    Text = e.NombreCat
-                }).ToListAsync(),
-
-                ListaEquipos = await _context.Equipos.Select(e => new SelectListItem
-                {
-                    Value = e.IdEquipo.ToString(),
-                    Text = e.NombreEq
-                }).ToListAsync()
+                FechaNac = model.FechaNac,
+                FechaRecibo = model.FechaRecibo,
+                Dni = model.Dni,
+                Nombre = model.Nombre,
+                Apellido = model.Apellido,
+                IdCategoria = model.IdCategoria,
+                IdEquipo = model.IdEquipo,
+                ListaCategoria = await _context.Categorias.Select(e => new SelectListItem { Value = e.IdCategorias.ToString(), Text = e.NombreCat }).ToListAsync(),
+                ListaEquipos = await _context.Equipos.Select(e => new SelectListItem { Value = e.IdEquipo.ToString(), Text = e.NombreEq }).ToListAsync()
             };
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) return View(viewModelError);
+
+            // --- VERIFICACIÓN DE UNICIDAD DEL DNI ---
+            var jugadorExistente = await _context.Jugadores.FirstOrDefaultAsync(j => j.Dni == model.Dni);
+            if (jugadorExistente != null)
             {
-                return View(viewModel);
+                ModelState.AddModelError("Dni", "Ya existe un jugador con este DNI.");
+                return View(viewModelError);
             }
 
-            if (ModelState.IsValid)
+            // --- PROCESAMIENTO DE LA FOTO CON EL NUEVO SERVICIO ---
+            string nombreFoto = "default-user.webp"; // Imagen por defecto si no suben nada
+            if (photo != null && photo.Length > 0)
             {
-                // --- VERIFICACIÓN DE UNICIDAD DEL DNI ---
-                var jugadorExistente = await _context.Jugadores
-                    .FirstOrDefaultAsync(j => j.Dni == model.Dni);
+                // Usamos la carpeta fotosPerfiles que definimos
+                string folderPath = Path.Combine(_env.WebRootPath, "fotosPerfiles");
 
-                if (jugadorExistente != null)
-                {
-                    // El DNI ya existe, agregar un error al ModelState
-                    ModelState.AddModelError("Dni", "Ya existe un jugador con este DNI.");
-                    return View(viewModel);
-                }
-
-                if (photo != null && photo.Length > 0)
-                {
-                    var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
-                    var relPath = Path.Combine("uploads", fileName);
-                    var absPath = Path.Combine(_env.WebRootPath, relPath);
-                    Directory.CreateDirectory(Path.GetDirectoryName(absPath)!);
-                    using var stream = new FileStream(absPath, FileMode.Create);
-                    await photo.CopyToAsync(stream);
-                    model.Foto = "/" + relPath.Replace('\\', '/');
-                }
-
-                // Si el DNI no existe, continuar con la creación del jugador
-                var nuevoJugador = new Jugadore
-                {
-                    Nombre = model.Nombre.ToUpper(),
-                    Apellido = model.Apellido.ToUpper(),
-                    Dni = model.Dni,
-                    FechaNac = model.FechaNac,
-                    Activo = model.Activo,
-                    Foto = model.Foto
-                };
-
-                _context.Jugadores.Add(nuevoJugador);
-                await _context.SaveChangesAsync();
-
-                var registroIntermedio = new Jgrxequipo
-                {
-                    Idjugador = nuevoJugador.Idjugador,
-                    IdEquipo = model.IdEquipo,
-                    IdCategorias = model.IdCategoria,
-                    FechaRecibo = DateTime.Now
-                };
-
-                _context.Jgrxequipos.Add(registroIntermedio);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                // El servicio se encarga de todo: Resize, Crop, WebP y Guardado
+                nombreFoto = await _imageService.SubirFotoPerfil(photo, folderPath);
             }
 
-            return View(model);
+            // --- CREACIÓN DEL JUGADOR ---
+            var nuevoJugador = new Jugadore
+            {
+                Nombre = model.Nombre.ToUpper(),
+                Apellido = model.Apellido.ToUpper(),
+                Dni = model.Dni,
+                FechaNac = model.FechaNac,
+                Activo = model.Activo,
+                Foto = nombreFoto // Guardamos solo el nombre del archivo (ej: "guid.webp")
+            };
+
+            _context.Jugadores.Add(nuevoJugador);
+            await _context.SaveChangesAsync();
+
+            // --- REGISTRO INTERMEDIO (RELACIÓN EQUIPO/CATEGORÍA) ---
+            var registroIntermedio = new Jgrxequipo
+            {
+                Idjugador = nuevoJugador.Idjugador,
+                IdEquipo = model.IdEquipo,
+                IdCategorias = model.IdCategoria,
+                FechaRecibo = DateTime.Now
+            };
+
+            _context.Jgrxequipos.Add(registroIntermedio);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> GenerarCarnet(int idjugador, int idpjxe)  //es el idJxE       
@@ -256,11 +244,10 @@ namespace ClubId.Controllers
                 FechaRecibo = jugador.FechaRecibo
             };
 
-            var document = new CarnetDocument(viewModel);
-
+          //      var document = new CarnetDocument(viewModel);
+            var document = new CarnetDocument(viewModel, _env.WebRootPath);
             byte[] pdfBytes = document.GeneratePdf();
 
-            //return File(pdfBytes, "application/pdf", $"Carnet_{jugador.IdjugadorNavigation.Idjugador}_{jugador.IdjugadorNavigation.Apellido}_{jugador.IdjugadorNavigation.Nombre.Replace(" ", "_")}.pdf");
             // 4. CAMBIO CLAVE: Configurar el header para visualización "Inline"
             // Esto le dice al navegador: "Muéstralo, no lo guardes todavía"
             // También definimos un nombre de archivo por si el usuario decide guardarlo después
@@ -323,121 +310,123 @@ namespace ClubId.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, JugadorPorEquipoViewModel input, IFormFile? photo)
         {
-
-            
             if (id != input.idjugadorxEquipo) return NotFound();
             if (!ModelState.IsValid) return View(input);
 
-            // encuentro la tupla
+            // Encuentro la tupla incluyendo la navegación del jugador
             var player = await _context.Jgrxequipos
-             .Include(j => j.IdjugadorNavigation)
-                 .Include(je => je.IdEquipoNavigation)
-                 .Include(c => c.IdCategoriasNavigation)
-             .FirstOrDefaultAsync(m => m.IdJxE == id);
+                .Include(j => j.IdjugadorNavigation)
+                .FirstOrDefaultAsync(m => m.IdJxE == id);
 
             if (player == null) return NotFound();
 
-            //cargo la NUEVA tupla
-            player.IdjugadorNavigation.Nombre = input.Nombre.ToUpper();   //JUGADOR
-            player.IdjugadorNavigation.Apellido = input.Apellido.ToUpper();   //JUGADOR
-            player.IdjugadorNavigation.Dni = input.Dni;                     // JUGADOR
-            player.IdjugadorNavigation.FechaNac = input.FechaNac;        //JUGADOR            
-            player.IdjugadorNavigation.Activo = input.Activo;               //JUGADOR
+            // 1. CARGA DE DATOS BÁSICOS
+            player.IdjugadorNavigation.Nombre = input.Nombre.ToUpper();
+            player.IdjugadorNavigation.Apellido = input.Apellido.ToUpper();
+            player.IdjugadorNavigation.Dni = input.Dni;
+            player.IdjugadorNavigation.FechaNac = input.FechaNac;
+            player.IdjugadorNavigation.Activo = input.Activo;
+
+            // 2. GESTIÓN DE LA NUEVA FOTO
             if (photo != null && photo.Length > 0)
             {
-                var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
-                var relPath = Path.Combine("uploads", fileName);
-                var absPath = Path.Combine(_env.WebRootPath, relPath);
-                Directory.CreateDirectory(Path.GetDirectoryName(absPath)!);
-                using var stream = new FileStream(absPath, FileMode.Create);
-                await photo.CopyToAsync(stream);
-                player.IdjugadorNavigation.Foto = "/" + relPath.Replace('\\', '/');     //JUGADOR
+                string folderPath = Path.Combine(_env.WebRootPath, "fotosPerfiles");
+
+                // --- OPCIONAL: Borrar la foto anterior para no acumular basura ---
+                if (!string.IsNullOrEmpty(player.IdjugadorNavigation.Foto) &&
+                    player.IdjugadorNavigation.Foto != "default-user.webp")
+                {
+                    var oldPath = Path.Combine(folderPath, player.IdjugadorNavigation.Foto);
+                    if (System.IO.File.Exists(oldPath)) System.IO.File.Delete(oldPath);
+                }
+
+                // --- Procesar y guardar la nueva foto ---
+                player.IdjugadorNavigation.Foto = await _imageService.SubirFotoPerfil(photo, folderPath);
             }
 
-            player.IdEquipo = input.IdEquipo;            //      JXE
-            player.IdCategorias = input.IdCategoria;     //JXE
-            player.Idjugador = player.IdjugadorNavigation.Idjugador; // JXE         
-            player.FechaRecibo = input.FechaRecibo;        //JXE
-            player.FechaRecibo = input.FechaRecibo; //JXE            
+            // 3. ACTUALIZACIÓN DE LA RELACIÓN
+            player.IdEquipo = input.IdEquipo;
+            player.IdCategorias = input.IdCategoria;
+            player.FechaRecibo = input.FechaRecibo;
 
-            var relacionAntigua = await _context.Jgrxequipos
-            .FirstOrDefaultAsync(je => je.IdJxE == id);
-            if (relacionAntigua != null)
+            try
             {
-                _context.Jgrxequipos.Remove(relacionAntigua);
+                _context.Update(player); // Usamos Update directamente sobre el objeto trackeado
                 await _context.SaveChangesAsync();
             }
-
-            _context.Jgrxequipos.Add(player);
-            await _context.SaveChangesAsync();
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Jgrxequipos.Any(e => e.IdJxE == id)) return NotFound();
+                else throw;
+            }
 
             return RedirectToAction(nameof(Index));
         }
 
         // pase o transferencia de equipo/categoria
-       public async Task<IActionResult> Pase(int id)
-{
-    var player = await _context.Jgrxequipos
-        .Include(j => j.IdjugadorNavigation)
-        .Include(je => je.IdEquipoNavigation)
-        .Include(c => c.IdCategoriasNavigation)
-        .FirstOrDefaultAsync(m => m.IdJxE == id);
-
-    if (player == null) return NotFound();
-
-    var viewModel = new JugadorPorEquipoViewModel
-    {
-        idjugadorxEquipo = id,
-        Idjugador = player.Idjugador,
-        Nombre = player.IdjugadorNavigation.Nombre,
-        Apellido = player.IdjugadorNavigation.Apellido,
-        Dni = player.IdjugadorNavigation.Dni,
-        FechaNac = player.IdjugadorNavigation.FechaNac,
-        FechaRecibo = DateTime.Now,
-        IdEquipo = player.IdEquipoNavigation.IdEquipo,
-        NombreEq = player.IdEquipoNavigation.NombreEq,
-        IdCategoria = player.IdCategoriasNavigation.IdCategorias,
-        NombreCat = player.IdCategoriasNavigation.NombreCat,
-        Activo = player.IdjugadorNavigation.Activo,
-        Foto = player.IdjugadorNavigation.Foto,
-
-        ListaCategoria = await _context.Categorias
-            .Where(e => e.EstadoCat == true)
-            .Select(e => new SelectListItem
-            {
-                Value = e.IdCategorias.ToString(),
-                Text = e.NombreCat
-            }).ToListAsync(),
-
-        ListaEquipos = await _context.Equipos.Select(e => new SelectListItem
+        public async Task<IActionResult> Pase(int id)
         {
-            Value = e.IdEquipo.ToString(),
-            Text = e.NombreEq
-        }).ToListAsync()
-    };
+            var player = await _context.Jgrxequipos
+                .Include(j => j.IdjugadorNavigation)
+                .Include(je => je.IdEquipoNavigation)
+                .Include(c => c.IdCategoriasNavigation)
+                .FirstOrDefaultAsync(m => m.IdJxE == id);
 
-    // --- AQUÍ VA LA NUEVA LÓGICA DE SANCIÓN ---
-    // Buscamos si el jugador tiene alguna sanción que contenga "SUSPENDIDO" o "EXPULSADO"
-    var sancionActiva = await _context.Jueqxsancions
-        .Include(s => s.IdSancionesNavigation)
-        .Where(s => s.Idjugador == viewModel.Idjugador && 
-                   (s.Sancion.Contains("SUSPENDIDO") || s.Sancion.Contains("EXPULSADO")))
-        .OrderByDescending(s => s.IdSancionesNavigation.Fecha)
-        .FirstOrDefaultAsync();
+            if (player == null) return NotFound();
 
-    if (sancionActiva != null)
-    {
-        // Guardamos el texto de la sanción en el ViewModel para que la Vista lo muestre
-        viewModel.MensajeSancion = sancionActiva.Sancion;
-    }
+            var viewModel = new JugadorPorEquipoViewModel
+            {
+                idjugadorxEquipo = id,
+                Idjugador = player.Idjugador,
+                Nombre = player.IdjugadorNavigation.Nombre,
+                Apellido = player.IdjugadorNavigation.Apellido,
+                Dni = player.IdjugadorNavigation.Dni,
+                FechaNac = player.IdjugadorNavigation.FechaNac,
+                FechaRecibo = DateTime.Now,
+                IdEquipo = player.IdEquipoNavigation.IdEquipo,
+                NombreEq = player.IdEquipoNavigation.NombreEq,
+                IdCategoria = player.IdCategoriasNavigation.IdCategorias,
+                NombreCat = player.IdCategoriasNavigation.NombreCat,
+                Activo = player.IdjugadorNavigation.Activo,
+                Foto = player.IdjugadorNavigation.Foto,
 
-    return View(viewModel);
-}
+                ListaCategoria = await _context.Categorias
+                    .Where(e => e.EstadoCat == true)
+                    .Select(e => new SelectListItem
+                    {
+                        Value = e.IdCategorias.ToString(),
+                        Text = e.NombreCat
+                    }).ToListAsync(),
+
+                ListaEquipos = await _context.Equipos.Select(e => new SelectListItem
+                {
+                    Value = e.IdEquipo.ToString(),
+                    Text = e.NombreEq
+                }).ToListAsync()
+            };
+
+            // --- AQUÍ VA LA NUEVA LÓGICA DE SANCIÓN ---
+            // Buscamos si el jugador tiene alguna sanción que contenga "SUSPENDIDO" o "EXPULSADO"
+            var sancionActiva = await _context.Jueqxsancions
+                .Include(s => s.IdSancionesNavigation)
+                .Where(s => s.Idjugador == viewModel.Idjugador &&
+                           (s.Sancion.Contains("SUSPENDIDO") || s.Sancion.Contains("EXPULSADO")))
+                .OrderByDescending(s => s.IdSancionesNavigation.Fecha)
+                .FirstOrDefaultAsync();
+
+            if (sancionActiva != null)
+            {
+                // Guardamos el texto de la sanción en el ViewModel para que la Vista lo muestre
+                viewModel.MensajeSancion = sancionActiva.Sancion;
+            }
+
+            return View(viewModel);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Pase(int id, JugadorPorEquipoViewModel input, IFormFile? photo)
-        {                      
+        {
             if (id != input.idjugadorxEquipo) return NotFound();
             if (!ModelState.IsValid) return View(input);
 

@@ -23,7 +23,7 @@
                     <div class="mb-3 text-center">
                         @if (!string.IsNullOrWhiteSpace(@Model.Foto))
                         { 
-                            <img src="@Model.Foto" class="img-fluid rounded-circle border border-5 border-light-subtle" 
+                            <img src="~/fotosPerfiles/@Model.Foto" class="img-fluid rounded-circle border border-5 border-light-subtle" 
                                  alt="Foto de @Model.Nombre" 
                                  style="width: 150px; height: 150px; object-fit: cover; margin-bottom: 15px;" /> 
                         }
