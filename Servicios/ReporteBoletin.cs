@@ -8,22 +8,23 @@ using System.ComponentModel.DataAnnotations;
 namespace ClubId.Services
 {
 
-// 1. Definimos el Modelo de Datos (ViewModel)
-public class BoletinSancionesModel
-{
-    public required string FechaTexto { get; set; } // "Martes 18 de Noviembre del 2025"
-    public required string Categoria { get; set; }  // "VETERANOS"    
-    public required string NroFecha { get; set; }   // "FECHA 4"
-    public List<SancionItem> Sanciones { get; set; } = new List<SancionItem>();
-}
+    // 1. Definimos el Modelo de Datos (ViewModel)
+    public class BoletinSancionesModel
+    {
+        public required string FechaTexto { get; set; } // "Martes 18 de Noviembre del 2025"
+        public required string Categoria { get; set; }  // "VETERANOS"    
+        public required string NroFecha { get; set; }   // "FECHA 4"
+        public List<SancionItem> Sanciones { get; set; } = new List<SancionItem>();
+    }
 
-public class SancionItem
-{
-    public required string Club { get; set; }
-    public required string Jugador { get; set; } //nombre
-    public required string Carnet { get; set; }
-    public required string Sancion { get; set; }
-}
+    public class SancionItem
+    {
+        public required string Club { get; set; }
+        public required string Jugador { get; set; } //nombre
+        public required string Carnet { get; set; }
+        public string? CarnetOld { get; set; }
+        public required string Sancion { get; set; }
+    }
 
     // 2. Definimos el Documento
     public class ReporteBoletin : IDocument
@@ -32,10 +33,10 @@ public class SancionItem
         private readonly string _pathImagenes; // Variable para guardar la ruta
 
         public ReporteBoletin(BoletinSancionesModel model, string pathImagenes)
-    {
-        Model = model;
-        _pathImagenes = pathImagenes; // Recibimos la ruta física de wwwroot
-    }
+        {
+            Model = model;
+            _pathImagenes = pathImagenes; // Recibimos la ruta física de wwwroot
+        }
         // Colores extraídos de la imagen
         private static readonly string ColorVioleta = "#730D73"; // Tono lila/violeta suave
         private static readonly string ColorRojo = "#D32F2F";
@@ -43,16 +44,16 @@ public class SancionItem
         private static readonly string ColorAzulClub = "#1976D2";
 
 
-    public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
-   
+        public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
+
 
         void ComposeHeader(IContainer container)
         {
             container.Row(row =>
-            {               
-               // 1. Logo Izquierda - Combinamos la ruta base con el nombre del archivo
-              var rutaEscudo = Path.Combine(_pathImagenes, "imgFijas", "escudoLiga.png");
-                 row.ConstantItem(110).Image(rutaEscudo);
+            {
+                // 1. Logo Izquierda - Combinamos la ruta base con el nombre del archivo
+                var rutaEscudo = Path.Combine(_pathImagenes, "imgFijas", "escudoLiga.png");
+                row.ConstantItem(110).Image(rutaEscudo);
 
                 // 2. Texto Central
                 row.RelativeItem().PaddingLeft(20).PaddingRight(5).Column(col =>
@@ -80,8 +81,8 @@ public class SancionItem
                 });
 
                 // 3. Imagen Tarjeta Roja Derecha
-            var rutaTarjeta = Path.Combine(_pathImagenes, "imgFijas", "tarjetaRoja.png");
-            row.ConstantItem(110).AlignRight().Image(rutaTarjeta);
+                var rutaTarjeta = Path.Combine(_pathImagenes, "imgFijas", "tarjetaRoja.png");
+                row.ConstantItem(110).AlignRight().Image(rutaTarjeta);
             });
         }
 
@@ -156,40 +157,51 @@ public class SancionItem
 
                 // --- FILA 3: CARNET ---
                 table.Cell().Element(LabelStyle).Text("Carnet ").Bold().FontSize(14);
-                table.Cell().PaddingLeft(3).Element(CellStyle).Text(item.Carnet);
+              //  table.Cell().PaddingLeft(3).Element(CellStyle).Text(item.Carnet);
+                table.Cell().PaddingLeft(3).Element(CellStyle).Text(txt =>
+                {
+                    // Carnet Nuevo (ID actual)
+                    txt.Span(item.Carnet);
 
+                    // Si existe carnet viejo, agregamos el separador y el número
+                    if (!string.IsNullOrEmpty(item.CarnetOld))
+                    {
+                        txt.Span(" / ").Bold().FontColor(ColorRojo); // Un toque de color al separador queda bien
+                        txt.Span(item.CarnetOld);
+                    }
+                });
                 // --- FILA 4: SANCION (Sin borde inferior en la última fila visualmente, o sí, según gusto)
                 // En la imagen parece que la última línea naranja también existe.
-             
-               table.Cell().BorderRight(2).BorderColor(ColorNaranja).Padding(3).Text("Sanción ").Bold();
+
+                table.Cell().BorderRight(2).BorderColor(ColorNaranja).Padding(3).Text("Sanción ").Bold();
                 //table.Cell().Element(CellStyle).Text(item.Sancion);
                 table.Cell().PaddingLeft(1).Padding(3).Text(item.Sancion);
             });
         }
-   
-      public void Compose(IDocumentContainer container)
+
+        public void Compose(IDocumentContainer container)
         {
-        //   var document = Document.Create(container =>             // COMENTAR ACA Y ABAJO PARA GENERAR EL PDF
-        //     {                       // COMENTAR ACA PARA GENERAR EL PDF
-                container.Page(page =>
+            //   var document = Document.Create(container =>             // COMENTAR ACA Y ABAJO PARA GENERAR EL PDF
+            //     {                       // COMENTAR ACA PARA GENERAR EL PDF
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(10);
+                page.DefaultTextStyle(x => x.FontSize(13).FontFamily(Fonts.TimesNewRoman));
+
+                page.Header().Element(ComposeHeader);
+                page.Content().Element(ComposeContent);
+
+                page.Footer().AlignCenter().Text(x =>
                 {
-                    page.Size(PageSizes.A4);
-                    page.Margin(10);
-                    page.DefaultTextStyle(x => x.FontSize(13).FontFamily(Fonts.TimesNewRoman));
-
-                    page.Header().Element(ComposeHeader);
-                    page.Content().Element(ComposeContent);
-
-                    page.Footer().AlignCenter().Text(x =>
-                    {
-                        x.CurrentPageNumber();
-                        x.Span(" / ");
-                        x.TotalPages();
-                    });
+                    x.CurrentPageNumber();
+                    x.Span(" / ");
+                    x.TotalPages();
                 });
-        //     });            // COMENTAR ACA Y ABAJO PARA GENERAR EL PDF
-        //    document.ShowInCompanion();          // COMENTAR ACA PARA GENERAR EL PDF
-       }
+            });
+            //     });            // COMENTAR ACA Y ABAJO PARA GENERAR EL PDF
+            //    document.ShowInCompanion();          // COMENTAR ACA PARA GENERAR EL PDF
+        }
     }
 
 }

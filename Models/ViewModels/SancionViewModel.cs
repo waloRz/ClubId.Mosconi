@@ -11,6 +11,7 @@ namespace ClubId.Models.ViewModels
     public class JugadorSancionadoViewModel
     {        
          public int IdJugador { get; set; }
+         public string? CarnetOld { get; set; }
          public int IdSanciones { get; set; }
         public string NombreCompleto { get; set; } = null!; // Ejemplo: Apellido, Nombre
          public string Nombre { get; set; } = null!;
@@ -26,8 +27,7 @@ namespace ClubId.Models.ViewModels
     {
         public int IdSanciones { get; set; }        
                 public DateTime FechaBoletin { get; set; }
-                public int NroFecha { get; set; }
-                
+                public int NroFecha { get; set; }                
                 public string NombreCat { get; set; } = string.Empty;
                 public string? Comunicado { get; set; } // Un resumen de la sanción
 

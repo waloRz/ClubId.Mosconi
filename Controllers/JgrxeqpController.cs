@@ -185,7 +185,9 @@ namespace ClubId.Controllers
                 string folderPath = Path.Combine(_env.WebRootPath, "fotosPerfiles");
 
                 // El servicio se encarga de todo: Resize, Crop, WebP y Guardado
-                nombreFoto = await _imageService.SubirFotoPerfil(photo, folderPath);
+
+                // El tercer parámetro es true por defecto (Crop)
+                nombreFoto = await _imageService.SubirFotoPerfil(photo, folderPath, true);
             }
 
             // --- CREACIÓN DEL JUGADOR ---
@@ -244,7 +246,7 @@ namespace ClubId.Controllers
                 FechaRecibo = jugador.FechaRecibo
             };
 
-          //      var document = new CarnetDocument(viewModel);
+            //      var document = new CarnetDocument(viewModel);
             var document = new CarnetDocument(viewModel, _env.WebRootPath);
             byte[] pdfBytes = document.GeneratePdf();
 
@@ -341,7 +343,8 @@ namespace ClubId.Controllers
                 }
 
                 // --- Procesar y guardar la nueva foto ---
-                player.IdjugadorNavigation.Foto = await _imageService.SubirFotoPerfil(photo, folderPath);
+                player.IdjugadorNavigation.Foto = await _imageService.SubirFotoPerfil(photo, folderPath,true);
+                  
             }
 
             // 3. ACTUALIZACIÓN DE LA RELACIÓN

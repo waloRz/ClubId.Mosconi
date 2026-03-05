@@ -128,7 +128,7 @@ namespace ClubId.Controllers
             .Where(b => b.EstadoCat)
             .ToListAsync();
             ViewData["IdCategoria"] = new SelectList(categorias, "IdCategorias", "NombreCat", boletin.IdCategorias);
-           
+
             // Mapeamos de Entidad -> ViewModel para mostrarlo en el formulario
             var viewModel = new SancionCreacionViewModel
             {
@@ -258,6 +258,9 @@ namespace ClubId.Controllers
                     NombreCompleto = !string.IsNullOrEmpty(d.IdjugadorNavigation.Nombre) ? d.IdjugadorNavigation.Apellido + ", " + d.IdjugadorNavigation.Nombre : "Sin Nombre",
                     NombreEq = d.IdEquipoNavigation.NombreEq ?? "Sin Equipo",
 
+                    // CAMBIO AQUÍ: Traemos el carnet viejo desde la relación con el jugador
+                    CarnetOld = d.IdjugadorNavigation?.NroCarnetOld.ToString(),
+
                     // OJO: Asegurate de cómo obtienes el DNI. 
                     // Si tu entidad DetalleSancion tiene el campo Dni, usa d.Dni. 
                     // Si tienes que ir a la tabla Jugador, usa d.Jugador?.Dni.ToString()
@@ -280,16 +283,17 @@ namespace ClubId.Controllers
                     Club = j.NombreEq,
                     Jugador = j.NombreCompleto,
                     Carnet = j.IdJugador.ToString(),
+                    CarnetOld = j.CarnetOld,
                     // Aquí unimos la cantidad y el motivo para que se vea bien en la grilla
                     Sancion = $"{j.CantidadPartidos}" //- {j.MotivoEspecifico}
                 }).ToList()
             };
 
-// Obtenemos la ruta física de wwwroot (ej: "C:/Proyectos/ClubId/wwwroot")
-        string webRootPath = _env.WebRootPath;
-        
+            // Obtenemos la ruta física de wwwroot (ej: "C:/Proyectos/ClubId/wwwroot")
+            string webRootPath = _env.WebRootPath;
+
             // --- 3. GENERAR PDF ---   
-            var documento = new ReporteBoletin(datosPdf,webRootPath);
+            var documento = new ReporteBoletin(datosPdf, webRootPath);
             byte[] pdfBytes = documento.GeneratePdf();
 
             //return File(pdfBytes, "application/pdf", $"Boletin_{viewModel.NroFecha}_{viewModel.nombreCat}.pdf");
@@ -398,43 +402,43 @@ namespace ClubId.Controllers
 
         // AJAX Endpoint para buscar jugadores (Utilizado por Select2 en la vista)
         [HttpGet]
-      public async Task<IActionResult> BuscarJugadores(string term)
-{
-    if (string.IsNullOrWhiteSpace(term))
-    {
-        return Json(new { results = new List<object>() });
-    }
-
-    // 1. Limpiamos y dividimos el término por espacios (ej: "Lopez Pablo" -> ["Lopez", "Pablo"])
-    var palabras = term.Trim().ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-    IQueryable<Jugadore> query = _context.Jugadores;
-
-    // 2. Por cada palabra, filtramos la consulta (esto hace un AND lógico entre palabras)
-    foreach (var palabra in palabras)
-    {
-        query = query.Where(j => j.Nombre.ToLower().Contains(palabra) || 
-                                 j.Apellido.ToLower().Contains(palabra) || 
-                                 j.Dni.Contains(palabra));
-    }
-
-    var results = await query
-        .OrderBy(j => j.Apellido)
-        .ThenBy(j => j.Nombre)
-        .Take(15) // Subimos un poco el límite para dar más opciones
-        .Select(j => new
+        public async Task<IActionResult> BuscarJugadores(string term)
         {
-            id = j.Idjugador,
-            text = $"{j.Apellido.ToUpper()}, {j.Nombre} (DNI: {j.Dni})",
-            dni = j.Dni,
-            nombre = j.Nombre,
-            apellido = j.Apellido,
-            nombreCompleto = $"{j.Apellido}, {j.Nombre}"
-        })
-        .ToListAsync();
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return Json(new { results = new List<object>() });
+            }
 
-    return Json(new { results = results });
-}
+            // 1. Limpiamos y dividimos el término por espacios (ej: "Lopez Pablo" -> ["Lopez", "Pablo"])
+            var palabras = term.Trim().ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            IQueryable<Jugadore> query = _context.Jugadores;
+
+            // 2. Por cada palabra, filtramos la consulta (esto hace un AND lógico entre palabras)
+            foreach (var palabra in palabras)
+            {
+                query = query.Where(j => j.Nombre.ToLower().Contains(palabra) ||
+                                         j.Apellido.ToLower().Contains(palabra) ||
+                                         j.Dni.Contains(palabra));
+            }
+
+            var results = await query
+                .OrderBy(j => j.Apellido)
+                .ThenBy(j => j.Nombre)
+                .Take(15) // Subimos un poco el límite para dar más opciones
+                .Select(j => new
+                {
+                    id = j.Idjugador,
+                    text = $"{j.Apellido.ToUpper()}, {j.Nombre} (DNI: {j.Dni})",
+                    dni = j.Dni,
+                    nombre = j.Nombre,
+                    apellido = j.Apellido,
+                    nombreCompleto = $"{j.Apellido}, {j.Nombre}"
+                })
+                .ToListAsync();
+
+            return Json(new { results = results });
+        }
 
         [HttpGet]
         public async Task<IActionResult> BuscarEquipos(string term) //int idcat
@@ -462,50 +466,50 @@ namespace ClubId.Controllers
 
             return Json(new { results = results });
         }
-    
-   //***************************************************** DELETE
-// GET: Sanciones/Delete/5
-public async Task<IActionResult> Delete(int? id)
-{
-    if (id == null) return NotFound();
 
-    // Traemos la entidad con sus relaciones
-    var sancion = await _context.Sanciones
-        .Include(s => s.IdCategoriasNavigation)
-        .FirstOrDefaultAsync(m => m.IdSanciones == id);
+        //***************************************************** DELETE
+        // GET: Sanciones/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
 
-    if (sancion == null) return NotFound();
+            // Traemos la entidad con sus relaciones
+            var sancion = await _context.Sanciones
+                .Include(s => s.IdCategoriasNavigation)
+                .FirstOrDefaultAsync(m => m.IdSanciones == id);
 
-    // 🛠️ MAPEAMOS AL VIEWMODEL (Esto resuelve el error)
-    var viewModel = new ClubId.Models.ViewModels.BoletinSancionesViewModel
-    {
-        IdSanciones = sancion.IdSanciones,
-        FechaBoletin = sancion.Fecha, // fecha Date
-        NombreCategoria = sancion.IdCategoriasNavigation?.NombreCat ?? "Sin Categoría",
-        Comunicado = sancion.Comunicado,
-        NroFecha = sancion.NroFecha
-    };
+            if (sancion == null) return NotFound();
 
-    return View(viewModel); // Ahora le pasamos el tipo correcto
-}
+            // 🛠️ MAPEAMOS AL VIEWMODEL (Esto resuelve el error)
+            var viewModel = new ClubId.Models.ViewModels.BoletinSancionesViewModel
+            {
+                IdSanciones = sancion.IdSanciones,
+                FechaBoletin = sancion.Fecha, // fecha Date
+                NombreCategoria = sancion.IdCategoriasNavigation?.NombreCat ?? "Sin Categoría",
+                Comunicado = sancion.Comunicado,
+                NroFecha = sancion.NroFecha
+            };
 
-// POST: Sanciones/Delete/5
-[HttpPost, ActionName("Delete")]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> DeleteConfirmed(int id)
-{
-    var sancion = await _context.Sanciones.FindAsync(id);
-    
-    if (sancion != null)
-    {
-        _context.Sanciones.Remove(sancion);
-        await _context.SaveChangesAsync();
+            return View(viewModel); // Ahora le pasamos el tipo correcto
+        }
+
+        // POST: Sanciones/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var sancion = await _context.Sanciones.FindAsync(id);
+
+            if (sancion != null)
+            {
+                _context.Sanciones.Remove(sancion);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
     }
-    
-    return RedirectToAction(nameof(Index));
-}
-
- 
-
-    }     
 }

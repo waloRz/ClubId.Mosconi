@@ -1,54 +1,46 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats.Webp;
-using ClubId.Services;
+using SixLabors.ImageSharp.Formats.Webp; // Asegúrate que este paquete esté instalado
 
 namespace ClubId.Services
 {
     public interface IImageService
     {
-        Task<string> SubirFotoPerfil(IFormFile archivo, string folderPath);
+        Task<string> SubirFotoPerfil(IFormFile archivo, string carpetaDestino, bool recortar = true);
     }
 
     public class ImageService : IImageService
     {
-        public async Task<string> SubirFotoPerfil(IFormFile archivo, string folderPath)
+        public async Task<string> SubirFotoPerfil(IFormFile archivo, string carpetaDestino, bool recortar = true)
         {
-            // 1. Si no hay archivo, devolvemos una imagen por defecto
-            if (archivo == null || archivo.Length == 0) return "default-user.webp";
+            // 1. Usamos SixLabors.ImageSharp.Image para evitar conflictos de nombre
+            using var image = await SixLabors.ImageSharp.Image.LoadAsync(archivo.OpenReadStream());
 
-            // 2. Generar nombre único y asegurar que la carpeta exista
+            var modoRedimensionado = recortar ? ResizeMode.Crop : ResizeMode.Pad;
+
+            image.Mutate(x => x.Resize(new ResizeOptions
+            {
+                Size = new Size(400, 400),
+                Mode = modoRedimensionado
+            }));
+
             var nombreArchivo = $"{Guid.NewGuid()}.webp";
-            var rutaCompleta = Path.Combine(folderPath, nombreArchivo);
-
-            if (!Directory.Exists(folderPath)) 
-                Directory.CreateDirectory(folderPath);
-
-            try 
+            
+            // Aseguramos que la carpeta exista antes de guardar
+            if (!Directory.Exists(carpetaDestino))
             {
-                using (var image = await Image.LoadAsync(archivo.OpenReadStream()))
-                {
-                    // 3. Recorte inteligente (Smart Crop)
-                    // Buscamos que la foto sea 400x400 sin estirarse
-                    image.Mutate(x => x.Resize(new ResizeOptions
-                    {
-                        Size = new Size(400, 400),
-                        Mode = ResizeMode.Crop // Corta los sobrantes para que sea cuadrada
-                    }));
+                Directory.CreateDirectory(carpetaDestino);
+            }
 
-                    // 4. Guardar como WebP
-                    await image.SaveAsWebpAsync(rutaCompleta, new WebpEncoder
-                    {
-                        Quality = 80 // Excelente balance entre calidad y peso (~30KB)
-                    });
-                }
-                return nombreArchivo;
-            }
-            catch (Exception)
-            {
-                // Si el archivo estaba corrupto o no era imagen, devolvemos el default
-                return "default-user.webp";
-            }
+            var rutaCompleta = Path.Combine(carpetaDestino, nombreArchivo);
+
+            // 2. Si WebPEncoder sigue fallando, prueba instanciarlo así:
+            await image.SaveAsWebpAsync(rutaCompleta, new WebpEncoder 
+            { 
+                Quality = 80 
+            });
+
+            return nombreArchivo;
         }
     }
 }
