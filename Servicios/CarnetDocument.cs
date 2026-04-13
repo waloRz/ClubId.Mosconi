@@ -24,12 +24,11 @@ namespace ClubId.Services
         public void Compose(IDocumentContainer container)
         {
             //var document = Document.Create(container =>  // COMENTAR ACA PARA GENERAR EL PDF
-            // {                                                                               // COMENTAR ACA
+            // {                                                                                                         // COMENTAR ACA
             container.Page(page =>
                 {
-                    // Ajusta el tamaño de la página para que se asemeje a un carnet, por ejemplo, A5 en horizontal
                     page.Size(PageSizes.A4.Portrait());
-                    page.Margin(10); // Minimal margin
+                    page.Margin(10); 
 
                     page.Content()
                     .Height(170)
@@ -39,27 +38,38 @@ namespace ClubId.Services
                         .Background(Colors.White)
                         .Row(row =>
                         {
+                            // --- NUEVO BLOQUE DE LÓGICA DE COLOR ---
+                            // Definimos la categoría en mayúsculas para evitar errores de tipeo
+                            string categoria = Model.NombreCat?.ToUpper() ?? "";
+                            string colorMarco;
+
+                            if (categoria.Contains("SUPER-60"))
+                            {
+                                colorMarco = Colors.Blue.Medium;
+                            }
+                            else if (categoria.Contains("SUPER V 42"))
+                            {
+                                // Usamos Darken1 para que resalte mejor al imprimir sobre blanco
+                                colorMarco = Colors.Yellow.Darken1; 
+                            }
+                            else 
+                            {
+                                // Por defecto (Veteranos u otra categoría)
+                                colorMarco = Colors.Red.Medium;
+                            }
+                            // ----------------------------------------
+
                             // Left side of the carnet (Front)
-                            var Categoria = Model.NombreCat;
-                            var color = "";
-                            if (Categoria != "SUPER-60")
-                            {
-                                color = Colors.Red.Medium;
-                            }
-                            else
-                            {
-                                color = Colors.Blue.Medium;
-                            }
                             row.RelativeItem()
                             .Border(3)
-                            .BorderColor(color)
+                            .BorderColor(colorMarco) // Aplicamos el color aquí
                             .Padding(10)
                             .Column(frontColumn =>
                                 {
                                     frontColumn.Item()
                                     .Background(Colors.White)
                                         .BorderBottom(2)
-                                      .BorderColor(color)
+                                      .BorderColor(colorMarco) // Aplicamos el color aquí
                                         .PaddingBottom(5)
                                         .Text(Model.Nombre.ToUpper() + " " + Model.Apellido.ToUpper())
                                         .Bold()
@@ -78,15 +88,7 @@ namespace ClubId.Services
                                                     infoColumn.Item().PaddingTop(2).Text($"FECHA INSCRIPCIÓN:  {Model.FechaRecibo.ToShortDateString()}");
                                                 });
 
-                                            dataRow.ConstantItem(10); // Espacio entre texto e imagen
-
-                                            // Association Logo
-                                            // dataRow.RelativeItem(1)
-                                            //     .Height(50)
-                                            //     .AlignRight()
-                                            //     .AlignMiddle()
-                                            //     .Image(_logoAsociacion)
-                                            //     .FitUnproportionally();
+                                            dataRow.ConstantItem(10); 
                                         });
 
                                     frontColumn.Item()
@@ -103,26 +105,15 @@ namespace ClubId.Services
                             row.ConstantItem(10); // Separador entre los dos carnets
 
                             // Lado derecho del carnet.
-
-                            if (Categoria != "SUPER-60")
-                            {
-                                color = Colors.Red.Medium;
-                            }
-                            else
-                            {
-                                color = Colors.Blue.Medium;
-                            }
                             row.RelativeItem()
-                            .BorderColor(color)
+                            .BorderColor(colorMarco) // Aplicamos el mismo color al lado derecho
                             .Border(3)
-                                // .BorderBottom(2)
                                 .Padding(5)
                                 .Column(backColumn =>
                                 {
                                     backColumn.Item()
                                      .BorderBottom(2)
-
-                                      .BorderColor(color)
+                                      .BorderColor(colorMarco) // Y a la línea separadora
                                         .Text("ASOCIACION DEL NORTE DE VETERANOS SUPER VETERANOS Y SENIOR DE FUTBOL-SALTA")
                                         .Bold()
                                         .FontSize(11)
@@ -135,20 +126,22 @@ namespace ClubId.Services
                                             dataRow.RelativeItem(1)
                                                 .Column(infoColumn =>
                                                 {
-                                                    infoColumn.Item().Text($"CARNET N°:  {Model.NombreCat.First()}- {Model.JugadorId}").Bold();
+                                                    // Extraemos la primera letra de forma segura. Si por algún motivo la categoría está vacía, ponemos una "C" por defecto.
+                                                    string inicialCat = categoria.Length > 0 ? categoria.Substring(0, 1) : "C";
+
+                                                    infoColumn.Item().Text($"CARNET N°:  {inicialCat}- {Model.JugadorId}").Bold();
 
                                                     infoColumn.Item().PaddingTop(7).Text($"CATEGORIA:");
-                                                    infoColumn.Item().PaddingTop(3).Text(Model.NombreCat.ToUpper()).Bold()
+                                                 // Usamos la variable 'categoria' que ya procesamos al principio del Compose
+                                                    infoColumn.Item().PaddingTop(3).Text(categoria).Bold()
                                                         .FontSize(12).AlignCenter();
+                                
                                                     infoColumn.Item().PaddingTop(8).Text("EQUIPO");
                                                     infoColumn.Item().PaddingTop(3).Text(Model.NombreEquipo.ToUpper()).Bold()
                                                         .FontSize(12).AlignCenter();
                                                 });
 
-                                            //     dataRow.ConstantItem(10);
-
-                                            // 1. Construimos la ruta dinámica. 
-                                            // Model.Foto ahora solo tiene el nombre (ej: "archivo.webp")
+                                            // Manejo de la imagen de perfil
                                             string imagePath = Path.Combine(_webRootPath, "fotosPerfiles", Model.Foto ?? "");
                                             bool imageExists = !string.IsNullOrEmpty(Model.Foto) && File.Exists(imagePath);
 
@@ -159,7 +152,7 @@ namespace ClubId.Services
                                                     .Height(105)
                                                     .PaddingLeft(10)
                                                     .Image(imagePath)
-                                                    .FitUnproportionally(); // O FitWidth() si quieres mantener el ratio
+                                                    .FitUnproportionally(); 
                                             }
                                             else
                                             {
@@ -179,8 +172,6 @@ namespace ClubId.Services
             //}); // COMENTAR ACA PARA GENERAR EL PDF
 
             //document.ShowInCompanion(); // COMENTAR ACA PARA GENERAR EL PDF
-
         }
-
     }
 }

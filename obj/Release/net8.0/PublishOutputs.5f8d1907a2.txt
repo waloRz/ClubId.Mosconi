@@ -37,6 +37,7 @@ g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\publish\Npgsql.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\publish\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\publish\Pomelo.EntityFrameworkCore.MySql.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\publish\QuestPDF.dll
+g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\publish\SixLabors.ImageSharp.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\publish\runtimes\linux-arm64\native\libQuestPdfSkia.so
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\publish\runtimes\linux-arm64\native\libqpdf.so
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\publish\runtimes\linux-musl-x64\native\libQuestPdfSkia.so

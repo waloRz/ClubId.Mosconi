@@ -1,0 +1,166 @@
+@using ClubId.Data
+@using Microsoft.AspNetCore.Mvc.Filters
+@using Microsoft.EntityFrameworkCore
+@using ClubId.Models.ViewModels
+
+@{
+    ViewData["Title"] = "Central de Reportes";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="display-6 fw-bold text-primary">
+                <i class="fas fa-chart-bar me-2"></i>Panel de Reportes Oficiales
+            </h2>
+            <p class="text-muted">Seleccione el tipo de reporte que desea generar o visualizar.</p>
+        </div>
+    </div>
+
+    <h5 class="text-secondary mb-3 border-bottom pb-2">Administrativos y Disciplinarios</h5>
+    <div class="row g-4 mb-5">
+        
+        @* --- NUEVA CARD: LISTADO DE FICHAJES POR FECHA --- *@
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-primary border-top-0 border-end-0 border-bottom-0"
+                 style="border-left-width: 5px;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title fw-bold text-primary">Fichajes por Fecha</h5>
+                        <i class="fas fa-id-card text-primary fs-4"></i>
+                    </div>
+                    <p class="card-text text-muted small">Listado de jugadores con fecha de recibo dentro de un rango determinado (Incluye carnet).</p>
+                    
+                    <form asp-action="ReporteFichajesPorFecha" method="get" target="_blank">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label class="small text-muted">Desde:</label>
+                                <input type="date" name="desde" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted">Hasta:</label>
+                                <input type="date" name="hasta" class="form-control form-control-sm" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm w-100 mt-3 fw-bold">
+                            <i class="fas fa-print me-1"></i> Generar Listado
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @* --- CARD: NOMINA DE EXPULSADOS --- *@
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-danger border-top-0 border-end-0 border-bottom-0"
+                 style="border-left-width: 5px;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title fw-bold text-danger">Nómina de Expulsados</h5>
+                        <i class="fas fa-user-slash text-danger fs-4"></i>
+                    </div>
+                    <p class="card-text text-muted small">Listado histórico de todos los jugadores expulsados definitivamente de la Liga.</p>
+                    <a asp-action="JugadoresExpulsados" target="_blank"
+                       class="btn btn-outline-danger btn-sm w-100 mt-2">
+                        <i class="fas fa-external-link-alt me-1"></i> Generar Reporte
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @* --- CARD: SANCIONADOS POR PERIODO --- *@
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-warning border-top-0 border-end-0 border-bottom-0"
+                 style="border-left-width: 5px;">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-warning-emphasis">Sancionados por Período</h5>
+                    <p class="card-text text-muted small">Consulta jugadores sancionados filtrando por rango de fechas y categoría específica.</p>
+                
+                    <form asp-action="ReporteSancionados" method="get" target="_blank">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="date" name="desde" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-6">
+                                <input type="date" name="hasta" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-12">
+                                <select name="idCategoria" class="form-select form-select-sm"
+                                        asp-items="ViewBag.Categorias">
+                                    <option value="">Todas las Categorías</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning btn-sm w-100 mt-3 text-dark fw-bold">
+                            <i class="fas fa-search me-1"></i> Consultar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @* --- CARD: SUSPENDIDOS / EXPULSADOS (MIXTO) --- *@
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-dark border-top-0 border-end-0 border-bottom-0"
+                 style="border-left-width: 5px;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title fw-bold">Suspendidos / Expulsados</h5>
+                        <i class="fas fa-layer-group text-dark fs-4"></i>
+                    </div>
+                    <p class="card-text text-muted small">Reporte combinado de inhabilitaciones por período y categoría.</p>
+    
+                    <form asp-action="ReporteMixto" method="get" target="_blank">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label class="small text-muted">Desde:</label>
+                                <input type="date" name="desde" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted">Hasta:</label>
+                                <input type="date" name="hasta" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <select name="idCategoria" class="form-select form-select-sm"
+                                        asp-items="@(ViewBag.Categorias as SelectList)">
+                                    <option value="">Todas las Categorías</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-dark btn-sm w-100 mt-3">
+                            <i class="fas fa-file-pdf me-1"></i> Generar Boletín Mixto
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <h5 class="text-secondary mb-3 border-bottom pb-2">Estadísticas de Juego (Próximamente)</h5>
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card h-100 border-dashed bg-light">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center py-4">
+                    <i class="fas fa-plus-circle text-muted fs-3 mb-2"></i>
+                    <span class="text-muted small fw-bold">Nuevo Reporte</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-dashed {
+        border: 2px dashed #dee2e6 !important;
+    }
+
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>

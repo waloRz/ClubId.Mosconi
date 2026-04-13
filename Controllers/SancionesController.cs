@@ -57,8 +57,6 @@ namespace ClubId.Controllers
                 Dni = jugador.Dni.ToString(),
                 Carnet = jugador.Idjugador.ToString() ?? "S/D", // Asumiendo que tienes campo Carnet, en mi caso mi IDJUGADOR es el nro de carnet
                 FechaNacimiento = jugador.FechaNac,
-
-
                 FotoUrl = jugador.Foto,  // Asumiendo que tienes un campo para la foto
 
                 Historial = historialDb.Select(h => new ItemHistorialSancion
@@ -409,31 +407,37 @@ namespace ClubId.Controllers
                 return Json(new { results = new List<object>() });
             }
 
-            // 1. Limpiamos y dividimos el término por espacios (ej: "Lopez Pablo" -> ["Lopez", "Pablo"])
-            var palabras = term.Trim().ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            // 1. Normalización inicial: quitamos puntos y pasamos a minúsculas
+            // Esto permite que "40.123.456" se convierta en "40123456"
+            var termNormalizado = term.Replace(".", "").Trim().ToLower();
+            var palabras = termNormalizado.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
             IQueryable<Jugadore> query = _context.Jugadores;
 
-            // 2. Por cada palabra, filtramos la consulta (esto hace un AND lógico entre palabras)
+            // 2. Aplicamos el filtro por cada palabra
             foreach (var palabra in palabras)
             {
-                query = query.Where(j => j.Nombre.ToLower().Contains(palabra) ||
-                                         j.Apellido.ToLower().Contains(palabra) ||
-                                         j.Dni.Contains(palabra));
+                query = query.Where(j =>
+                    j.Nombre.ToLower().Contains(palabra) ||
+                    j.Apellido.ToLower().Contains(palabra) ||
+                    // Aquí la magia: limpiamos los puntos del DNI de la DB antes de comparar
+                    j.Dni.Replace(".", "").Contains(palabra)
+                );
             }
 
             var results = await query
                 .OrderBy(j => j.Apellido)
                 .ThenBy(j => j.Nombre)
-                .Take(15) // Subimos un poco el límite para dar más opciones
+                .Take(15)
                 .Select(j => new
                 {
                     id = j.Idjugador,
+                    // Mostramos el DNI formateado como esté en la DB para que el usuario lo reconozca
                     text = $"{j.Apellido.ToUpper()}, {j.Nombre} (DNI: {j.Dni})",
                     dni = j.Dni,
                     nombre = j.Nombre,
                     apellido = j.Apellido,
-                    nombreCompleto = $"{j.Apellido}, {j.Nombre}"
+                    nombreCompleto = $"{j.Apellido.ToUpper()}, {j.Nombre}"
                 })
                 .ToListAsync();
 

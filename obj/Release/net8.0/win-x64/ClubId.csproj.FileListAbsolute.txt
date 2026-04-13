@@ -422,7 +422,6 @@ G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\createdump.exe
 G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\hostfxr.dll
 G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\hostpolicy.dll
 G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\mscordaccore.dll
-G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\mscordaccore_amd64_amd64_8.0.1925.36514.dll
 G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\mscordbi.dll
 G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\mscorrc.dll
 G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\msquic.dll
@@ -438,11 +437,6 @@ G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\ClubId.RazorAssemblyInf
 G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\ClubId.sourcelink.json
 G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\staticwebassets.build.json
 G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\staticwebassets.development.json
-G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\staticwebassets\msbuild.ClubId.Microsoft.AspNetCore.StaticWebAssets.props
-G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\staticwebassets\msbuild.build.ClubId.props
-G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\staticwebassets\msbuild.buildMultiTargeting.ClubId.props
-G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\staticwebassets\msbuild.buildTransitive.ClubId.props
-G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\staticwebassets.pack.json
 G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\scopedcss\bundle\ClubId.styles.css
 G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\ClubId.csproj.Up2Date
 G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\ClubId.dll
@@ -450,3 +444,15 @@ G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\refint\ClubId.dll
 G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\ClubId.pdb
 G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\ClubId.genruntimeconfig.cache
 G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\ref\ClubId.dll
+G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\ClubId.staticwebassets.endpoints.json
+G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\Npgsql.dll
+G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\SixLabors.ImageSharp.dll
+G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\win-x64\mscordaccore_amd64_amd64_8.0.2426.7010.dll
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\rpswa.dswa.cache.json
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\rjimswa.dswa.cache.json
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\rjsmrazor.dswa.cache.json
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\rjsmcshtml.dswa.cache.json
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\staticwebassets.build.json.cache
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\staticwebassets.build.endpoints.json
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\win-x64\swae.build.ex.cache

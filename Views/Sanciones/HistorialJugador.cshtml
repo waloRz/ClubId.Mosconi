@@ -19,7 +19,7 @@
                     <div class="position-relative d-inline-block">
                         @if (!string.IsNullOrEmpty(Model.FotoUrl))
                         {
-                            <img src="@Model.FotoUrl" alt="Foto Jugador" class="rounded-circle img-thumbnail shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
+                            <img src="~/fotosPerfiles/@Model.FotoUrl" alt="Foto Jugador" class="rounded-circle img-thumbnail shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
                         }
                         else
                         {

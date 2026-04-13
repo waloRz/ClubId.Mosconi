@@ -8,6 +8,7 @@ using CsvHelper;
 using ClubId.Services;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
+using Microsoft.AspNetCore.Hosting; // Importante para IWebHostEnvironment
 
 
 namespace ClubId.Controllers
@@ -23,10 +24,19 @@ namespace ClubId.Controllers
             QuestPDF.Settings.License = LicenseType.Community;
             _env = env;
         }
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
+            // Buscamos las categorías en la base de datos
+            var categorias = await _context.Categorias.ToListAsync();
+
+            // Las guardamos en el ViewBag para que la vista las encuentre. 
+            // "Id" es el valor interno y "NombreCat" es lo que ve el usuario.
+            ViewBag.Categorias = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categorias, "IdCategorias", "NombreCat");
+
             return View();
         }
+
         public async Task<IActionResult> Sancionados(DateTime? desde, DateTime? hasta, int? idCategoria)
         {
             // Llenar el dropdown de categorías
@@ -73,97 +83,164 @@ namespace ClubId.Controllers
             return View(model);
         }
 
-    public async Task<IActionResult> GenerarReporteSancionados(DateTime desde, DateTime hasta, int idCategoria)
-{
-    var sancionados = await _context.Jueqxsancions // Tabla intermedia
-        .Include(j => j.IdSancionesNavigation)
-        .Include(j => j.IdjugadorNavigation)
-        .Include(j => j.IdEquipoNavigation)
-        .Where(j => j.IdSancionesNavigation.Fecha >= desde && 
-                    j.IdSancionesNavigation.Fecha <= hasta &&
-                    j.IdSancionesNavigation.IdCategorias == idCategoria)
-        // Ordenamos por Equipo y luego por el nombre/apellido del jugador
-        .OrderBy(j => j.IdEquipoNavigation.NombreEq)
-        .ThenBy(j => j.IdjugadorNavigation.Apellido)
-        .Select(j => new SancionReporteDto
+        public async Task<IActionResult> GenerarReporteSancionados(DateTime desde, DateTime hasta, int idCategoria)
         {
-            Equipo = j.IdEquipoNavigation.NombreEq,
-            NombreCompleto = $"{j.IdjugadorNavigation.Apellido} {j.IdjugadorNavigation.Nombre}",
-            Carnet = j.IdjugadorNavigation.Idjugador.ToString(),
-            FechaBoletin = j.IdSancionesNavigation.Fecha.ToString("dd/MM/yy"),
-            NroFecha = j.IdSancionesNavigation.NroFecha,
-            SancionTexto = j.Sancion // Ejemplo: "1 (una) fecha art 82"
-        })
-        .ToListAsync();
+            var sancionados = await _context.Jueqxsancions // Tabla intermedia
+                .Include(j => j.IdSancionesNavigation)
+                .Include(j => j.IdjugadorNavigation)
+                .Include(j => j.IdEquipoNavigation)
+                .Where(j => j.IdSancionesNavigation.Fecha >= desde &&
+                            j.IdSancionesNavigation.Fecha <= hasta &&
+                            j.IdSancionesNavigation.IdCategorias == idCategoria)
+                // Ordenamos por Equipo y luego por el nombre/apellido del jugador
+                .OrderBy(j => j.IdEquipoNavigation.NombreEq)
+                .ThenBy(j => j.IdjugadorNavigation.Apellido)
+                .Select(j => new SancionReporteDto
+                {
+                    Equipo = j.IdEquipoNavigation.NombreEq,
+                    NombreCompleto = $"{j.IdjugadorNavigation.Apellido} {j.IdjugadorNavigation.Nombre}",
+                    Carnet = j.IdjugadorNavigation.Idjugador.ToString(),
+                    FechaBoletin = j.IdSancionesNavigation.Fecha.ToString("dd/MM/yy"),
+                    NroFecha = j.IdSancionesNavigation.NroFecha,
+                    SancionTexto = j.Sancion // Ejemplo: "1 (una) fecha art 82"
+                })
+                .ToListAsync();
 
-    var categoriaNombre = await _context.Categorias
-        .Where(c => c.IdCategorias == idCategoria)
-        .Select(c => c.NombreCat)
-        .FirstOrDefaultAsync();
+            var categoriaNombre = await _context.Categorias
+                .Where(c => c.IdCategorias == idCategoria)
+                .Select(c => c.NombreCat)
+                .FirstOrDefaultAsync();
 
-    // Generar PDF con QuestPDF   
-    
-    var document = new ReporteSancionadosDocument(sancionados, desde, hasta, categoriaNombre ?? "VETERANOS", _env.WebRootPath);
+            // Generar PDF con QuestPDF   
 
-    byte[] pdfBytes = document.GeneratePdf();
+            var document = new ReporteSancionadosDocument(sancionados, desde, hasta, categoriaNombre ?? "VETERANOS", _env.WebRootPath);
 
-    return File(pdfBytes, "application/pdf");
-}
-    
+            byte[] pdfBytes = document.GeneratePdf();
 
-public async Task<IActionResult> GenerarReporteInhabilitados(DateTime FechaDesde, DateTime FechaHasta, int idCategoria)
-{
-    // Inyecta IWebHostEnvironment _env en el constructor de tu controlador
-    string carpetaWWWRoot = _env.WebRootPath;
-    
-    // Reemplazo de la línea que daba error:
-    var todosLosSancionados = await _context.Jueqxsancions
-        .Include(s => s.IdjugadorNavigation)
-        .Include(s => s.IdSancionesNavigation)
-        .Where(s => s.IdSancionesNavigation.Fecha >= FechaDesde && 
-                    s.IdSancionesNavigation.Fecha <= FechaHasta &&
-                    s.IdSancionesNavigation.IdCategorias == idCategoria) // Ajusta según tu relación
-        .Select(s => new SancionReporteDto
+            return File(pdfBytes, "application/pdf");
+        }
+
+
+        public async Task<IActionResult> GenerarReporteInhabilitados(DateTime FechaDesde, DateTime FechaHasta, int idCategoria)
         {
-            Equipo = s.IdEquipoNavigation.NombreEq,  // IdjugadorNavigation. .Equipo, // Ajusta según tu modelo
-            NombreCompleto = s.IdjugadorNavigation.Apellido + ", " + s.IdjugadorNavigation.Nombre,
-            Carnet = s.IdjugadorNavigation.Dni,
-            NroFecha = s.IdSancionesNavigation.NroFecha,
-            FechaBoletin = s.IdSancionesNavigation.Fecha.ToString("dd/MM/yyyy"),
-            SancionTexto = s.Sancion
-        })
-        .ToListAsync();
+            // Inyecta IWebHostEnvironment _env en el constructor de tu controlador
+            string carpetaWWWRoot = _env.WebRootPath;
 
-    // Ahora filtramos solo los que NO pueden jugar
-    var inhabilitados = todosLosSancionados
-        .Where(s => s.SancionTexto.ToUpper().Contains("SUSPENDIDO") || 
-                    s.SancionTexto.ToUpper().Contains("EXPULSADO"))
-        .ToList();
+            // Reemplazo de la línea que daba error:
+            var todosLosSancionados = await _context.Jueqxsancions
+                .Include(s => s.IdjugadorNavigation)
+                .Include(s => s.IdSancionesNavigation)
+                .Where(s => s.IdSancionesNavigation.Fecha >= FechaDesde &&
+                            s.IdSancionesNavigation.Fecha <= FechaHasta &&
+                            s.IdSancionesNavigation.IdCategorias == idCategoria) // Ajusta según tu relación
+                .Select(s => new SancionReporteDto
+                {
+                    Equipo = s.IdEquipoNavigation.NombreEq,  // IdjugadorNavigation. .Equipo, // Ajusta según tu modelo
+                    NombreCompleto = s.IdjugadorNavigation.Apellido + ", " + s.IdjugadorNavigation.Nombre,
+                    Carnet = s.IdjugadorNavigation.Dni,
+                    NroFecha = s.IdSancionesNavigation.NroFecha,
+                    FechaBoletin = s.IdSancionesNavigation.Fecha.ToString("dd/MM/yyyy"),
+                    SancionTexto = s.Sancion
+                })
+                .ToListAsync();
 
-    var nombreCat = _context.Categorias.Find(idCategoria)?.NombreCat ?? "Todas";
-// Pasamos la ruta como último parámetro
-    var document = new ReporteInhabilitadosDocument(inhabilitados, FechaDesde, FechaHasta, nombreCat, carpetaWWWRoot);
+            // Ahora filtramos solo los que NO pueden jugar
+            var inhabilitados = todosLosSancionados
+                .Where(s => s.SancionTexto.ToUpper().Contains("SUSPENDIDO") ||
+                            s.SancionTexto.ToUpper().Contains("EXPULSADO"))
+                .ToList();
 
-   
-    byte[] pdfBytes = document.GeneratePdf();
-    
-    return File(pdfBytes, "application/pdf");
- //  return File(pdfBytes, "application/pdf");// return File(pdfBytes, "application/pdf", $"Inhabilitados_{nombreCat}.pdf");
-}
+            var nombreCat = _context.Categorias.Find(idCategoria)?.NombreCat ?? "Todas";
+            // Pasamos la ruta como último parámetro
+            var document = new ReporteInhabilitadosDocument(inhabilitados, FechaDesde, FechaHasta, nombreCat, carpetaWWWRoot);
 
-public async Task<IActionResult> GenerarReporte()
-{
-    var viewModel = new FiltroReporteViewModel
-    {
-        ListaCategorias = await _context.Categorias
-            .Where(c => c.EstadoCat == true)
-            .Select(c => new SelectListItem {
-                Value = c.IdCategorias.ToString(),
-                Text = c.NombreCat
-            }).ToListAsync()
-    };
-    return View(viewModel);
-}
+            byte[] pdfBytes = document.GeneratePdf();
+
+            return File(pdfBytes, "application/pdf");
+            //  return File(pdfBytes, "application/pdf");// return File(pdfBytes, "application/pdf", $"Inhabilitados_{nombreCat}.pdf");
+        }
+
+        public async Task<IActionResult> GenerarReporte()
+        {
+            var viewModel = new FiltroReporteViewModel
+            {
+                ListaCategorias = await _context.Categorias
+                    .Where(c => c.EstadoCat == true)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.IdCategorias.ToString(),
+                        Text = c.NombreCat
+                    }).ToListAsync()
+            };
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> JugadoresExpulsados()
+        {
+            var expulsadosDb = await _context.Jueqxsancions
+                    .Include(j => j.IdjugadorNavigation)
+                    .Include(j => j.IdEquipoNavigation)
+                    .Include(j => j.IdSancionesNavigation)
+                        .ThenInclude(s => s.IdCategoriasNavigation)
+                    .Where(j => j.Sancion != null && j.Sancion.ToUpper().Contains("EXPULSADO"))
+                    // ORDENAMOS POR FECHA (Descendente para ver los últimos primero)
+                    .OrderByDescending(j => j.IdSancionesNavigation.Fecha)
+                    .ThenBy(j => j.IdjugadorNavigation.Apellido)
+                    .ToListAsync();
+
+            var datosReporte = new ReporteExpulsadosModel
+            {
+                Jugadores = expulsadosDb.Select(x => new ExpulsadoItem
+                {
+                    Equipo = x.IdEquipoNavigation?.NombreEq ?? "SIN EQUIPO",
+                    NombreCompleto = x.IdjugadorNavigation != null
+                        ? $"{x.IdjugadorNavigation.Apellido}, {x.IdjugadorNavigation.Nombre}".ToUpper()
+                        : "SIN NOMBRE",
+                    Dni = x.IdjugadorNavigation?.Dni.ToString() ?? "S/D",
+                    Categoria = x.IdSancionesNavigation?.IdCategoriasNavigation?.NombreCat ?? "GENERAL",
+                    Sancion = x.Sancion?.ToUpper() ?? "EXPULSADO",
+
+                    // CONVERSIÓN DE TIPOS AQUÍ:
+                    RondaFecha = $"FECHA {x.IdSancionesNavigation?.NroFecha}", // Convertimos int a string
+                    FechaBoletin = x.IdSancionesNavigation?.Fecha.ToString("dd/MM/yyyy") ?? "" // DateTime a string
+                }).ToList()
+            };
+
+            // Pasamos el objeto 'datosReporte' y el 'webRootPath' para el logo
+            var documento = new ReporteExpulsadosDocument(datosReporte, _env.WebRootPath);
+            byte[] pdfBytes = documento.GeneratePdf();
+
+            //return File(pdfBytes, "application/pdf", $"Expulsados_{DateTime.Now:ddMMyy}.pdf");
+            return File(pdfBytes, "application/pdf");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReporteFichajesPorFecha(DateTime desde, DateTime hasta)
+        {
+            string webRootPath = _env.WebRootPath;
+
+            var jugadores = await _context.Jgrxequipos
+                .Include(je => je.IdjugadorNavigation)
+                .Include(je => je.IdEquipoNavigation)
+                .Where(je => je.FechaRecibo >= desde && je.FechaRecibo <= hasta)
+                // IMPORTANTE: Primero por Equipo, luego por Fecha
+                .OrderBy(je => je.IdEquipoNavigation.NombreEq)
+                .ThenBy(je => je.FechaRecibo)
+                .Select(je => new JugadorFichajeDto
+                {
+                    NombreCompleto = $"{je.IdjugadorNavigation.Apellido}, {je.IdjugadorNavigation.Nombre}",
+                    Dni = je.IdjugadorNavigation.Dni ?? "S/D",
+                    Equipo = je.IdEquipoNavigation.NombreEq ?? "Sin Equipo",
+                    Carnet = je.IdjugadorNavigation.Idjugador.ToString(),
+                    FechaRecibo = je.FechaRecibo
+                })
+                .ToListAsync();
+
+            var documento = new ReporteFichajesDocument(jugadores, desde, hasta, webRootPath);
+            byte[] pdfBytes = documento.GeneratePdf();
+
+            return File(pdfBytes, "application/pdf");
+        }
 
     }
 }
