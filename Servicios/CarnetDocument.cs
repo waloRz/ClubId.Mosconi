@@ -47,6 +47,10 @@ namespace ClubId.Services
                             {
                                 colorMarco = Colors.Blue.Medium;
                             }
+                            else if (categoria.Contains("SUPER-65"))
+                            {
+                                colorMarco = Colors.Green.Darken1; 
+                            }
                             else if (categoria.Contains("SUPER V 42"))
                             {
                                 // Usamos Darken1 para que resalte mejor al imprimir sobre blanco

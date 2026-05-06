@@ -1,4 +1,3 @@
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.GeneratedMSBuildEditorConfig.editorconfig
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\appsettings.json
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.staticwebassets.runtime.json
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.staticwebassets.endpoints.json
@@ -22,8 +21,8 @@ g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\LatoFont\Lato-Thin.ttf
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\LatoFont\Lato-ThinItalic.ttf
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\LatoFont\OFL.txt
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.exe
-g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.deps.json
-g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.runtimeconfig.json
+G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.deps.json
+G:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.runtimeconfig.json
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.dll
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\ClubId.pdb
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\CsvHelper.dll
@@ -133,6 +132,7 @@ g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\runtimes\win-x86\native\qpdf.dl
 g:\Proyectos Web\ClubId_MySQL\bin\Release\net8.0\runtimes\win-x86\native\zlib1.dll
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.csproj.AssemblyReference.cache
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\rpswa.dswa.cache.json
+g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.GeneratedMSBuildEditorConfig.editorconfig
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.AssemblyInfoInputs.cache
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.AssemblyInfo.cs
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.csproj.CoreCompileInputs.cache
@@ -149,9 +149,9 @@ g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.build.json.cach
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.development.json
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\staticwebassets.build.endpoints.json
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\swae.build.ex.cache
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.csproj.Up2Date
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.csproj.Up2Date
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.dll
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\refint\ClubId.dll
 g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.pdb
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.genruntimeconfig.cache
-g:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ref\ClubId.dll
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ClubId.genruntimeconfig.cache
+G:\Proyectos Web\ClubId_MySQL\obj\Release\net8.0\ref\ClubId.dll

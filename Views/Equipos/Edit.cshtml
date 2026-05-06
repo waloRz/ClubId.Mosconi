@@ -4,7 +4,9 @@
 @using ClubId.Models.ViewModels
 @model ClubId.Models.ViewModels.EquipoViewModel
 
-@{ ViewData["Title"] = "Editar Equipo"; }
+@{
+    ViewData["Title"] = "Editar Equipo";
+}
 
 <div class="container mt-4">
     <div class="card shadow">
@@ -15,7 +17,7 @@
             <form asp-action="Edit" enctype="multipart/form-data">
                 <input type="hidden" asp-for="IdEquipo" />
                 @* Guardamos la ruta vieja por si no cambia la foto *@
-                <input type="hidden" asp-for="FotoEq" /> 
+                <input type="hidden" asp-for="FotoEq" />
 
                 <div class="row">
                     @* COLUMNA IZQUIERDA: DATOS *@
@@ -28,9 +30,13 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label asp-for="IdCategoria" class="form-label"></label>
-                                <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.IdCategoria">
+    
+                                <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.IdCategoria"
+                                        disabled>
                                     <option value="">-- Seleccione una Categoría --</option>
                                 </select>
+
+                                <input type="hidden" asp-for="IdCategoria" />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Delegado" class="form-label"></label>
@@ -43,40 +49,47 @@
                             <div class="col-md-12 mb-3">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" asp-for="Estado">
-                                    <label class="form-check-label" asp-for="Estado">Equipo Activo</label>
+                                        <label class="form-check-label" asp-for="Estado">Equipo Activo</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label asp-for="FotoFile" class="form-label">Cambiar Escudo (Opcional)</label>
+                                    <input asp-for="FotoFile" type="file" class="form-control" accept="image/*" />
                                 </div>
                             </div>
-                            <div class="col-md-12 mb-3">
-                                <label asp-for="FotoFile" class="form-label">Cambiar Escudo (Opcional)</label>
-                                <input asp-for="FotoFile" type="file" class="form-control" accept="image/*" />
-                            </div>
+                        </div>
+
+                        @* COLUMNA DERECHA: FOTO ACTUAL *@
+                        <div class="col-md-4 text-center d-flex flex-column justify-content-center align-items-center">
+                            <label class="mb-2 fw-bold">Escudo Actual</label>
+                            @if (!string.IsNullOrEmpty(Model.FotoEq))
+                            {
+                                <img src="~/imagenes/equipos/@Model.FotoEq" class="img-thumbnail  shadow-sm"
+                                     style="width: 200px; height: 250px; object-fit: contain;" />
+                            }
+                            else
+                            {
+                                <div class="bg-light border rounded-circle d-flex align-items-center justify-content-center text-muted"
+                                     style="width: 150px; height: 150px;">
+                                    Sin Foto
+                                </div>
+                            }
                         </div>
                     </div>
 
-                    @* COLUMNA DERECHA: FOTO ACTUAL *@
-                    <div class="col-md-4 text-center d-flex flex-column justify-content-center align-items-center">
-                        <label class="mb-2 fw-bold">Escudo Actual</label>
-                        @if (!string.IsNullOrEmpty(Model.FotoEq))
-                        {
-                            <img src="~/imagenes/equipos/@Model.FotoEq" class="img-thumbnail  shadow-sm" style="width: 200px; height: 250px; object-fit: contain;" />
-                        }
-                        else
-                        {
-                            <div class="bg-light border rounded-circle d-flex align-items-center justify-content-center text-muted" style="width: 150px; height: 150px;">
-                                Sin Foto
-                            </div>
-                        }
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
                     </div>
-                </div>
-
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-@section Scripts { @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} }
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+
+    }
 

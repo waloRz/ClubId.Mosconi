@@ -298,7 +298,7 @@ namespace ClubId.Controllers
                 }).ToListAsync(),
                 ListaEquipos = await _context.Equipos
                 .Where(e => e.IdCategoria == player.IdCategoriasNavigation.IdCategorias)
-                .Where(e=> e.Estado == true)
+             //  .Where(e => e.Estado == true)
                 .Select(e => new SelectListItem
                 {
                     Value = e.IdEquipo.ToString(),
@@ -397,7 +397,7 @@ namespace ClubId.Controllers
                 Foto = player.IdjugadorNavigation.Foto,
 
                 ListaCategoria = await _context.Categorias
-                    .Where(e => e.EstadoCat == true)                
+                    .Where(e => e.EstadoCat == true)
                     .Select(e => new SelectListItem
                     {
                         Value = e.IdCategorias.ToString(),
@@ -406,8 +406,8 @@ namespace ClubId.Controllers
 
                 ListaEquipos = await _context.Equipos
                 .Where(e => e.IdCategoria == player.IdCategoriasNavigation.IdCategorias)
-                .Where(e=> e.Estado == true)
-                .Select(e => new SelectListItem                
+                .Where(e => e.Estado == true)
+                .Select(e => new SelectListItem
                 {
                     Value = e.IdEquipo.ToString(),
                     Text = e.NombreEq
@@ -433,7 +433,6 @@ namespace ClubId.Controllers
 
             return View(viewModel);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -191,5 +191,20 @@
             
             $.validator.unobtrusive.parse(document);
         });
+
+        $(document).ready(function () {
+            // Interceptamos el envío del formulario
+            $('form').on('submit', function () {
+                var $btn = $(this).find('button[type="submit"]');
+                
+                // Si el formulario es válido (pasa las validaciones de ASP.NET)
+                if ($(this).valid()) {
+                    // Deshabilitamos el botón y cambiamos el texto
+                    $btn.prop('disabled', true);
+                    $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...');
+                }
+            });
+        }); 
+
     </script>
 }
