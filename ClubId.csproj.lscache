@@ -59,12 +59,16 @@ Controllers/
  JgrxeqpController.cs
  ReportesController.cs
  SancionesController.cs
-Data/
- ApplicationDbContext.cs
- LigabdContext.cs
+Data/LigabdContext.cs
 Migrations/
  20260302213546_MigracionPostgresFinal.cs
  20260302213546_MigracionPostgresFinal.Designer.cs
+ 20260509162138_AddColorToCategoria.cs
+ 20260509162138_AddColorToCategoria.Designer.cs
+ 20260516144635_AddAlertaPaseToSanciones.cs
+ 20260516144635_AddAlertaPaseToSanciones.Designer.cs
+ 20260516160742_MoveAlertaPaseToIntermedia.cs
+ 20260516160742_MoveAlertaPaseToIntermedia.Designer.cs
  LigabdContextModelSnapshot.cs
 Models/
  Categoria.cs

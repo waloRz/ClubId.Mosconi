@@ -11,6 +11,8 @@ public partial class Categoria
 
     public bool EstadoCat { get; set; }
 
+    public string Color { get; set; } = "#000000"; // Color por defecto
+
     public virtual ICollection<Equipo> Equipos { get; set; } = new List<Equipo>();
 
     public virtual ICollection<Jgrxequipo> Jgrxequipos { get; set; } = new List<Jgrxequipo>();

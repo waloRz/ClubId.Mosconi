@@ -17,7 +17,7 @@ public partial class Sancione
     public int NroFecha { get; set; }
 
     public string Comunicado { get; set; }= null!;
-
+    
     public virtual Categoria IdCategoriasNavigation { get; set; } = null!;
 
     public virtual ICollection<Jueqxsancion> Jueqxsancions { get; set; } = new List<Jueqxsancion>();

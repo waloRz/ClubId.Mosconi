@@ -25,12 +25,12 @@
                             
                             <div class="col-md-6">
                                 <label asp-for="Nombre" class="form-label fw-semibold"></label>
-                                <input asp-for="Nombre" class="form-control" placeholder="Ej: Lionel" />
+                                <input asp-for="Nombre" class="form-control" placeholder="Ej: Lionel" maxlength="16" />
                                 <span asp-validation-for="Nombre" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="Apellido" class="form-label fw-semibold"></label>
-                                <input asp-for="Apellido" class="form-control" placeholder="Ej: Messi" />
+                                <input asp-for="Apellido" class="form-control" placeholder="Ej: Messi" maxlength="14"/>
                                 <span asp-validation-for="Apellido" class="text-danger"></span>
                             </div>
 
@@ -39,7 +39,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-postcard"></i></span>
                                     <input asp-for="Dni" class="form-control" id="DniInput" 
-                                           oninput="formatAndValidateDni(this)" maxlength="10" 
+                                           oninput="formatAndValidateDni(this)" maxlength="10"
                                            placeholder="XX.XXX.XXX" />
                                 </div>
                                 <span asp-validation-for="Dni" class="text-danger"></span>

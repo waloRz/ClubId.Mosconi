@@ -3,6 +3,7 @@ using System;
 using ClubId.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClubId.Migrations
 {
     [DbContext(typeof(LigabdContext))]
-    partial class LigabdContextModelSnapshot : ModelSnapshot
+    [Migration("20260509162138_AddColorToCategoria")]
+    partial class AddColorToCategoria
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,9 +305,6 @@ namespace ClubId.Migrations
                         .HasColumnName("idJexS");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdJexS"));
-
-                    b.Property<bool>("AlertaPase")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("IdEquipo")
                         .HasColumnType("integer")

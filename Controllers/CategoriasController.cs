@@ -30,7 +30,8 @@ namespace ClubId.Controllers
         {
             IdCategoria = c.IdCategorias,
             NombreCat = c.NombreCat,
-            EstadoCat = c.EstadoCat
+            EstadoCat = c.EstadoCat,
+            Color =c.Color
         }).ToList();
 
         // Devolver la lista de ViewModels a la vista
@@ -65,7 +66,8 @@ namespace ClubId.Controllers
             var nuevaCategoria = new Categoria 
             {
                 NombreCat = viewModel.NombreCat,
-                EstadoCat = viewModel.EstadoCat
+                EstadoCat = viewModel.EstadoCat,
+                Color = viewModel.Color
             };
 
             _context.Add(nuevaCategoria);
@@ -96,7 +98,8 @@ namespace ClubId.Controllers
         {
             IdCategoria = categoria.IdCategorias,
             NombreCat = categoria.NombreCat,
-            EstadoCat = categoria.EstadoCat
+            EstadoCat = categoria.EstadoCat,
+            Color = categoria.Color
         };
 
         return View(viewModel);
@@ -138,6 +141,9 @@ namespace ClubId.Controllers
             // Aplicar los cambios del ViewModel a la Entidad
             categoria.NombreCat = viewModel.NombreCat;
             categoria.EstadoCat = viewModel.EstadoCat;
+            categoria.Color = viewModel.Color;
+
+            // Actualizar la entidad en la base de datos
 
             _context.Update(categoria);
             await _context.SaveChangesAsync();

@@ -14,17 +14,28 @@
             <input type="hidden" asp-for="IdCategoria" />
 
             <div class="form-group mb-3">
-                <label asp-for="NombreCat" class="control-label"></label>
+                <label asp-for="NombreCat" class="control-label">Nombre de la Categoría</label>
                 <input asp-for="NombreCat" class="form-control" />
                 <span asp-validation-for="NombreCat" class="text-danger"></span>
             </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Color" class="control-label">Color del Marco del Carnet</label>
+                <div class="d-flex align-items-center gap-2">
+                    <input asp-for="Color" type="color" class="form-control form-control-color shadow-sm" 
+                           id="ColorPicker" title="Elegí el color del carnet" />
+                    <small class="text-muted">Elegí el color que identificará a la categoría.</small>
+                </div>
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+
             <div class="form-group form-check mb-3">
                 <input class="form-check-input" type="checkbox" asp-for="EstadoCat" id="EstadoCat" />
-                
                 <label class="form-check-label" for="EstadoCat">
                     @Html.DisplayNameFor(model => model.EstadoCat)
                 </label>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Guardar Cambios" class="btn btn-warning" />
                 <a asp-action="Index" class="btn btn-secondary">Cancelar</a>

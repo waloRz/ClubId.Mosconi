@@ -12,7 +12,7 @@ public partial class Jueqxsancion
     public int Idjugador { get; set; }
 
     public int IdEquipo { get; set; }
-
+    public bool AlertaPase { get; set; }
     public string Sancion { get; set; } = null!;
 
     public string Informe { get; set; } = null!;

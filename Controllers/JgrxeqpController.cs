@@ -223,6 +223,7 @@ namespace ClubId.Controllers
              .Include(x => x.IdEquipoNavigation)
                 .Include(j => j.IdjugadorNavigation)
                     .Include(j => j.IdCategoriasNavigation)
+                        .Include(j => j.IdCategoriasNavigation)
                 .OrderByDescending(x => x.FechaRecibo).FirstOrDefaultAsync(m => m.IdJxE == idpjxe || m.Idjugador == idjugador);
             //.FirstOrDefaultAsync(m => m.IdJxE == idpjxe || m.Idjugador == idjugador);
 
@@ -241,7 +242,8 @@ namespace ClubId.Controllers
                 NombreEquipo = jugador.IdEquipoNavigation.NombreEq,
                 NombreCat = jugador.IdCategoriasNavigation.NombreCat,
                 FechaNac = jugador.IdjugadorNavigation.FechaNac,
-                FechaRecibo = jugador.FechaRecibo
+                FechaRecibo = jugador.FechaRecibo,
+                Color = jugador.IdCategoriasNavigation.Color,
             };
 
             //      var document = new CarnetDocument(viewModel);
@@ -370,69 +372,59 @@ namespace ClubId.Controllers
         }
 
         // pase o transferencia de equipo/categoria
-        public async Task<IActionResult> Pase(int id)
-        {
-            var player = await _context.Jgrxequipos
-                .Include(j => j.IdjugadorNavigation)
-                .Include(je => je.IdEquipoNavigation)
-                .Include(c => c.IdCategoriasNavigation)
-                .FirstOrDefaultAsync(m => m.IdJxE == id);
+       public async Task<IActionResult> Pase(int id)
+{
+    var player = await _context.Jgrxequipos
+        .Include(j => j.IdjugadorNavigation)
+        .Include(je => je.IdEquipoNavigation)
+        .Include(c => c.IdCategoriasNavigation)
+        .FirstOrDefaultAsync(m => m.IdJxE == id);
 
-            if (player == null) return NotFound();
+    if (player == null) return NotFound();
 
-            var viewModel = new JugadorPorEquipoViewModel
-            {
-                idjugadorxEquipo = id,
-                Idjugador = player.Idjugador,
-                Nombre = player.IdjugadorNavigation.Nombre,
-                Apellido = player.IdjugadorNavigation.Apellido,
-                Dni = player.IdjugadorNavigation.Dni,
-                FechaNac = player.IdjugadorNavigation.FechaNac,
-                FechaRecibo = DateTime.Now,
-                IdEquipo = player.IdEquipoNavigation.IdEquipo,
-                NombreEq = player.IdEquipoNavigation.NombreEq,
-                IdCategoria = player.IdCategoriasNavigation.IdCategorias,
-                NombreCat = player.IdCategoriasNavigation.NombreCat,
-                Activo = player.IdjugadorNavigation.Activo,
-                Foto = player.IdjugadorNavigation.Foto,
+    var viewModel = new JugadorPorEquipoViewModel
+    {
+        idjugadorxEquipo = id,
+        Idjugador = player.Idjugador,
+        Nombre = player.IdjugadorNavigation.Nombre,
+        Apellido = player.IdjugadorNavigation.Apellido,
+        Dni = player.IdjugadorNavigation.Dni,
+        FechaNac = player.IdjugadorNavigation.FechaNac,
+        FechaRecibo = DateTime.Now,
+        IdEquipo = player.IdEquipoNavigation.IdEquipo,
+        NombreEq = player.IdEquipoNavigation.NombreEq,
+        IdCategoria = player.IdCategoriasNavigation.IdCategorias,
+        NombreCat = player.IdCategoriasNavigation.NombreCat,
+        Activo = player.IdjugadorNavigation.Activo,
+        Foto = player.IdjugadorNavigation.Foto,
 
-                ListaCategoria = await _context.Categorias
-                    .Where(e => e.EstadoCat == true)
-                    .Select(e => new SelectListItem
-                    {
-                        Value = e.IdCategorias.ToString(),
-                        Text = e.NombreCat
-                    }).ToListAsync(),
+        ListaCategoria = await _context.Categorias
+            .Where(e => e.EstadoCat == true)
+            .Select(e => new SelectListItem { Value = e.IdCategorias.ToString(), Text = e.NombreCat })
+            .ToListAsync(),
 
-                ListaEquipos = await _context.Equipos
-                .Where(e => e.IdCategoria == player.IdCategoriasNavigation.IdCategorias)
-                .Where(e => e.Estado == true)
-                .Select(e => new SelectListItem
-                {
-                    Value = e.IdEquipo.ToString(),
-                    Text = e.NombreEq
-                }).ToListAsync()
-            };
+        ListaEquipos = await _context.Equipos
+            .Where(e => e.IdCategoria == player.IdCategoriasNavigation.IdCategorias && e.Estado == true)
+            .Select(e => new SelectListItem { Value = e.IdEquipo.ToString(), Text = e.NombreEq })
+            .ToListAsync()
+    };
 
-            // --- LÓGICA DE SANCIÓN ACTUALIZADA (INCLUYE DEUDOR) ---
-            // Buscamos si el jugador tiene alguna sanción activa: SUSPENDIDO, EXPULSADO o DEUDOR
-            var sancionActiva = await _context.Jueqxsancions
-                .Include(s => s.IdSancionesNavigation)
-                .Where(s => s.Idjugador == viewModel.Idjugador &&
-                            (s.Sancion.ToUpper().Contains("SUSPENDIDO") ||
-                             s.Sancion.ToUpper().Contains("EXPULSADO") ||
-                             s.Sancion.ToUpper().Contains("DEUDOR"))) // <--- Nuevo Filtro
-                .OrderByDescending(s => s.IdSancionesNavigation.Fecha)
-                .FirstOrDefaultAsync();
+    // --- LÓGICA DE ALERTA SIMPLIFICADA ---
+    // Buscamos la sanción más reciente que tenga la AlertaPase activa
+    var sancionConAlerta = await _context.Jueqxsancions
+        .Include(s => s.IdSancionesNavigation)
+        .Where(s => s.Idjugador == viewModel.Idjugador && s.AlertaPase == true)
+        .OrderByDescending(s => s.IdSancionesNavigation.Fecha)
+        .FirstOrDefaultAsync();
 
-            if (sancionActiva != null)
-            {
-                // Guardamos el texto de la sanción (ej: "DEUDOR - EQUIPO ABANDONÓ")
-                viewModel.MensajeSancion = sancionActiva.Sancion;
-            }
+    if (sancionConAlerta != null)
+    {
+        // Pasamos el motivo al mensaje de sanción
+        viewModel.MensajeSancion = sancionConAlerta.Sancion; 
+    }
 
-            return View(viewModel);
-        }
+    return View(viewModel);
+}
 
         [HttpPost]
         [ValidateAntiForgeryToken]

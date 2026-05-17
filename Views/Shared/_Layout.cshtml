@@ -21,6 +21,16 @@
 
     <link rel="icon" type="image/x-icon" href="~/imgFijas/favicon.ico" />
 
+<link rel="manifest" href="~/manifest.json">
+<meta name="theme-color" content="#000000">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js');
+    });
+  }
+</script>
 
     <style>
                     /* ESTILOS MODERNOS EN LÍNEA (O muévelos a site.css) */

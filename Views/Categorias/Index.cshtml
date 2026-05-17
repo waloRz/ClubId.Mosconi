@@ -7,8 +7,9 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Listado de Categorías</h2>
+        @* Botón para crear nueva categoría *@
         <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm">
-            <i class="bi bi-plus-lg"></i>  Nueva Categoría
+            <i class="bi bi-plus-lg"></i> Nueva Categoría
         </a>
     </div>
 
@@ -17,6 +18,7 @@
             <tr>
                 <th style="width: 50px">ID</th>
                 <th>Nombre</th>
+                <th style="width: 200px;">Color Carnet</th>
                 <th>Estado</th>
                 <th class="text-end" style="width: 150px;">Acciones</th>
             </tr>
@@ -25,9 +27,17 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td  align="center">@item.IdCategoria</td>
-                    <td class="fw-bold ">@item.NombreCat</td>
-                    <td>                      
+                    <td align="center">@item.IdCategoria</td>
+                    <td class="fw-bold">@item.NombreCat</td>
+                    <td>
+                        @* Cuadradito de color *@
+                        <div style="width: 40px; height: 25px; background-color: @item.Color; 
+                                    border: 1px solid #dee2e6; border-radius: 4px; 
+                                    box-shadow: 0 1px 3px rgba(0,0,0,0.2);" 
+                             title="@item.Color">
+                        </div>
+                    </td>
+                    <td> 
                         @if (item.EstadoCat) 
                         {
                             <span class="badge bg-success">Activa</span>
@@ -41,9 +51,6 @@
                         <a asp-action="Edit" asp-route-id="@item.IdCategoria" class="btn btn-warning btn-sm" title="Editar">
                             <i class="bi bi-pencil"></i> Editar
                         </a>
-                        @* <a asp-action="Delete" asp-route-id="@item.IdCategoria" class="btn btn-danger btn-sm" title="Eliminar">
-                            <i class="bi bi-trash"></i> Eliminar
-                        </a> *@
                     </td>
                 </tr>
             }
@@ -52,31 +59,21 @@
 </div>
 
 @section Scripts {
-    @* <script src="~/lib/jquery/dist/jquery.min.js"></script>  *@
-    
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.js"></script>
 
     <script>
         $(document).ready(function () {
-            // Inicializar DataTables en tu tabla con id="tablaCategorias"
             $('#tablaCategorias').DataTable({
-                // Configuración para español
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
                 },
-                // Configurar las opciones de cantidad de registros a visualizar
                 lengthMenu: [
                     [5, 10, 25, 50, -1],
-                    [5, 10, 25, 50, "Todos"] // Texto para mostrar en el dropdown
+                    [5, 10, 25, 50, "Todos"]
                 ],
-                // Ordenar por la columna 1 (Nombre) por defecto
                 order: [[1, 'asc']], 
-                
-                // Habilitar la búsqueda (por defecto es true)
                 searching: true,
-                
-                // Habilitar la paginación y el cambio de cantidad de registros
                 paging: true,
                 lengthChange: true
             });

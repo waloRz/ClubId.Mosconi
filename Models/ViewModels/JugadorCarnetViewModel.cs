@@ -13,6 +13,7 @@ public class JugadorCarnetViewModel
     public required string NombreEquipo { get; set; }
     public int idJxE { get; set; }    
     public string NombreCat { get; set; } = string.Empty;
+    public string? Color { get; set; }    
     public DateTime FechaInscripcion { get; set; }
     public DateTime FechaRecibo { get; set; }
 }

@@ -147,7 +147,8 @@ namespace ClubId.Controllers
                     NombreEq = d.IdEquipoNavigation.NombreEq,  //NombreEquipoSnapshot,
                     IdEquipo = d.IdEquipoNavigation.IdEquipo,
                     CantidadPartidos = d.Sancion, // .CantidadPartidos,                       
-                    MotivoEspecifico = d.Informe,   // Motivo,                    
+                    MotivoEspecifico = d.Informe,   // Motivo,                 
+                    AlertaPase = d.AlertaPase,   //
                     // Agrega DNI u otros datos si los guardaste en el snapshot
                 }).ToList()
             };
@@ -200,6 +201,7 @@ namespace ClubId.Controllers
                                 // NombreEquipoSnapshot = item.NombreEq,
                                 Sancion = item.CantidadPartidos,
                                 Informe = item.MotivoEspecifico,
+                                AlertaPase = item.AlertaPase
                             });
                         }
                     }
@@ -371,6 +373,8 @@ namespace ClubId.Controllers
                         IdEquipo = item.IdEquipo,
                         Sancion = item.CantidadPartidos, //d.Sancion.ToString() + (d.Sancion == "1" ? " FECHA" : " FECHAS")
                         Informe = item.MotivoEspecifico,
+                        AlertaPase = item.AlertaPase,
+
                         // Propiedades adicionales de SancionxJugador
 
                     }).ToList();

@@ -27,12 +27,12 @@
 
               <div class="col-md-6">
                 <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" />
+                <input asp-for="Nombre" class="form-control" maxlength="16" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
               </div>
               <div class="col-md-6">
                 <label asp-for="Apellido" class="form-label"></label>
-                <input asp-for="Apellido" class="form-control" />
+                <input asp-for="Apellido" class="form-control" maxlength="14"/>
                 <span asp-validation-for="Apellido" class="text-danger"></span>
               </div>
 

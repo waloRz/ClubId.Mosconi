@@ -17,5 +17,8 @@ using System.ComponentModel.DataAnnotations;
 
             [Display(Name = "Estado (Activa)")]
             public bool EstadoCat { get; set; } = true; // Valor por defecto para el Alta
+
+            public string Color { get; set; } = "#000000"; // Color por defecto
+
         }
 //}

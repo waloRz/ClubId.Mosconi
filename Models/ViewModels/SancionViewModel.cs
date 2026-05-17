@@ -57,6 +57,7 @@ namespace ClubId.Models.ViewModels
         public int IdJugador { get; set; }
         public int IdEquipo { get; set; }
         
+          public bool AlertaPase { get; set; }
         // Datos específicos de la sanción
       //  [Required(ErrorMessage = "Campo obligatorio")]        
        // [Display(Name = "Partidos")]
@@ -102,7 +103,7 @@ namespace ClubId.Models.ViewModels
 
         [Display(Name = "Descripción General del Boletín")]
         [StringLength(1000, ErrorMessage = "Máximo 1000 caracteres")]
-        public string Comunicado { get; set; } = null!;
+        public string Comunicado { get; set; } = null!;      
 
         // Colección dinámica que será llenada en el frontend
         public List<SancionJugadorCreacionItem> JugadoresSancionados { get; set; } = new List<SancionJugadorCreacionItem>();

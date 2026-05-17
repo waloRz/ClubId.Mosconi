@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 using ClubId.Models;
+using System.IO.Compression;
 
 namespace ClubId.Data;
 
@@ -63,6 +64,7 @@ public partial class LigabdContext : DbContext
 
             entity.Property(e => e.IdCategorias).HasColumnName("idCategorias");
             entity.Property(e => e.EstadoCat).HasColumnName("estadoCat");
+            //entity.Property(e=> e.Color).).HasColumnName("Color");
             entity.Property(e => e.NombreCat)
                 .HasMaxLength(50)
                 .HasColumnName("nombreCat");

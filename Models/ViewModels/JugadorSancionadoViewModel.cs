@@ -12,6 +12,7 @@ public class JugadorSancionadoViewModel1
     //public int IdJexS { get; set; } // SE CREA SOLO 
      public string Sancion { get; set; } = null!;
     public string Informe { get; set; } = null!;
+    public bool AlertaPase { get; set; }
    
     //************** JUGADOR X EQUIPO 
     public int IdJxE { get; set; }

@@ -11,181 +11,125 @@
     <h2 class="mb-4 text-warning">
         <i class="bi bi-arrow-left-right me-2"></i> Transferencia de Jugador
     </h2>
-    <p class="text-muted">Revise los datos del jugador y complete la nueva **Categoría** y **Equipo** para realizar el
-        pase.</p>
 
-        @if (!string.IsNullOrEmpty(Model.MensajeSancion))
-        {
-            var sancionUpper = Model.MensajeSancion.ToUpper();
-            var esDeudor = sancionUpper.Contains("DEUDOR");
-            var esExpulsado = sancionUpper.Contains("EXPULSADO");
-            var esSuspendido = !esDeudor && !esExpulsado;
+    @* --- SECCIÓN DE ALERTA SIMPLIFICADA --- *@
+    @if (!string.IsNullOrEmpty(Model.MensajeSancion))
+    {
+        <div class="alert shadow-lg border-start border-5 d-flex align-items-center animate__animated animate__pulse animate__infinite"
+             role="alert"
+             style="background-color: #fff3cd; border-color: #ffc107 !important; color: #856404; border-radius: 8px;">
+            <i class="bi bi-exclamation-triangle-fill fs-1 me-3 text-warning"></i>
+            <div>
+                <h4 class="alert-heading fw-bold mb-1">¡ATENCIÓN: JUGADOR CON ALERTA!</h4>
+                <p class="mb-0 fs-5">
+                    Este jugador tiene una observación pendiente: <strong>@Model.MensajeSancion.ToUpper()</strong>.
+                    <br />
+                    <span class="text-dark opacity-75 small">
+                        <i class="bi bi-info-circle me-1"></i> Verifique que se haya regularizado la situación antes de imprimir el nuevo carnet.
+                    </span>
+                </p>
+            </div>        
+        </div>
+    }
 
-            var colorNaranja = "#F49532";
-            var colorVioleta = "#8E7CC3";
-            var colorRojo = "#DC3545";
+    <form asp-action="Pase" method="post" enctype="multipart/form-data" class="mt-4" id="formPase">
+        <input type="hidden" asp-for="idjugadorxEquipo" />
+        <input type="hidden" asp-for="Foto" />
 
-            string colorElegido;
-            string icono;
-            string titulo;
-            string aclaracion;
-
-            if (esExpulsado)
-            {
-                colorElegido = colorRojo;
-                icono = "bi-exclamation-octagon-fill";
-                titulo = "¡JUGADOR EXPULSADO!";
-                aclaracion = "Tenga en cuenta que el pase no anula la sanción del boletín oficial.";
-            }
-            else if (esDeudor)
-            {
-                colorElegido = colorNaranja;
-                icono = "bi-cash-stack";
-                titulo = "¡JUGADOR DEUDOR!";
-                aclaracion = "El equipo anterior debe planillas. Regularizar deuda para habilitar el pase.";
-            }
-            else
-            {
-                colorElegido = colorVioleta;
-                icono = "bi-exclamation-triangle-fill";
-                titulo = "¡JUGADOR SUSPENDIDO!";
-                aclaracion = "Tenga en cuenta que el pase no anula la sanción del boletín oficial.";
-            }
-
-            <div class="alert shadow-lg border-start border-5 d-flex align-items-center animate__animated animate__pulse animate__infinite"
-                 role="alert"
-                 style="background-color: @(colorElegido)15; border-color: @colorElegido !important; color: #333; border-radius: 8px;">
-                <i class="bi @icono fs-1 me-3" style="color: @colorElegido;"></i>
-                <div>
-                    <h4 class="alert-heading fw-bold mb-1" style="color: @colorElegido;">@titulo</h4>
-                    <p class="mb-0 fs-5">
-                        <span>El jugador se encuentra actualmente: <strong>@Model.MensajeSancion.ToUpper()</strong>.</span>
-                        <br />
-                        <span class="text-dark opacity-75 small"><i class="bi bi-info-circle me-1"></i> @aclaracion</span>
-                    </p>
-                </div>
-            </div>
-        }
-
-        <form asp-action="Pase" method="post" enctype="multipart/form-data" class="mt-4" id="formPase">
-            <input type="hidden" asp-for="idjugadorxEquipo" />
-            <input type="hidden" asp-for="Foto" />
-
-            <div class="row g-4">
-                <div class="col-lg-6">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-dark text-white">
-                            <h5 class="mb-0 fw-bold"><i class="bi bi-person-circle"></i> Datos Actuales del Jugador</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label asp-for="Nombre" class="form-label fw-semibold"></label>
-                                    <input asp-for="Nombre" class="form-control" readonly />
-                                </div>
-                                <div class="col-md-6">
-                                    <label asp-for="Apellido" class="form-label fw-semibold"></label>
-                                    <input asp-for="Apellido" class="form-control" readonly />
-                                </div>
-                                <div class="col-12 mt-3 mb-3 border-bottom pb-3 text-center">
-                                    <a asp-action="HistorialJugador" asp-controller="Sanciones"
-                                           asp-route-id="@Model.Idjugador" target="_blank"
-                                           class="btn btn-outline-danger btn-sm">
-                                        <i class="bi bi-list-columns-reverse me-2"></i> Ver Historial de Sanciones
-                                    </a>
-                                </div>
-                                <div class="col-md-6">
-                                    <label asp-for="Dni" class="form-label fw-semibold"></label>
-                                    <input asp-for="Dni" class="form-control" readonly />
-                                </div>
-                                <div class="col-md-6">
-                                    <label asp-for="FechaNac" class="form-label fw-semibold">Fecha Nacimiento</label>
-                                    <input asp-for="FechaNac" class="form-control" type="date" readonly />
-                                </div>
-                                <div class="col-12 mt-4 pt-3 border-top text-center">
-                                    <label class="form-label d-block fw-semibold text-muted text-start">Foto Actual</label>
-                                    <div class="p-2 border rounded bg-white shadow-sm d-inline-block">
-                                        @if (!string.IsNullOrWhiteSpace(Model.Foto))
-                                        {
-                                            @* Usamos Url.Content para asegurar que la ruta sea relativa a la raíz del sitio *@
-                                            <img src="~/fotosPerfiles/@Model.Foto" class="img-fluid rounded" alt="Foto del jugador"
-                                                 style="max-height: 200px; width: auto; object-fit: contain;"
-                                                 onerror="this.onerror=null; this.src='/images/default-user.png';" />
-                                        }
-                                        else
-                                        {
-                                            <div class="d-flex align-items-center justify-content-center text-muted"
-                                                 style="height: 150px; width: 150px; background-color: #e9ecef;">
-                                                <i class="bi bi-person-bounding-box fs-1"></i>
-                                            </div>
-                                        }
-                                    </div>
+        <div class="row g-4">
+            @* Lado Izquierdo: Datos actuales *@
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-person-circle"></i> Datos Actuales</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Nombre</label>
+                                <input asp-for="Nombre" class="form-control bg-light" readonly />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Apellido</label>
+                                <input asp-for="Apellido" class="form-control bg-light" readonly />
+                            </div>
+                            <div class="col-12 text-center my-3">
+                                <a asp-action="HistorialJugador" asp-controller="Sanciones" asp-route-id="@Model.Idjugador" 
+                                   target="_blank" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-list-columns-reverse me-2"></i> Ver Historial Completo
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">DNI</label>
+                                <input asp-for="Dni" class="form-control bg-light" readonly />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Fecha Nacimiento</label>
+                                <input asp-for="FechaNac" class="form-control bg-light" type="date" readonly />
+                            </div>
+                            <div class="col-12 mt-4 text-center">
+                                <div class="p-2 border rounded bg-white shadow-sm d-inline-block">
+                                    <img src="~/fotosPerfiles/@Model.Foto" class="img-fluid rounded" 
+                                         style="max-height: 180px;" onerror="this.src='/fotosPerfiles/default-user.webp';" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-lg-6">
-                    <div class="card shadow-lg h-100 border-warning border-3">
-                        <div class="card-header bg-warning text-dark">
-                            <h5 class="mb-0 fw-bold"><i class="bi bi-calendar-event"></i> Datos del Nuevo Fichaje</h5>
-                        </div>
-                        <div class="card-body bg-warning bg-opacity-10">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <label asp-for="FechaRecibo"
-                                           class="form-label fw-semibold fs-5 text-warning-emphasis">Fecha del Pase /
-                                        Fichaje</label>
-                                        <input asp-for="FechaRecibo" class="form-control form-control-lg" type="date"
-                                               required />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label asp-for="IdCategoria" class="control-label fw-semibold">Nueva Categoría</label>
-                                        <select asp-for="IdCategoria" class="form-select" asp-items="@Model.ListaCategoria">
-                                            <option value="">Seleccione una CATEGORIA</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label asp-for="IdEquipo" class="control-label fw-semibold">Nuevo Equipo</label>
-                                        <select asp-for="IdEquipo" class="form-select" asp-items="@Model.ListaEquipos">
-                                            <option value="">Seleccione un EQUIPO</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-12 mt-4 pt-3 border-top border-warning">
-                                        <div class="form-check form-switch p-3 bg-white border rounded">
-                                            <input class="form-check-input ms-0 me-3" type="checkbox" asp-for="Activo"
-                                                   role="switch" id="ActivoSwitch" />
-                                            <label class="form-check-label fw-bold" for="ActivoSwitch">
-                                                @Html.DisplayNameFor(model => model.Activo)
-                                                <small class="d-block text-muted fw-normal">Marque si el jugador debe estar
-                                                    activo en el nuevo equipo.</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
+            @* Lado Derecho: Nuevo Fichaje *@
+            <div class="col-lg-6">
+                <div class="card shadow-lg h-100 border-warning border-3">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-calendar-event"></i> Datos del Nuevo Fichaje</h5>
+                    </div>
+                    <div class="card-body bg-warning bg-opacity-10">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label asp-for="FechaRecibo" class="form-label fw-semibold fs-5">Fecha del Pase</label>
+                                <input asp-for="FechaRecibo" class="form-control form-control-lg" type="date" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label fw-semibold">Nueva Categoría</label>
+                                <select asp-for="IdCategoria" class="form-select" asp-items="@Model.ListaCategoria">
+                                    <option value="">Seleccione CATEGORIA</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label fw-semibold">Nuevo Equipo</label>
+                                <select asp-for="IdEquipo" class="form-select" asp-items="@Model.ListaEquipos">
+                                    <option value="">Seleccione EQUIPO</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mt-4 pt-3 border-top border-warning">
+                                <div class="form-check form-switch p-3 bg-white border rounded">
+                                    <input class="form-check-input ms-0 me-3" type="checkbox" asp-for="Activo" role="switch" id="ActivoSwitch" />
+                                    <label class="form-check-label fw-bold" for="ActivoSwitch">
+                                        Jugador Activo
+                                        <small class="d-block text-muted fw-normal">Habilita al jugador para jugar en el nuevo equipo.</small>
+                                    </label>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-12 mt-4 pt-3 border-top text-end">
-                        <a asp-action="Index" class="btn btn-secondary btn-lg me-2">
-                            <i class="bi bi-x-circle"></i> Cancelar
-                        </a>
-
-                        <button type="submit" name="proximaAccion" value="guardar" id="btnTransferir"
-                                class="btn btn-primary btn-lg me-2" disabled onclick="enviarPase('guardar')">
-                            <i class="bi bi-check-circle"></i> Solo Guardar
-                        </button>
-
-                        <button type="submit" name="proximaAccion" value="imprimir" id="btnTransferirImprimir"
-                                class="btn btn-success btn-lg fw-bold" disabled onclick="enviarPase('imprimir')">
-                            <i class="bi bi-printer-fill"></i> Guardar y Generar Carnet
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
+        </div>
+
+        <div class="col-12 mt-4 pt-3 border-top text-end">
+            <a asp-action="Index" class="btn btn-secondary btn-lg me-2">Cancelar</a>
+            <button type="submit" name="proximaAccion" value="guardar" id="btnTransferir" 
+                    class="btn btn-primary btn-lg me-2" disabled onclick="enviarPase('guardar')">
+                <i class="bi bi-check-circle"></i> Guardar
+            </button>
+            <button type="submit" name="proximaAccion" value="imprimir" id="btnTransferirImprimir" 
+                    class="btn btn-success btn-lg fw-bold" disabled onclick="enviarPase('imprimir')">
+                <i class="bi bi-printer-fill"></i> Guardar e Imprimir Carnet
+            </button>
+        </div>
+    </form>
+</div>
 
             @section Scripts {
                 @{
