@@ -2,65 +2,140 @@
 
 @{ ViewData["Title"] = "Nuevo Equipo"; }
 
-<div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h4>Alta de Equipo</h4>
-        </div>
-        <div class="card-body">
-            @* IMPORTANTE: enctype="multipart/form-data" para subir archivos *@
-            <form asp-action="Create" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/form-equipo.css" asp-append-version="true" />
+}
 
-                <div class="row">
-                    @* 1. NOMBRE Y CATEGORIA *@
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="NombreEq" class="form-label"></label>
-                        <input asp-for="NombreEq" class="form-control" />
-                        <span asp-validation-for="NombreEq" class="text-danger fw-bold"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="IdCategoria" class="form-label"></label>
-                        <select asp-for="IdCategoria" class ="form-select" asp-items="ViewBag.IdCategoria">
-                              <option value="">-- Seleccione Categoría --</option> 
-                        </select>
-                         <span asp-validation-for="IdCategoria" class="text-danger"></span>
-                    </div>
+<div class="feq-page">
 
-                    @* 2. DELEGADO Y CELULAR *@
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Delegado" class="form-label"></label>
-                        <input asp-for="Delegado" class="form-control" />
-                        <span asp-validation-for="Delegado" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Celular" class="form-label"></label>
-                        <input asp-for="Celular" class="form-control" placeholder="Ej: 387-1234569" />
-                        <span asp-validation-for="Celular" class="text-danger"></span>
-                    </div>
-
-                    @* 3. ESTADO Y FOTO *@
-                    <div class="col-md-4 mb-3 d-flex align-items-center">
-                        <div class="form-check form-switch fs-5">
-                            <input class="form-check-input" type="checkbox" asp-for="Estado" checked>
-                            <label class="form-check-label" asp-for="Estado">Equipo Activo</label>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-8 mb-3">
-                        <label asp-for="FotoEq" class="form-label"></label>
-                        <input asp-for="FotoEq" type="file" class="form-control" accept="image/*" />
-                        <span asp-validation-for="FotoEq" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-success">Guardar Equipo</button>
-                    <a asp-action="Index" class="btn btn-secondary">Volver</a>
-                </div>
-            </form>
-        </div>
+  <!-- ── Header ── -->
+  <div class="feq-header">
+    <div>
+      <div class="feq-eyebrow">
+        <i class="bi bi-shield-shaded me-1"></i> Plantel
+      </div>
+      <h2 class="feq-title">Nuevo equipo</h2>
     </div>
+    <a asp-action="Index" class="feq-back">
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  <!-- ── Card ── -->
+  <div class="feq-card">
+    <form asp-action="Create" enctype="multipart/form-data">
+
+      <div asp-validation-summary="ModelOnly" class="feq-validation" role="alert"
+           style="margin: 1.5rem 1.75rem 0;"></div>
+
+      <!-- SECCIÓN 1: Identidad del equipo -->
+      <div class="feq-section">
+        <h5 class="feq-section-title">
+          <i class="bi bi-card-text"></i> Identidad del equipo
+        </h5>
+        <div class="feq-row">
+          <div class="feq-field">
+            <label asp-for="NombreEq"></label>
+            <input asp-for="NombreEq" class="form-control" placeholder="Ej: Club Atlético San Martín" />
+            <span asp-validation-for="NombreEq" class="text-danger"></span>
+          </div>
+          <div class="feq-field">
+            <label asp-for="IdCategoria">Categoría</label>
+            <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.IdCategoria">
+              <option value="">Seleccionar categoría</option>
+            </select>
+            <span asp-validation-for="IdCategoria" class="text-danger"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: Delegado -->
+      <div class="feq-section">
+        <h5 class="feq-section-title">
+          <i class="bi bi-person-badge"></i> Delegado
+        </h5>
+        <div class="feq-row">
+          <div class="feq-field">
+            <label asp-for="Delegado"></label>
+            <input asp-for="Delegado" class="form-control" placeholder="Nombre completo" />
+            <span asp-validation-for="Delegado" class="text-danger"></span>
+          </div>
+          <div class="feq-field">
+            <label asp-for="Celular">Celular / WhatsApp</label>
+            <div class="feq-tel-group">
+              <span class="feq-tel-icon"><i class="bi bi-whatsapp"></i></span>
+              <input asp-for="Celular" class="form-control" placeholder="Ej: 387-1234569" />
+            </div>
+            <span asp-validation-for="Celular" class="text-danger"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3: Estado y escudo -->
+      <div class="feq-section">
+        <h5 class="feq-section-title">
+          <i class="bi bi-shield-fill-check"></i> Estado y escudo
+        </h5>
+        <div class="feq-row">
+
+          <!-- Switch estado -->
+          <div class="feq-switch-wrap is-activo" id="estadoWrap">
+            <input class="form-check-input" type="checkbox" asp-for="Estado"
+                   role="switch" id="EstadoSwitch" checked />
+            <div>
+              <span class="feq-switch-label-title" id="estadoTitle">✓ Equipo activo</span>
+              <span class="feq-switch-label-sub">Habilita al equipo para ser asignado en el sistema.</span>
+            </div>
+          </div>
+
+          <!-- Dropzone escudo -->
+          <div class="feq-field">
+            <label>Escudo del equipo <span style="font-weight:400; text-transform:none; font-size:.85rem; color:var(--text-muted)">(opcional)</span></label>
+            <div class="feq-dropzone">
+              <i class="bi bi-shield-shaded feq-dropzone-icon"></i>
+              <span class="feq-dropzone-label">Subir escudo</span>
+              <input asp-for="FotoEq" type="file" class="form-control" accept="image/*" />
+              <small>PNG, JPG o SVG · Fondo transparente recomendado</small>
+            </div>
+            <span asp-validation-for="FotoEq" class="text-danger"></span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ACCIONES -->
+      <div class="feq-section">
+        <div class="feq-actions">
+          <button type="submit" class="btn-feq save">
+            <i class="bi bi-plus-lg"></i> Crear equipo
+          </button>
+          <a asp-action="Index" class="btn-feq cancel">
+            <i class="bi bi-x"></i> Cancelar
+          </a>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
 </div>
 
-@section Scripts { @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} }
+@section Scripts {
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+  <script>
+    $(document).ready(function () {
+      const $switch = $('#EstadoSwitch');
+      const $wrap   = $('#estadoWrap');
+      const $title  = $('#estadoTitle');
+
+      function updateEstado(isActivo) {
+        $wrap.removeClass('is-activo is-inactivo')
+             .addClass(isActivo ? 'is-activo' : 'is-inactivo');
+        $title.text(isActivo ? '\u2713 Equipo activo' : '\u2717 Equipo inactivo');
+      }
+
+      updateEstado($switch.is(':checked'));
+      $switch.on('change', function () { updateEstado($(this).is(':checked')); });
+    });
+  </script>
+}

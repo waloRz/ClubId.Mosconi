@@ -1,0 +1,59 @@
+@model IEnumerable<ClubId.Models.ViewModels.PlanillaExcelViewModel>
+
+@{
+    Layout = null; // No queremos menú de navegación ni footers, solo la tabla pura
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Planilla Excel</title>
+    <style>
+        /* Estilos re simples solo para que se vea ordenado en pantalla antes de copiar */
+        body { font-family: sans-serif; padding: 20px; }
+        .instrucciones { margin-bottom: 20px; color: #555; }
+        table { border-collapse: collapse; width: 100%; max-width: 1200px; }
+        th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="instrucciones">
+        <h3>Planilla lista para exportar</h3>
+        <p>Seleccioná desde la primera celda hasta la última (o presioná Ctrl+A), copiá (Ctrl+C) y pegá en tu Excel.</p>
+    </div>
+
+<table id="tablaExport">
+        <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Apellido y Nombre</th>
+                <th>Sanción</th>
+                <th>DEBE</th>
+                <th>TOTAL</th>
+                <th>Categoría</th>
+                <th>Equipo</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fila in Model)
+            {
+                <tr>
+                    <td style="mso-number-format:'\@@';">@fila.Dni</td>
+                    <td>@fila.ApellidoNombre</td>
+                    <td>@fila.Sancion</td>
+                    <td>@fila.Debe</td>
+                    <td>@fila.Total</td>
+                    <td>@fila.Categoria</td>
+                    <td>@fila.Equipo</td>
+                    <td>@fila.FechaBoletin</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

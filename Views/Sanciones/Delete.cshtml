@@ -1,49 +1,355 @@
 @using ClubId.Data
 @using Microsoft.AspNetCore.Mvc.Filters
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Mvc.Rendering;
-@using ClubId.Services;
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using ClubId.Services
 
 @model ClubId.Models.ViewModels.BoletinSancionesViewModel
 
 @{
-    ViewData["Title"] = "Eliminar Sanción";
+    ViewData["Title"] = "Eliminar Boletín";
 }
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-danger text-white text-center py-3">
-                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>¿Eliminar este registro?</h4>
-                </div>
-                <div class="card-body p-4">
-                    <p class="text-muted text-center">Esta acción no se puede deshacer. Por favor, confirma los datos del boletín:</p>
-                    
-                    <ul class="list-group list-group-flush mb-4">
-                        <li class="list-group-item d-flex justify-content-between">
-                            <strong>Fecha:</strong> <span>@Model.FechaBoletin.ToString("dd/MM/yyyy")</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <strong>Categoría:</strong> <span>@Model.NombreCategoria</span>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Comunicado:</strong>
-                            <p class="small text-muted mt-1">@Model.Comunicado</p>
-                        </li>
-                    </ul>
+@section Styles {
+<style>
+  :root {
+    --marino:      #0B2A3D;
+    --acero:       #4682B4;
+    --nube:        #F5F7FA;
+    --dorado:      #E2B24A;
+    --plateado:    #C4CBD3;
+    --rojo:        #C0392B;
+    --bg-surface:  #FFFFFF;
+    --text-primary:#0B2A3D;
+    --text-soft:   #3D5166;
+    --text-muted:  #7A8A99;
+    --border:      #C4CBD3;
+    --border-soft: #DCE1E7;
+    --radius:      8px;
+  }
 
-                    <form asp-action="Delete">
-                        <input type="hidden" asp-for="IdSanciones" />
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-danger fw-bold">
-                                <i class="bi bi-trash"></i> Confirmar Eliminación
-                            </button>
-                            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar y volver</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+  /* ── Página centrada ── */
+  .del-page {
+    padding: 2.5rem 1rem 3rem;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* ── Card ── */
+  .del-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-soft);
+    border-top: 4px solid var(--rojo);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(192,57,43,.1);
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .del-card-head {
+    background: var(--rojo);
+    padding: 1.5rem 1.75rem;
+    text-align: center;
+  }
+  .del-head-icon {
+    width: 56px; height: 56px;
+    background: rgba(255,255,255,.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto .85rem;
+  }
+  .del-head-icon i { font-size: 1.75rem; color: #fff; }
+  .del-head-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -.01em;
+    margin: 0;
+  }
+  .del-head-sub {
+    font-size: .88rem;
+    color: rgba(255,255,255,.75);
+    margin-top: .35rem;
+  }
+
+  /* ── Cuerpo ── */
+  .del-card-body { padding: 1.75rem; }
+
+  /* Aviso de acción irreversible */
+  .del-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    background: rgba(192,57,43,.05);
+    border: 1px solid rgba(192,57,43,.2);
+    border-left: 4px solid var(--rojo);
+    border-radius: var(--radius);
+    padding: .9rem 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+  .del-warning i { color: var(--rojo); font-size: 1.1rem; flex-shrink: 0; margin-top: .05rem; }
+  .del-warning-text {
+    font-size: .92rem;
+    color: var(--text-soft);
+    line-height: 1.45;
+  }
+  .del-warning-text strong { color: var(--rojo); }
+
+  /* Datos del boletín */
+  .del-datos {
+    background: var(--nube);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+  .del-dato-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: .85rem 1.1rem;
+    border-bottom: 1px solid var(--border-soft);
+    gap: 1rem;
+  }
+  .del-dato-row:last-child { border-bottom: none; }
+  .del-dato-row.block { flex-direction: column; gap: .35rem; }
+
+  .del-dato-label {
+    font-size: .75rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .del-dato-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: right;
+  }
+  .del-dato-comunicado {
+    font-size: .92rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    padding: .65rem .9rem;
+  }
+
+  /* Badge fecha/nro */
+  .del-badge-fecha {
+    display: inline-flex; align-items: center; gap: .3rem;
+    background: rgba(226,178,74,.12);
+    color: #B8892A;
+    border: 1px solid rgba(226,178,74,.32);
+    border-radius: 20px;
+    font-size: .82rem; font-weight: 700;
+    padding: .2rem .7rem;
+  }
+
+  /* ── Acciones ── */
+  .del-actions {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+
+  /* Confirmar eliminar — rojo sólido con sombra */
+  .btn-del-confirm {
+    display: flex; align-items: center; justify-content: center; gap: .5rem;
+    font-size: .95rem; font-weight: 800;
+    letter-spacing: .05em; text-transform: uppercase;
+    border-radius: var(--radius); padding: .85rem 1.5rem;
+    border: 2px solid var(--rojo); cursor: pointer;
+    background: var(--rojo); color: #FFFFFF;
+    box-shadow: 0 3px 12px rgba(192,57,43,.3);
+    transition: background .13s, box-shadow .13s, transform .1s;
+    width: 100%;
+  }
+  .btn-del-confirm:hover {
+    background: #a93226; border-color: #a93226;
+    box-shadow: 0 5px 18px rgba(192,57,43,.4);
+    transform: translateY(-1px);
+  }
+
+  /* Cancelar — marino sólido, peso visual claro pero diferente */
+  .btn-del-cancel {
+    display: flex; align-items: center; justify-content: center; gap: .5rem;
+    font-size: .9rem; font-weight: 700;
+    letter-spacing: .04em; text-transform: uppercase;
+    border-radius: var(--radius); padding: .75rem 1.5rem;
+    border: 2px solid var(--marino); cursor: pointer;
+    background: var(--marino); color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(11,42,61,.2);
+    text-decoration: none;
+    transition: background .13s, box-shadow .13s, transform .1s;
+    width: 100%;
+  }
+  .btn-del-cancel:hover {
+    background: #0d3550; border-color: #0d3550; color: #fff;
+    box-shadow: 0 4px 14px rgba(11,42,61,.28);
+    transform: translateY(-1px);
+  }
+
+  /* Separador "o" entre acciones */
+  .del-or {
+    text-align: center;
+    font-size: .78rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .del-or::before,
+  .del-or::after {
+    content: '';
+    position: absolute;
+    top: 50%; width: 42%;
+    height: 1px;
+    background: var(--border-soft);
+  }
+  .del-or::before { left: 0; }
+  .del-or::after  { right: 0; }
+
+  @@media (max-width: 480px) {
+    .del-page { padding: 1rem 1rem 2rem; }
+    .del-card-body { padding: 1.25rem; }
+  }
+</style>
+}
+
+<div class="del-page">
+  <div class="del-card">
+
+    <!-- ── Header rojo ── -->
+    <div class="del-card-head">
+      <div class="del-head-icon">
+        <i class="bi bi-trash3-fill"></i>
+      </div>
+      <h4 class="del-head-title">¿Eliminar este boletín?</h4>
+      <p class="del-head-sub">Revisá los datos antes de confirmar</p>
     </div>
+
+    <!-- ── Cuerpo ── -->
+    <div class="del-card-body">
+
+      <!-- Advertencia irreversible -->
+      <div class="del-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <p class="del-warning-text mb-0">
+          <strong>Esta acción no se puede deshacer.</strong>
+          El boletín y todos sus registros asociados serán eliminados permanentemente del sistema.
+        </p>
+      </div>
+
+      <!-- Datos del boletín -->
+      <div class="del-datos">
+        <div class="del-dato-row">
+          <span class="del-dato-label">Fecha</span>
+          <span class="del-dato-value">@Model.FechaBoletin.ToString("dd/MM/yyyy")</span>
+        </div>
+        <div class="del-dato-row">
+          <span class="del-dato-label">N° Fecha</span>
+          <span class="del-dato-value">
+            <span class="del-badge-fecha">
+              <i class="bi bi-calendar3"></i> Fecha #@Model.NroFecha
+            </span>
+          </span>
+        </div>
+        <div class="del-dato-row">
+          <span class="del-dato-label">Categoría</span>
+          <span class="del-dato-value">@Model.NombreCategoria</span>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(Model.Comunicado))
+        {
+          <div class="del-dato-row block">
+            <span class="del-dato-label">Comunicado</span>
+            <div class="del-dato-comunicado">@Model.Comunicado</div>
+          </div>
+        }
+      </div>
+
+      <!-- Acciones -->
+      <form asp-action="Delete">
+        <input type="hidden" asp-for="IdSanciones" />
+        <div class="del-actions">
+          <button type="button" class="btn-del-confirm" data-bs-toggle="modal" data-bs-target="#modalConfirm">
+            <i class="bi bi-trash3-fill"></i> Sí, eliminar definitivamente
+          </button>
+          <div class="del-or">o</div>
+          <a asp-action="Index" class="btn-del-cancel">
+            <i class="bi bi-arrow-left"></i> No, volver al listado
+          </a>
+        </div>
+      </form>
+
+    </div>
+  </div>
 </div>
+
+<!-- ══ MODAL DE CONFIRMACIÓN FINAL ══ -->
+<div class="modal fade" id="modalConfirm" tabindex="-1" aria-labelledby="modalConfirmLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border:none; border-radius:12px; overflow:hidden; border-top: 4px solid #C0392B;">
+
+      <!-- Header -->
+      <div class="modal-header" style="background:#C0392B; border:none; padding:1.25rem 1.5rem;">
+        <div style="display:flex; align-items:center; gap:.75rem;">
+          <div style="width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="bi bi-exclamation-triangle-fill" style="color:#fff;font-size:1.1rem;"></i>
+          </div>
+          <h5 class="modal-title" id="modalConfirmLabel"
+              style="color:#fff;font-weight:800;font-size:1.05rem;margin:0;letter-spacing:-.01em;">
+            Última confirmación
+          </h5>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body" style="padding:1.5rem; background:#fff;">
+        <p style="font-size:1rem; color:#0B2A3D; font-weight:600; margin-bottom:.5rem;">
+          Estás a punto de eliminar el boletín:
+        </p>
+        <div style="background:#F5F7FA; border:1px solid #DCE1E7; border-radius:8px; padding:.85rem 1.1rem; margin-bottom:1.1rem;">
+          <div style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:#7A8A99;font-weight:700;margin-bottom:.2rem;">Fecha</div>
+          <div style="font-size:1rem;font-weight:700;color:#0B2A3D;">@Model.FechaBoletin.ToString("dd/MM/yyyy")</div>
+        </div>
+        <p style="font-size:.92rem; color:#3D5166; margin:0;">
+          <i class="bi bi-exclamation-circle-fill" style="color:#C0392B;margin-right:.35rem;"></i>
+          Esta acción <strong style="color:#C0392B;">no se puede deshacer</strong>.
+          ¿Confirmás la eliminación definitiva?
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer" style="background:#F5F7FA; border-top:1px solid #DCE1E7; padding:1rem 1.5rem; gap:.75rem;">
+        <button type="button" data-bs-dismiss="modal"
+                style="background:#0B2A3D;color:#fff;border:2px solid #0B2A3D;font-size:.88rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:8px;padding:.6rem 1.25rem;cursor:pointer;transition:background .13s;"
+                onmouseover="this.style.background='#0d3550'" onmouseout="this.style.background='#0B2A3D'">
+          <i class="bi bi-arrow-left me-1"></i> No, cancelar
+        </button>
+        <button type="button" id="btnConfirmFinal"
+                style="background:#C0392B;color:#fff;border:2px solid #C0392B;font-size:.88rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:8px;padding:.6rem 1.4rem;cursor:pointer;box-shadow:0 2px 8px rgba(192,57,43,.3);transition:background .13s,box-shadow .13s;"
+                onmouseover="this.style.background='#a93226'" onmouseout="this.style.background='#C0392B'">
+          <i class="bi bi-trash3-fill me-1"></i> Sí, eliminar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+  <script>
+    document.getElementById('btnConfirmFinal').addEventListener('click', function () {
+      // Cierra el modal y envía el formulario
+      var modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirm'));
+      if (modal) modal.hide();
+      document.querySelector('form[action*="Delete"]').submit();
+    });
+  </script>
+}

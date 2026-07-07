@@ -1,379 +1,415 @@
 @model ClubId.Models.ViewModels.SancionCreacionViewModel
 
 @{
-    // ¡Armemos el Nuevo Boletín de Sanciones!
-    ViewData["Title"] = "¡Armemos el Nuevo Boletín de Sanciones!";
+    ViewData["Title"] = "Nuevo Boletín de Sanciones";
 }
 
-@* NOTA: Este código asume que tienes acceso a jQuery y Bootstrap.
-Usamos Select2 para la búsqueda avanzada de jugadores. *@
+@section Styles {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/crear-boletin.css" asp-append-version="true" />
+}
 
-<div class="container py-4">
-    <div class="card shadow-lg">
-        <div class="card-header bg-danger text-white">
-            <h3 class="mb-0">¡Armemos el Nuevo Boletín de Sanciones!</h3>
-        </div>
-        <div class="card-body">
+<div class="cb-page">
 
-            <form method="post" enctype="multipart/form-data">
-                <input type="hidden" asp-for="IdSanciones" />
-
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-
-                @* {{-- Sección de Encabezado del Boletín --}} *@
-                <h4 class="text-danger border-bottom pb-2 mb-4">Datos Principales del Boletín</h4>
-                <div class="row">
-                    <div class="col-md-2 mb-3" style="width: 20%">
-                        <label asp-for="FechaBoletin" class="form-label">Fecha (¿Cuándo es esto?)</label>
-                        <input asp-for="FechaBoletin" type="date" class="form-control" />
-                        <span asp-validation-for="FechaBoletin" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-2 mb-2" style="width: 15%">
-                        <label asp-for="NroFecha" class="form-label">Nro de Fecha</label>
-                        <input type="number" asp-for="NroFecha" class="form-control" min="1" max="99" required />
-                    </div>
-
-                    <div class="col-md-2 mb-3" style="width: 20%">
-                        <label asp-for="IdCategoria" class="form-label"></label>
-                        <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.IdCategoria">
-                            <option value="">-- Categoría --</option>
-                        </select>
-                        <span asp-validation-for="IdCategoria" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-5 mb-4">
-                        <label asp-for="Comunicado" class="form-label">COMUNICADO GENERAL</label>
-                        <textarea asp-for="Comunicado" class="form-control" rows="3"></textarea>
-                        <span asp-validation-for="Comunicado" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <hr class="my-4" />
-
-                @* {{-- Sección de Gestión de Jugadores --}} *@
-                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
-                    <h4 class="text-danger mb-0">Jugadores que van con Sanción</h4>
-                    <button type="button" id="btnAddJugador" class="btn btn-success px-4 shadow-sm">
-                        <i class="bi bi-plus-circle me-4 "></i>¡Sumar!
-                    </button>
-                </div>
-
-                <div class="row g-3 align-items-start mb-4 p-3 border rounded bg-light">
-                    @* Fila superior: Búsqueda *@
-                    <div class="col-md-4">
-                        <label for="JugadorSearch" class="form-label fw-bold">Buscá y Elegí al Jugador</label>
-                        <select id="JugadorSearch" class="form-select w-100" style="width: 100%"></select>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="EquipoSearch" class="form-label fw-bold">Buscá y Elegí al Equipo</label>
-                        <select id="EquipoSearch" class="form-select w-100" style="width: 100%"></select>
-                    </div>
-                    @* Nueva ubicación del Checkbox de Advertencia *@
-                    <div class="col-md-4">
-                        <div class="form-check form-switch p-2 border rounded bg-white shadow-sm"
-                             style="margin-left: 0; padding-left: 3.5rem !important;">
-                            <input class="form-check-input" type="checkbox" id="AlertaPase"
-                                   style="width: 3.5em; height: 1.25em;">
-                            <label class="form-check-label fw-bold text-danger text-center " style="display:flow"
-                                   for="AlertaPase">
-                                ¿Mostrar advertencia en PASE de este jugador?
-                            </label>
-                        </div>
-                    </div>
-
-                    @* Fila media: Informe y Artículos *@
-                    <div class="col-md-8">
-                        <label for="txtMotivo" class="form-label fw-bold text-uppercase"
-                               style="font-size: 0.85rem;">Informe ARBITRO (¡El Por qué!)</label>
-                        <textarea id="txtMotivo" class="form-control" rows="3" maxlength="500"
-                                  placeholder="Contá bien la falta, el informe, o lo que pasó."></textarea>
-                        <div class="d-flex justify-content-between mt-1">
-                            <small class="text-muted italic">Máximo 500 caracteres.</small>
-                            <small id="motivoCount" class="text-success fw-bold">0 / 500</small>
-                        </div>
-                        <span id="motivoError" class="text-danger fw-bold" style="display:none; font-size: 0.8rem;">
-                            ¡Te excediste el límite de 500 caracteres!
-                        </span>
-                    </div>
-    
-                    <div class="col-md-4">
-                        <label for="txtArticulo" class="form-label fw-bold" style="font-size: 0.85rem;">Sanción y
-                            Artículos Aplicados</label>
-                            <textarea id="txtArticulo" class="form-control" rows="3"
-                                      placeholder="Ej: Art. 204 - 2 Partidos"></textarea>
-                        </div>
-
-               
-                    </div>
-
-                    @* {{-- Tabla de Jugadores Sancionados --}} *@
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle" id="jugadoresTable">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th style="width: 10%;">DNI</th>
-                                    <th style="width: 20%;">Nombre del Jugador</th>
-                                    <th style="width: 20%;">Equipo</th>
-                                    <th style="width: 20%;">Cant. Partidos</th>
-                                    <th style="width: 45%;">Motivo del Informe</th> @* <-- Motivo toma el mayor ancho *@
-                                    <th style="width: 10%;">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.JugadoresSancionados.Any())
-                                {
-                                    for (int i = 0; i < Model.JugadoresSancionados.Count; i++)
-                                    {
-                                        var item = Model.JugadoresSancionados[i];
-                                        <tr data-id="@item.IdJugador">
-                                            <td>@item.Dni</td>
-                                            <td>
-                                                @item.NombreCompleto
-                                                @if (item.AlertaPase)
-                                                {
-                                                    <span class="badge bg-warning text-dark">
-                                                        <i class="bi bi-exclamation-triangle"></i> Con Alerta
-                                                    </span>
-                                                }
-                                            </td>
-                                            <td>@item.NombreEq</td>
-                                            <td>
-                                                <input type="text" name="JugadoresSancionados[@i].CantidadPartidos"
-                                                       value="@item.CantidadPartidos"
-                                                       class="form-control form-control-sm input-articulo" style="width: 150px;" />
-                                                <input type="hidden" name="JugadoresSancionados[@i].IdSanciones"
-                                                       value="@item.IdSanciones" />
-                                                <input type="hidden" name="JugadoresSancionados[@i].IdJugador"
-                                                       value="@item.IdJugador" />
-                                                <input type="hidden" name="JugadoresSancionados[@i].Nombre" value="@item.Nombre" />
-                                                <input type="hidden" name="JugadoresSancionados[@i].Apellido"
-                                                       value="@item.Apellido" />
-                                                <input type="hidden" name="JugadoresSancionados[@i].AlertaPase"
-                                                       value="@item.AlertaPase.ToString().ToLower()" />
-                                                <input type="hidden" name="JugadoresSancionados[@i].Dni" value="@item.Dni" />
-                                                <input type="hidden" name="JugadoresSancionados[@i].IdEquipo"
-                                                       value="@item.IdEquipo" />
-                                                <input type="hidden" name="JugadoresSancionados[@i].NombreEq"
-                                                       value="@item.NombreEq" />
-                                                <input type="hidden" name="JugadoresSancionados[@i].NombreCompleto"
-                                                       value="@item.NombreCompleto" />
-                                            </td>
-                                            <td>
-                                                <textarea name="JugadoresSancionados[@i].MotivoEspecifico"
-                                                          class="form-control form-control-sm input-motivo"
-                                                          rows="2">@item.MotivoEspecifico</textarea>
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-danger btn-remove ">Quitar</button>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="text-end mt-4">
-                        <a asp-action="Index" class="btn btn-secondary">Mejor no (Cancelar)</a>
-                        <button type="submit" class="btn btn-primary">¡Listo, Guardar Boletín!</button>
-                    </div>
-                </form>
-            </div>
-
-
-        </div>
-
+  <!-- ── Header ── -->
+  <div class="cb-header">
+    <div class="cb-header-left">
+      <div class="cb-icon-wrap">
+        <i class="bi bi-shield-fill-exclamation"></i>
+      </div>
+      <div>
+        <div class="cb-eyebrow">Disciplina</div>
+        <h2 class="cb-title">Nuevo Boletín de Sanciones</h2>
+        <p class="cb-subtitle">Completá los datos del boletín y sumá los jugadores sancionados.</p>
+      </div>
     </div>
+    <a asp-action="Index" class="cb-back">
+      <i class="bi bi-arrow-left"></i> Volver a Boletines
+    </a>
+  </div>
 
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+  <!-- ── Formulario ── -->
+  <form method="post" enctype="multipart/form-data" id="formBoletin">
+    <input type="hidden" asp-for="IdSanciones" />
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+      <div class="cb-validation" asp-validation-summary="ModelOnly" role="alert"></div>
+    }
+
+    <div class="cb-card">
+
+      <!-- ══ SECCIÓN 1: Datos del boletín ══ -->
+      <div class="cb-section">
+        <div class="cb-section-head">
+          <h4 class="cb-section-title">
+            <i class="bi bi-newspaper"></i> Datos principales del boletín
+          </h4>
+        </div>
+
+        <div class="cb-fields-row">
+          <div class="cb-field">
+            <label asp-for="FechaBoletin">Fecha de publicación</label>
+            <input asp-for="FechaBoletin" type="date" class="form-control" />
+            <span asp-validation-for="FechaBoletin" class="text-danger"></span>
+          </div>
+          <div class="cb-field">
+            <label asp-for="NroFecha">Nro. de fecha</label>
+            <input type="number" asp-for="NroFecha" class="form-control" min="1" max="99" required />
+          </div>
+          <div class="cb-field">
+            <label asp-for="IdCategoria">Categoría</label>
+            <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.IdCategoria">
+              <option value="">— Seleccionar —</option>
+            </select>
+            <span asp-validation-for="IdCategoria" class="text-danger"></span>
+          </div>
+          <div class="cb-field">
+            <label asp-for="Comunicado">Comunicado general</label>
+            <textarea asp-for="Comunicado" class="form-control" rows="3"
+                      placeholder="Texto del comunicado oficial del boletín…"></textarea>
+            <span asp-validation-for="Comunicado" class="text-danger"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SECCIÓN 2: Ingreso de jugadores ══ -->
+      <div class="cb-section">
+        <div class="cb-section-head">
+          <h4 class="cb-section-title">
+            <i class="bi bi-person-fill-slash"></i> Jugadores sancionados
+          </h4>
+          <button type="button" id="btnAddJugador" class="btn-add-jugador">
+            <i class="bi bi-plus-lg"></i> Agregar jugador
+          </button>
+        </div>
+
+        <!-- Panel de ingreso -->
+        <div class="cb-jugador-panel">
+
+          <!-- Fila superior: búsquedas + switch -->
+          <div class="cb-jugador-row-top">
+            <div class="cb-field">
+              <label for="JugadorSearch">Jugador</label>
+              <select id="JugadorSearch" class="form-select w-100"></select>
+            </div>
+            <div class="cb-field">
+              <label for="EquipoSearch">Equipo</label>
+              <select id="EquipoSearch" class="form-select w-100"></select>
+            </div>
+            <div class="cb-field" style="display:flex; align-items:flex-end;">
+              <div class="cb-switch-wrap" style="width:100%">
+                <input class="form-check-input" type="checkbox" id="AlertaPase" role="switch" />
+                <div>
+                  <span class="cb-switch-label-title">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Advertencia en pase
+                  </span>
+                  <span class="cb-switch-label-sub">Mostrar alerta al realizar un pase de este jugador.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fila inferior: motivo + artículos -->
+          <div class="cb-jugador-row-mid">
+            <div class="cb-field" style="margin:0">
+              <label for="txtMotivo">Informe del árbitro</label>
+              <textarea id="txtMotivo" class="form-control" rows="3" maxlength="600"
+                        placeholder="Describí el incidente, la falta o el motivo de la sanción…">Sin Informe</textarea>
+              <div class="cb-motivo-footer">
+                <span class="cb-motivo-limit">Máximo 500 caracteres</span>
+                <span id="motivoCount" class="cb-motivo-count">0 / 500</span>
+              </div>
+              <span id="motivoError" class="cb-motivo-error">
+                <i class="bi bi-exclamation-circle me-1"></i>Superaste el límite de 500 caracteres
+              </span>
+            </div>
+            <div class="cb-articulos-wrap" style="min-width:350px">
+              <label for="txtArticulo">Sanción y artículos</label>
+              <textarea id="txtArticulo" rows="3"
+                        placeholder="Ej: Art. 204 — 2 partidos"></textarea>
+            </div>
+          </div>
+
+        </div><!-- /cb-jugador-panel -->
+
+        <!-- Tabla de sancionados -->
+        <div class="cb-table-wrap">
+          <table id="jugadoresTable" class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th style="width:4%">#</th>
+                <th style="width:10%">DNI</th>
+                <th style="width:20%">Jugador</th>
+                <th style="width:18%">Equipo</th>
+                <th style="width:16%">Sanción / Artículos</th>
+                <th>Informe del árbitro</th>
+                <th style="width:8%;text-align:center">Quitar</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (Model.JugadoresSancionados.Any())
+              {
+                for (int i = 0; i < Model.JugadoresSancionados.Count; i++)
+                {
+                  var item = Model.JugadoresSancionados[i];
+                  <tr data-id="@item.IdJugador">
+                    <td>@(i + 1)</td>
+                    <td>@item.Dni</td>
+                    <td>
+                      @item.NombreCompleto
+                      @if (item.AlertaPase)
+                      {
+                        <span class="badge-alerta">
+                          <i class="bi bi-exclamation-triangle-fill"></i> Alerta
+                        </span>
+                      }
+                    </td>
+                    <td>@item.NombreEq</td>
+                    <td>
+                      <input type="text"
+                             name="JugadoresSancionados[@i].CantidadPartidos"
+                             value="@item.CantidadPartidos"
+                             class="input-articulo" />
+                      <input type="hidden" name="JugadoresSancionados[@i].IdSanciones"    value="@item.IdSanciones" />
+                      <input type="hidden" name="JugadoresSancionados[@i].IdJugador"       value="@item.IdJugador" />
+                      <input type="hidden" name="JugadoresSancionados[@i].Nombre"          value="@item.Nombre" />
+                      <input type="hidden" name="JugadoresSancionados[@i].Apellido"        value="@item.Apellido" />
+                      <input type="hidden" name="JugadoresSancionados[@i].AlertaPase"      value="@item.AlertaPase.ToString().ToLower()" />
+                      <input type="hidden" name="JugadoresSancionados[@i].Dni"             value="@item.Dni" />
+                      <input type="hidden" name="JugadoresSancionados[@i].IdEquipo"        value="@item.IdEquipo" />
+                      <input type="hidden" name="JugadoresSancionados[@i].NombreEq"        value="@item.NombreEq" />
+                      <input type="hidden" name="JugadoresSancionados[@i].NombreCompleto"  value="@item.NombreCompleto" />
+                    </td>
+                    <td>
+                      <textarea name="JugadoresSancionados[@i].MotivoEspecifico"
+                                class="input-motivo" rows="2">@item.MotivoEspecifico</textarea>
+                    </td>
+                    <td>
+                      <button type="button" class="btn-remove-jugador btn-remove">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              }
+              else
+              {
+                <tr id="emptyRow">
+                  <td colspan="7">
+                    <div class="cb-table-empty">
+                      <i class="bi bi-person-fill-slash"></i>
+                      Todavía no hay jugadores en el boletín. Usá el panel de arriba para agregarlos.
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div><!-- /cb-table-wrap -->
+
+      </div><!-- /sección jugadores -->
+
+      <!-- ══ ACCIONES ══ -->
+      <div class="cb-section">
+        <div class="cb-actions">
+          <a asp-action="Index" class="btn-cb cancel">
+            <i class="bi bi-x"></i> Cancelar
+          </a>
+          <button type="submit" class="btn-cb save">
+            <i class="bi bi-check-lg"></i> Guardar boletín
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /cb-card -->
+  </form>
+</div>
+
+@section Scripts {
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.full.min.js"></script>
+
+ <script>
+    var jugadorIndex = @(Model.JugadoresSancionados.Any() ? Model.JugadoresSancionados.Count : 0);
+    const maxLength = 500;
+
+    $(document).ready(function () {
+
+      /* ── Contador motivo ── */
+      const $motivo      = $('#txtMotivo');
+      const $motivoCount = $('#motivoCount');
+      const $motivoError = $('#motivoError');
+
+      $motivo.on('input', function () {
+        const len = $(this).val().length;
+        $motivoCount.text(len + ' / ' + maxLength);
+        $motivoCount.removeClass('warn danger');
+        if (len > maxLength) {
+          $motivoCount.addClass('danger');
+          $motivoError.show();
+        } else if (len > maxLength * .8) {
+          $motivoCount.addClass('warn');
+          $motivoError.hide();
+        } else {
+          $motivoError.hide();
+        }
+      });
+
+/* ── FIX PARA EL FOCO AUTOMÁTICO EN SELECT2 ── */
+      $(document).on('select2:open', function(e) {
+          // Usamos un pequeñísimo retardo (0 ms suele bastar para que el DOM se actualice)
+          // para asegurarnos de que la caja de texto ya existe antes de enfocarla.
+          setTimeout(function() {
+              document.querySelector('.select2-container--open .select2-search__field').focus();
+          }, 10);
+      });
+      
+      /* ── Select2: Jugadores ── */
+      $('#JugadorSearch').select2({
+        placeholder: 'Buscá por apellido, nombre o DNI…',
+        minimumInputLength: 3,
+        ajax: {
+          url: '@Url.Action("BuscarJugadores", "Sanciones")',
+          dataType: 'json', delay: 300,
+          data: p => ({ term: p.term.trim() }),
+          processResults: d => ({ results: d.results }),
+          cache: true
+        }
+      });
+
+      /* ── Select2: Equipos ── */
+      $('#EquipoSearch').select2({
+        placeholder: 'Escribí el nombre del equipo…',
+        minimumInputLength: 3,
+        ajax: {
+          url: '@Url.Action("BuscarEquipos", "Sanciones")',
+          dataType: 'json', delay: 250,
+          // SOLUCIÓN MINÚSCULAS: Forzamos el texto a minúsculas antes de enviarlo
+          data: p => ({ term: p.term }), 
+          processResults: d => ({ results: d.results }),
+          cache: true
+        }
+      });
+
+      /* ── FLUJO DE FOCUS AUTOMÁTICO ── */
+      
+      // 1. Al seleccionar un Jugador -> Enfoca y abre Equipo
+      $('#JugadorSearch').on('select2:select', function (e) {
+          $('#EquipoSearch').select2('open');
+      });
+
+      // 2. Al seleccionar un Equipo -> Enfoca Sanción/Artículos
+      $('#EquipoSearch').on('select2:select', function (e) {
+          $('#txtArticulo').focus();
+      });
+
+      // (Opcional) Si querés que con presionar 'Enter' en Artículos vaya al botón Agregar
+      $('#txtArticulo').on('keypress', function(e) {
+          if (e.which == 13) { 
+              e.preventDefault(); 
+              $('#btnAddJugador').click(); 
+          }
+      });
+
+
+      /* ── Reindexar filas ── */
+      function reIndexTable() {
+        $('#jugadoresTable tbody tr:not(#emptyRow)').each(function (i) {
+          $(this).find('input, textarea').each(function () {
+            const n = $(this).attr('name');
+            if (n) $(this).attr('name', n.replace(/\[\d+\]/g, '[' + i + ']'));
+          });
+          $(this).find('td:first-child').text(i + 1);
+        });
+        jugadorIndex = $('#jugadoresTable tbody tr:not(#emptyRow)').length;
+      }
+
+      /* ── Agregar jugador ── */
+      $('#btnAddJugador').on('click', function () {
+        const sd        = $('#JugadorSearch').select2('data')[0];
+        const ed        = $('#EquipoSearch').select2('data')[0];
+        const motivo    = $motivo.val().trim();
+        const articulos = $('#txtArticulo').val().trim();
+        const alerta    = $('#AlertaPase').is(':checked');
+
+        if (!sd)     { alert('Seleccioná un jugador.'); return; }
+        if (!ed)     { alert('Seleccioná un equipo.');  return; }
+        if (!motivo) { alert('Completá el informe del árbitro.'); return; }
+        if (motivo.length > maxLength) {
+          alert('El informe supera los ' + maxLength + ' caracteres (' + motivo.length + ').');
+          $motivo.focus(); return;
+        }
+        if ($('#jugadoresTable tbody tr[data-id="' + sd.id + '"]').length > 0) {
+          alert('Este jugador ya está en el boletín.'); return;
         }
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.full.min.js"></script>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+        const safeMotivo = motivo.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const alertaBadge = alerta
+          ? '<span class="badge-alerta"><i class="bi bi-exclamation-triangle-fill"></i> Alerta</span>'
+          : '';
 
-        <script>
-            // Contador global para asegurar índices únicos para el Model Binder de MVC
-            var jugadorIndex = @(Model.JugadoresSancionados.Any() ? Model.JugadoresSancionados.Count : 0);
-
-            // Mensaje de alerta personalizado para no usar alert()
-            function showCustomAlert(message) {
-            // Reemplaza esto con un modal o una notificación de Toastr en una aplicación real.
-            alert(message);
-            }
-
-            $(document).ready(function () {
-
-            // --- LÓGICA DE VALIDACIÓN DEL INFORME (500 CARACTERES) ---
-            const motivoTextarea = $('#txtMotivo');
-            const motivoCount = $('#motivoCount');
-            const motivoError = $('#motivoError');
-            const maxLength = 500;
-
-            motivoTextarea.on('input', function () {
-            const currentLength = $(this).val().length;
-
-            motivoCount.text(currentLength + ' / ' + maxLength);
-
-            if (currentLength > maxLength) {
-            motivoCount.removeClass('text-success').addClass('text-danger');
-            motivoError.show();
-            } else if (currentLength > (maxLength * 0.8)) { // Advertencia al 80% (400 caracteres)
-            motivoCount.removeClass('text-success').addClass('text-warning');
-            motivoError.hide();
-            }
-            else {
-            motivoCount.removeClass('text-warning').removeClass('text-danger').addClass('text-success');
-            motivoError.hide();
-            }
-            });
-
-            // 1. Inicializar Select2 para la búsqueda AJAX
-            $('#JugadorSearch').select2({
-            placeholder: "Buscá por Apellido, Nombre o DNI...",
-            minimumInputLength: 3,
-            ajax: {
-            url: '@Url.Action("BuscarJugadores", "Sanciones")',
-            dataType: 'json',
-            delay: 300, // Un poquito más de espera para que termine de escribir
-            data: function (params) {
-            return {
-            term: params.term.trim() // Limpiamos espacios al inicio/final
-            };
-            },
-            processResults: function (data) {
-            return {
-            results: data.results
-            };
-            },
-            cache: true
-            }
-            });
-
-            $('#EquipoSearch').select2({
-            placeholder: "Escribí el nombre del equipo...",
-            minimumInputLength: 2, // Buscamos a partir de 2 letras
-            ajax: {
-            url: '@Url.Action("BuscarEquipos", "Sanciones")', // Asegurate que el nombre del Action coincida
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-            return {
-            term: params.term // El texto que el usuario escribe                   
-            };
-            },
-            processResults: function (data) {
-            return {
-            results: data.results
-            };
-            },
-            cache: true
-            }
-            });
-
-            // 2. Función para recalcular los índices de la tabla (CRUCIAL para el Model Binder de ASP.NET Core)
-            function reIndexTable() {
-            $('#jugadoresTable tbody tr').each(function (index) {
-            // Actualiza el índice en el nombre de todos los inputs para que MVC los reconozca como una lista
-            $(this).find('input, textarea').each(function () {
-            var name = $(this).attr('name');
-            if (name) {
-            // Usamos una expresión regular para reemplazar el índice actual por el nuevo
-            $(this).attr('name', name.replace(/\[\d+\]/g, '[' + index + ']'));
-            }
-            });
-            });
-            // Sincroniza el contador global con la cantidad actual de filas
-            jugadorIndex = $('#jugadoresTable tbody tr').length;
-            }
-
-            // 3. Añadir jugador a la lista
-            $('#btnAddJugador').click(function () {
-            var selectData = $('#JugadorSearch').select2('data')[0];
-            var idJugador = selectData ? selectData.id : null;
-            var nombreCompleto = selectData ? selectData.nombreCompleto : null;
-            var dni = selectData ? selectData.dni : null;
-            var articulos = $('#txtArticulo').val();
-            var motivo = $('#txtMotivo').val();
-            var alertaPase = $('#AlertaPase').is(':checked'); // <--- CAPTURAMOS EL CHECKBOX
-            var nombre = selectData ? selectData.nombre : null;
-            var apellido = selectData ? selectData.apellido : null;
-
-            var dataEquipo = $('#EquipoSearch').select2('data')[0];
-            var NombreEquipo = dataEquipo ? dataEquipo.nombreEquipo : null;
-            var idEquipo = dataEquipo ? dataEquipo.id : null;
-
-            // Nueva Validación de Caracteres del Motivo
-            if (motivo.length > maxLength) {
-            showCustomAlert('Error: El informe del Árbitro supera los ' + maxLength + ' caracteres (' + motivo.length + '). Por favor, acorte el texto.');
-            motivoTextarea.focus();
-            return;
-            }
-
-            if (!idJugador || !motivo || !NombreEquipo) {
-            showCustomAlert('¡Ojo! Tenés que elegir un jugador, ponerle los partidos y contar el motivo.');
-            return;
-            }
-
-            // Evitar duplicados
-            if ($('#jugadoresTable tbody tr[data-id="' + idJugador + '"]').length > 0) {
-            showCustomAlert('¡Uy! Este jugador ya está en la lista del boletín.');
-            return;
-            }
-
-            // Sanitización básica para HTML
-            motivo = motivo.replace(/</g, "=<").replace(/>/g, "=>");
-
-            // Construcción de la fila de la tabla
-            var newRow = `
-            <tr data-id="${idJugador}">
-            <td >${dni}</td>
-            <td >${nombreCompleto} ${alertaPase ? '<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle"></i> Con Alerta</span>' : ''}</td>
-            <td >${NombreEquipo}</td>
-            <td > 
-            <input type="text" name="JugadoresSancionados[${jugadorIndex}].CantidadPartidos" value="${articulos}" class="form-control form-control-sm input-articulo" style="width: 150px;"  />
-            <input type="hidden" name="JugadoresSancionados[${jugadorIndex}].IdJugador" value="${idJugador}" /> 
-            <input type="hidden" name="JugadoresSancionados[${jugadorIndex}].Nombre" value="${nombre}" /> 
-            <input type="hidden" name="JugadoresSancionados[${jugadorIndex}].Apellido" value="${apellido}" /> 
-            <input type="hidden" name="JugadoresSancionados[${jugadorIndex}].Dni" value="${dni}" />
-            <input type="hidden" name="JugadoresSancionados[${jugadorIndex}].NombreCompleto" value="${nombreCompleto}" />
-            <input type="hidden" name="JugadoresSancionados[${jugadorIndex}].IdEquipo" value="${idEquipo}" /> 
-            <input type="hidden" name="JugadoresSancionados[${jugadorIndex}].NombreEq" value="${NombreEquipo}" />
-            <input type="hidden" name="JugadoresSancionados[${jugadorIndex}].AlertaPase" value="${alertaPase}" />
+        const idx = jugadorIndex;
+        const row = `
+          <tr data-id="${sd.id}">
+            <td>${idx + 1}</td>
+            <td>${sd.dni}</td>
+            <td>${sd.nombreCompleto} ${alertaBadge}</td>
+            <td>${ed.nombreEquipo}</td>
+            <td>
+              <input type="text"  name="JugadoresSancionados[${idx}].CantidadPartidos" value="${articulos}" class="input-articulo" />
+              <input type="hidden" name="JugadoresSancionados[${idx}].IdJugador"       value="${sd.id}" />
+              <input type="hidden" name="JugadoresSancionados[${idx}].Nombre"          value="${sd.nombre}" />
+              <input type="hidden" name="JugadoresSancionados[${idx}].Apellido"        value="${sd.apellido}" />
+              <input type="hidden" name="JugadoresSancionados[${idx}].NombreCompleto"  value="${sd.nombreCompleto}" />
+              <input type="hidden" name="JugadoresSancionados[${idx}].Dni"             value="${sd.dni}" />
+              <input type="hidden" name="JugadoresSancionados[${idx}].IdEquipo"        value="${ed.id}" />
+              <input type="hidden" name="JugadoresSancionados[${idx}].NombreEq"        value="${ed.nombreEquipo}" />
+              <input type="hidden" name="JugadoresSancionados[${idx}].AlertaPase"      value="${alerta}" />
             </td>
-            <td style="width: 45%;"> 
-            <textarea name="JugadoresSancionados[${jugadorIndex}].MotivoEspecifico" class="form-control form-control-sm input-motivo" rows="2" >${motivo}</textarea>
+            <td>
+              <textarea name="JugadoresSancionados[${idx}].MotivoEspecifico" class="input-motivo" rows="2">${safeMotivo}</textarea>
             </td>
-            <td > 
-            <button type="button" class="btn btn-sm btn-danger btn-remove">Sacar</button>
+            <td>
+              <button type="button" class="btn-remove-jugador btn-remove">
+                <i class="bi bi-trash"></i>
+              </button>
             </td>
-            </tr>`;
+          </tr>`;
 
-            $('#jugadoresTable tbody').append(newRow);
-            jugadorIndex++;
+        $('#emptyRow').remove();
+        $('#jugadoresTable tbody').append(row);
+        jugadorIndex++;
 
-            // Limpiar campos después de añadir
-            $('#JugadorSearch').val(null).trigger('change');
-            $('#txtArticulo').val('');
-            $('#txtMotivo').val('');
-            $('#AlertaPase').prop('checked', false);
-            // Resetear contador visual
-            motivoCount.text('0 / ' + maxLength).removeClass('text-warning').removeClass('text-danger').addClass('text-success');
-            });
+        /* limpiar panel */
+        $('#JugadorSearch, #EquipoSearch').val(null).trigger('change');
+        $('#txtArticulo').val('');
+        $motivo.val('Sin Informe');
+        $('#AlertaPase').prop('checked', false);
+        $motivoCount.text('0 / ' + maxLength).removeClass('warn danger');
+        
+        // 3. Devolvemos el foco al buscador de jugadores para el siguiente
+        $('#JugadorSearch').select2('open');
+      });
 
-            // 4. Modificar o Eliminar jugador de la lista
-            $('#jugadoresTable').on('click', '.btn-remove', function () {
-            // Eliminar la fila
-            $(this).closest('tr').remove();
+      /* ── Quitar jugador ── */
+      $('#jugadoresTable').on('click', '.btn-remove', function () {
+        $(this).closest('tr').remove();
+        reIndexTable();
+        if ($('#jugadoresTable tbody tr').length === 0) {
+          $('#jugadoresTable tbody').append(`
+            <tr id="emptyRow">
+              <td colspan="7">
+                <div class="cb-table-empty">
+                  <i class="bi bi-person-fill-slash"></i>
+                  Todavía no hay jugadores en el boletín.
+                </div>
+              </td>
+            </tr>`);
+        }
+      });
 
-            // Reindexar la tabla después de eliminar
-            reIndexTable();
-            });
-
-            // Asegurar que la tabla esté indexada correctamente al cargar si hay datos de restauración
-            reIndexTable();
-            });
-
-        </script>
-
-    }
+      reIndexTable();
+    });
+  </script>>
+}

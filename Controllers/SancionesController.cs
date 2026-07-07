@@ -441,7 +441,7 @@ namespace ClubId.Controllers
                     dni = j.Dni,
                     nombre = j.Nombre,
                     apellido = j.Apellido,
-                    nombreCompleto = $"{j.Apellido.ToUpper()}, {j.Nombre}"
+                    nombreCompleto = $"{j.Apellido.ToUpper()} {j.Nombre}"
                 })
                 .ToListAsync();
 
@@ -455,17 +455,17 @@ namespace ClubId.Controllers
             {
                 return Json(new { results = new List<object>() });
             }
-
+          
+            
             var results = await _context.Equipos
             .Include(b => b.IdCategoriaNavigation)
                 // Busca por nombre
-                .Where(j => j.NombreEq.Contains(term)) //&& j.IdCategoria == idcat
+                .Where(j => j.NombreEq.Contains(term.ToUpper())) 
                 .Take(10) // Limita resultados para mejor rendimiento
                 .Select(j => new
                 {
                     id = j.IdEquipo, // Necesario para el valor del select
-                    text = $"{j.NombreEq} (Cat: {j.IdCategoriaNavigation.NombreCat}) ",    // Texto a mostrar
-                                                                                           //text = $"{j.Apellido}, {j.Nombre} (DNI: {j.Dni})", // Texto a mostrar
+                    text = $"{j.NombreEq} (Cat: {j.IdCategoriaNavigation.NombreCat}) ",    // Texto a mostrar               
                     ncat = j.IdCategoriaNavigation.NombreCat,
                     // Campos extra para tu lógica de JS:
                     nombreEquipo = j.NombreEq
@@ -517,7 +517,74 @@ namespace ClubId.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+ public async Task<IActionResult> PlanillaExcel(int id)
+{
+    // 1. Buscamos el boletín con sus jugadores sancionados
+    var boletin = await _context.Sanciones
+        .Include(b => b.IdCategoriasNavigation)
+        .Include(b => b.Jueqxsancions) // O como se llame tu tabla intermedia
+            .ThenInclude(d => d.IdjugadorNavigation)
+         .Include(b => b.Jueqxsancions)
+            .ThenInclude(d => d.IdEquipoNavigation)
+        .FirstOrDefaultAsync(b => b.IdSanciones == id);
 
+    if (boletin == null) return NotFound();
+
+    var listaPlanilla = new List<PlanillaExcelViewModel>();
+    string nombreFecha = "F" + boletin.NroFecha; // Genera el "F14"
+
+ foreach (var detalle in boletin.Jueqxsancions)
+    {
+      string textoSancion = detalle.Sancion?.Trim() ?? "";
+    
+    string sancion = textoSancion; // Por defecto, mostramos lo que se escribió
+    string debe = "";
+    string total = "";
+
+    // LÓGICA DE PARSEO ACTUALIZADA:
+    if (textoSancion.StartsWith("Inhabilitado", StringComparison.OrdinalIgnoreCase))
+    {
+        sancion = "INHABILITADO";
+        debe = "";  // Vacío
+        total = ""; // Vacío
+    }
+    else if (!string.IsNullOrEmpty(textoSancion) && char.IsDigit(textoSancion[0]))
+    {
+        // 1. Si empieza con número, la columna Sanción pasa a ser fija: "DEBE"
+        sancion = "DEBE";
+
+        // 2. Extraemos el número inicial para las columnas numéricas
+        string numero = new string(textoSancion.TakeWhile(char.IsDigit).ToArray());
+        debe = numero;
+        total = numero;
+    }
+    else if (textoSancion.StartsWith("Habilitado", StringComparison.OrdinalIgnoreCase))
+    {
+        // Si empieza con HABILITADO, conserva el texto original (ej: "Habilitado art 4")
+        sancion = textoSancion; 
+        debe = "";  // Vacío
+        total = ""; // Vacío
+    }
+
+        // Armamos la fila con la nueva estructura
+        listaPlanilla.Add(new PlanillaExcelViewModel
+        {
+            Dni = detalle.IdjugadorNavigation.Dni,
+            ApellidoNombre = $"{detalle.IdjugadorNavigation.Apellido} {detalle.IdjugadorNavigation.Nombre}",
+            Sancion = sancion,
+            Debe = debe,
+            Total = total,
+            Categoria = boletin.IdCategoriasNavigation.NombreCat,
+            Equipo = detalle.IdEquipoNavigation.NombreEq,
+            FechaBoletin = nombreFecha
+        });
+    }
+
+    // Ordenamos alfabéticamente por equipo y luego por apellido (opcional, ayuda al excel)
+    listaPlanilla = listaPlanilla.OrderBy(x => x.Equipo).ThenBy(x => x.ApellidoNombre).ToList();
+
+    return View(listaPlanilla);
+}
 
     }
 }

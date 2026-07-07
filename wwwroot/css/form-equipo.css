@@ -1,0 +1,309 @@
+/* ═══════════════════════════════════════
+   FORM-EQUIPO.CSS — Alta / Edición de equipo
+   Paleta: #0B2A3D #4682B4 #F5F7FA #E2B24A #C4CBD3
+   Compartido por Create y Edit de Equipo
+═══════════════════════════════════════ */
+
+:root {
+  --marino:      #0B2A3D;
+  --acero:       #4682B4;
+  --nube:        #F5F7FA;
+  --dorado:      #E2B24A;
+  --plateado:    #C4CBD3;
+  --verde:       #16A34A;
+  --rojo:        #C0392B;
+  --bg-surface:  #FFFFFF;
+  --text-primary:#0B2A3D;
+  --text-soft:   #3D5166;
+  --text-muted:  #7A8A99;
+  --border:      #C4CBD3;
+  --border-soft: #DCE1E7;
+  --radius:      8px;
+}
+
+/* ── Página ── */
+.feq-page {
+  padding: 2rem 2rem 3rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.feq-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.feq-eyebrow {
+  font-size: .78rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--acero);
+  font-weight: 700;
+  margin-bottom: .2rem;
+}
+.feq-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--marino);
+  letter-spacing: -.02em;
+  margin: 0;
+  line-height: 1.1;
+}
+.feq-back {
+  font-size: .88rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  transition: color .13s, border-color .13s;
+  white-space: nowrap;
+  align-self: center;
+}
+.feq-back:hover { color: var(--marino); border-color: var(--acero); }
+
+/* ── Card principal ── */
+.feq-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-top: 4px solid var(--acero);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(11,42,61,.07);
+  overflow: hidden;
+}
+
+/* ── Secciones dentro de la card ── */
+.feq-section {
+  padding: 1.5rem 1.75rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+.feq-section:last-child { border-bottom: none; }
+
+.feq-section-title {
+  font-size: .8rem;
+  font-weight: 800;
+  color: var(--marino);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0 0 1.25rem;
+}
+.feq-section-title i { color: var(--acero); font-size: 1rem; }
+.feq-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-soft);
+  margin-left: .5rem;
+}
+
+/* ── Grid de campos ── */
+.feq-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .85rem 1.25rem;
+}
+.feq-row.single { grid-template-columns: 1fr; }
+.feq-row.three  { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ── Campo base ── */
+.feq-field { margin-bottom: 0; }
+.feq-field label {
+  font-size: .78rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: .4rem;
+  display: block;
+}
+.feq-field .form-control,
+.feq-field .form-select {
+  background: var(--nube);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  padding: .6rem .9rem;
+  transition: border-color .13s, box-shadow .13s;
+  width: 100%;
+}
+.feq-field .form-control:focus,
+.feq-field .form-select:focus {
+  outline: none;
+  border-color: var(--acero);
+  box-shadow: 0 0 0 3px rgba(70,130,180,.15);
+  background: #fff;
+}
+.feq-field .form-select option { background: #fff; }
+.feq-field .text-danger {
+  font-size: .82rem;
+  display: block;
+  margin-top: .3rem;
+  color: var(--rojo);
+}
+
+/* ── Input celular — con ícono ── */
+.feq-tel-group { display: flex; align-items: stretch; }
+.feq-tel-icon {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--nube);
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: var(--radius) 0 0 var(--radius);
+  padding: 0 .85rem;
+  color: #25D366;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.feq-tel-group .form-control { border-radius: 0 var(--radius) var(--radius) 0; }
+
+/* ── Validation summary ── */
+.feq-validation {
+  background: rgba(192,57,43,.05);
+  border: 1px solid rgba(192,57,43,.2);
+  border-left: 4px solid var(--rojo);
+  border-radius: var(--radius);
+  padding: .9rem 1.1rem;
+  margin-bottom: 1.35rem;
+  font-size: .92rem;
+  color: var(--rojo);
+}
+
+/* ── Switch estado ── */
+.feq-switch-wrap {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  background: var(--nube);
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  transition: background .2s, border-color .2s;
+}
+.feq-switch-wrap.is-activo {
+  background: rgba(22,163,74,.05);
+  border-color: rgba(22,163,74,.28);
+}
+.feq-switch-wrap.is-inactivo {
+  background: rgba(192,57,43,.04);
+  border-color: rgba(192,57,43,.22);
+}
+.feq-switch-wrap .form-check-input {
+  width: 2.8em; height: 1.5em;
+  flex-shrink: 0; cursor: pointer;
+  background-color: var(--rojo);
+  border-color: var(--rojo);
+  transition: background-color .2s, border-color .2s;
+}
+.feq-switch-wrap .form-check-input:checked {
+  background-color: var(--verde);
+  border-color: var(--verde);
+}
+.feq-switch-label-title {
+  font-size: 1rem;
+  font-weight: 800;
+  display: block;
+  line-height: 1.2;
+  transition: color .2s;
+}
+.feq-switch-wrap.is-activo   .feq-switch-label-title { color: var(--verde); }
+.feq-switch-wrap.is-inactivo .feq-switch-label-title { color: var(--rojo); }
+.feq-switch-label-sub {
+  font-size: .82rem;
+  color: var(--text-muted);
+  margin-top: .1rem;
+  display: block;
+}
+
+/* ── Dropzone escudo ── */
+.feq-dropzone {
+  border: 2px dashed var(--plateado);
+  border-radius: 10px;
+  padding: 1.35rem 1.25rem;
+  text-align: center;
+  background: var(--nube);
+  transition: border-color .15s, background .15s;
+}
+.feq-dropzone:hover { border-color: var(--acero); background: rgba(70,130,180,.03); }
+.feq-dropzone-icon { font-size: 1.75rem; color: var(--text-muted); display: block; margin-bottom: .5rem; }
+.feq-dropzone-label { font-size: .9rem; font-weight: 700; color: var(--text-soft); display: block; margin-bottom: .75rem; }
+.feq-dropzone .form-control { background: #fff; font-size: .95rem; }
+.feq-dropzone small { display: block; margin-top: .5rem; font-size: .78rem; color: var(--text-muted); }
+
+/* Preview escudo actual (Edit) */
+.feq-escudo-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+.feq-escudo-frame {
+  width: 90px; height: 96px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  background: var(--nube);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(11,42,61,.08);
+}
+.feq-escudo-frame img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.feq-escudo-frame i { font-size: 2.5rem; color: var(--plateado); }
+.feq-escudo-caption {
+  font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 700;
+}
+
+/* ── Acciones ── */
+.feq-actions {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  flex-wrap: wrap;
+}
+.btn-feq {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-size: .9rem; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase;
+  border-radius: var(--radius); padding: .7rem 1.5rem;
+  border: 2px solid; cursor: pointer;
+  text-decoration: none; white-space: nowrap;
+  transition: background .13s, color .13s, border-color .13s,
+              box-shadow .13s, transform .1s;
+}
+.btn-feq.save {
+  background: var(--marino); color: #FFFFFF; border-color: var(--marino);
+  box-shadow: 0 3px 10px rgba(11,42,61,.25);
+}
+.btn-feq.save:hover {
+  background: #0d3550; border-color: #0d3550; color: #fff;
+  box-shadow: 0 5px 16px rgba(11,42,61,.32);
+  transform: translateY(-2px);
+}
+.btn-feq.cancel {
+  background: transparent; color: var(--text-muted); border-color: var(--border);
+  margin-left: auto;
+}
+.btn-feq.cancel:hover {
+  color: var(--marino); border-color: var(--marino);
+  background: rgba(11,42,61,.04); transform: none;
+}
+
+@media (max-width: 700px) {
+  .feq-page { padding: 1rem 1rem 2rem; }
+  .feq-title { font-size: 1.4rem; }
+  .feq-row, .feq-row.three { grid-template-columns: 1fr; }
+  .feq-actions { flex-direction: column; align-items: stretch; }
+  .feq-actions .btn-feq { justify-content: center; }
+  .feq-actions .btn-feq.cancel { margin-left: 0; }
+}

@@ -1,128 +1,154 @@
 @using ClubId.Data
 @using Microsoft.AspNetCore.Mvc.Filters
 @using Microsoft.EntityFrameworkCore
-@using ClubId.Services;
+@using ClubId.Services
 @model ClubId.Models.ViewModels.JugadorHistorialViewModel
 
 @{
     ViewData["Title"] = $"Historial: {Model.NombreCompleto}";
 }
 
-<div class="container py-5">
-    
-    @* --- PARTE 1: TARJETA DE PERFIL (FOTO + DATOS) --- *@
-    <div class="card shadow-sm mb-4 border-0">
-        <div class="card-body p-4">
-            <div class="row align-items-center">
-                @* Columna Foto *@
-                <div class="col-md-3 text-center mb-3 mb-md-0">
-                    <div class="position-relative d-inline-block">
-                        @if (!string.IsNullOrEmpty(Model.FotoUrl))
-                        {
-                            <img src="~/fotosPerfiles/@Model.FotoUrl" alt="Foto Jugador" class="rounded-circle img-thumbnail shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
-                        }
-                        else
-                        {
-                            @* Placeholder si no hay foto *@
-                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto" style="width: 150px; height: 150px; font-size: 4rem;">
-                                <i class="bi bi-person"></i>
-                            </div>
-                        }
-                    </div>
-                </div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/historial-jugador.css" asp-append-version="true" />
+}
 
-                @* Columna Datos *@
-                <div class="col-md-9">
-                    <h2 class="fw-bold text-primary">@Model.NombreCompleto</h2>
-                    <hr class="my-2" />
-                    <div class="row mt-3">
-                        <div class="col-sm-4 mb-2">
-                            <label class="small text-muted fw-bold text-uppercase">DNI</label>
-                            <p class="h5">@Model.Dni</p>
-                        </div>
-                        <div class="col-sm-4 mb-2">
-                            <label class="small text-muted fw-bold text-uppercase">Nro. Carnet</label>
-                            <p class="h5">@Model.Carnet</p>
-                        </div>
-                        <div class="col-sm-4 mb-2">
-                            <label class="small text-muted fw-bold text-uppercase">Fecha Nacimiento</label>
-                            <p class="h5">
-                                @(Model.FechaNacimiento.HasValue ? Model.FechaNacimiento.Value.ToString("dd/MM/yyyy") : "-")
-                            </p>
-                        </div>
-                    </div>
-                </div>
+<div class="hist-page">
+
+  <!-- ── Navegación superior ── -->
+  <div class="hist-nav">
+    <span class="hist-eyebrow">
+      <i class="bi bi-shield-exclamation me-1"></i> Expediente disciplinario
+    </span>
+    <a href="javascript:history.back()" class="hist-back">
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  <!-- ══════════════════════════════
+       TARJETA DE PERFIL
+  ══════════════════════════════ -->
+  <div class="hist-perfil">
+    <div class="hist-perfil-inner">
+
+      <!-- Foto formato carnet -->
+      <div class="hist-foto-col">
+        <div class="hist-foto-frame">
+          @if (!string.IsNullOrEmpty(Model.FotoUrl))
+          {
+            <img src="~/fotosPerfiles/@Model.FotoUrl" alt="Foto de @Model.NombreCompleto" />
+          }
+          else
+          {
+            <div class="hist-foto-empty">
+              <i class="bi bi-person-bounding-box"></i>
+              <span>Sin foto</span>
             </div>
+          }
         </div>
+        <span class="hist-foto-caption">Foto carnet</span>
+      </div>
+
+      <!-- Datos del jugador -->
+      <div class="hist-datos-col">
+        <h2 class="hist-nombre">@Model.NombreCompleto</h2>
+        <span class="hist-carnet-chip">
+          <i class="bi bi-credit-card-2-front"></i> Carnet #@Model.Carnet
+        </span>
+
+        <div class="hist-datos-grid">
+          <div class="hist-dato">
+            <span class="hist-dato-label">DNI</span>
+            <span class="hist-dato-value">@Model.Dni</span>
+          </div>
+          <div class="hist-dato">
+            <span class="hist-dato-label">Fecha de nacimiento</span>
+            <span class="hist-dato-value">
+              @(Model.FechaNacimiento.HasValue
+                ? Model.FechaNacimiento.Value.ToString("dd/MM/yyyy")
+                : "—")
+            </span>
+          </div>
+          <div class="hist-dato">
+            <span class="hist-dato-label">Total de sanciones</span>
+            <span class="hist-dato-value" style="color: @(Model.Historial.Any() ? "var(--rojo)" : "var(--verde)")">
+              @Model.Historial.Count()
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       HISTORIAL DE SANCIONES
+  ══════════════════════════════ -->
+  <div class="hist-table-card">
+
+    <div class="hist-table-head">
+      <i class="bi bi-clock-history"></i>
+      <span class="hist-table-title">Historial de sanciones</span>
     </div>
 
-    @* --- PARTE 2: GRILLA DE SANCIONES --- *@
-    <div class="card shadow border-0">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0 text-secondary"><i class="bi bi-clock-history me-2"></i>Historial de Sanciones</h5>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4">Fecha Sanción</th>
-                            <th>Equipo</th>
-                            <th>Sanción Aplicada</th>
-                            <th>Informe / Motivo</th>
-                            <th class="text-end pe-4">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.Historial.Any())
-                        {
-                            @foreach (var item in Model.Historial)
-                            {
-                                <tr>
-                                    <td class="ps-4 fw-bold text-dark">
-                                        @item.FechaSancion.ToString("dd/MM/yyyy")
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-light text-dark border">
-                                            @item.NombreEquipo
-                                        </span>
-                                    </td>
-                                    <td class="text-danger fw-bold">
-                                        @item.DetalleSancion
-                                    </td>
-                                    <td class="text-muted small" style="max-width: 300px;">
-                                        @item.Informe
-                                    </td>
-                                    <td class="text-end pe-4">
-                                        @* Botón REPORTE  *@
-                                        <a asp-action="GenerarBoletin" asp-controller="Sanciones" asp-route-id="@item.IdSancion" 
-                                           class="btn btn-outline-danger btn-sm" target="_blank">
-                                            <i class="bi bi-file-earmark-pdf-fill"></i> Reporte
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="5" class="text-center py-5 text-muted">
-                                    <i class="bi bi-shield-check display-4 d-block mb-2 text-success"></i>
-                                    <h4>¡Limpio!</h4>
-                                    <p class="mb-0">Este jugador no registra sanciones en el sistema.</p>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="table-responsive">
+      <table class="hist-table">
+        <thead>
+          <tr>
+            <th>Fecha sanción</th>
+            <th>Equipo</th>
+            <th>Sanción aplicada</th>
+            <th>Informe / Motivo</th>
+            <th>Reporte</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (Model.Historial.Any())
+          {
+            @foreach (var item in Model.Historial)
+            {
+              <tr>
+                <td>
+                  <span class="hist-fecha">@item.FechaSancion.ToString("dd/MM/yyyy")</span>
+                </td>
+                <td>
+                  <span class="hist-equipo-badge">
+                    <i class="bi bi-shield-shaded me-1"></i>@item.NombreEquipo
+                  </span>
+                </td>
+                <td>
+                  <span class="hist-sancion">@item.DetalleSancion</span>
+                </td>
+                <td>
+                  <span class="hist-informe">@item.Informe</span>
+                </td>
+                <td>
+                  <a asp-action="GenerarBoletin" asp-controller="Sanciones"
+                     asp-route-id="@item.IdSancion"
+                     class="btn-reporte" target="_blank">
+                    <i class="bi bi-file-earmark-pdf-fill"></i> Reporte
+                  </a>
+                </td>
+              </tr>
+            }
+          }
+          else
+          {
+            <tr>
+              <td colspan="5">
+                <div class="hist-empty">
+                  <i class="bi bi-shield-check hist-empty-icon"></i>
+                  <p class="hist-empty-title">Registro limpio</p>
+                  <p class="hist-empty-sub">
+                    Este jugador no registra sanciones en el sistema.
+                  </p>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
-    
-    <div class="mt-4">
-        <a href="javascript:history.back()" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Volver               
-        </a>
-    </div>
+
+  </div>
 
 </div>

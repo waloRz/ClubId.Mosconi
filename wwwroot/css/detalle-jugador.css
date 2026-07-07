@@ -1,0 +1,402 @@
+/* ═══════════════════════════════════════
+   DETALLE-JUGADOR.CSS — Ficha del jugador
+   Paleta: #0B2A3D #4682B4 #F5F7FA #E2B24A #C4CBD3
+═══════════════════════════════════════ */
+
+:root {
+  --marino:      #0B2A3D;
+  --acero:       #4682B4;
+  --nube:        #F5F7FA;
+  --dorado:      #E2B24A;
+  --plateado:    #C4CBD3;
+  --verde:       #16A34A;
+  --rojo:        #C0392B;
+  --bg-base:     #F5F7FA;
+  --bg-surface:  #FFFFFF;
+  --text-primary:#0B2A3D;
+  --text-soft:   #3D5166;
+  --text-muted:  #7A8A99;
+  --border:      #C4CBD3;
+  --border-soft: #DCE1E7;
+  --radius:      8px;
+}
+
+/* ── Página ── */
+.det-page {
+  padding: 2rem 2rem 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.det-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+.det-eyebrow {
+  font-size: .78rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--acero);
+  font-weight: 700;
+  margin-bottom: .2rem;
+}
+.det-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--marino);
+  letter-spacing: -.02em;
+  margin: 0;
+  line-height: 1.1;
+}
+.det-title span { color: var(--acero); }
+.det-back {
+  font-size: .88rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  transition: color .13s, border-color .13s;
+  white-space: nowrap;
+  align-self: center;
+}
+.det-back:hover { color: var(--marino); border-color: var(--acero); }
+
+/* ══════════════════════════════
+   GRID PRINCIPAL
+══════════════════════════════ */
+.det-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* ══════════════════════════════
+   PANEL IZQUIERDO — PERFIL
+══════════════════════════════ */
+.det-perfil {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-top: 4px solid var(--marino);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(11,42,61,.07);
+  overflow: hidden;
+}
+
+/* Zona foto — fondo marino oscuro como "cancha" */
+.det-foto-zona {
+  background: var(--marino);
+  padding: 2rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Línea dorada decorativa bajo la foto */
+.det-foto-zona::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--dorado);
+  border-radius: 2px;
+}
+
+/* Foto grande — protagonista */
+.det-foto-frame {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 4px solid var(--dorado);
+  overflow: hidden;
+  background: rgba(255,255,255,.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,.35);
+  flex-shrink: 0;
+}
+.det-foto-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.det-foto-empty {
+  text-align: center;
+  color: rgba(255,255,255,.5);
+}
+.det-foto-empty i { font-size: 4rem; display: block; }
+.det-foto-empty span { font-size: .82rem; display: block; margin-top: .3rem; }
+
+.det-foto-nombre {
+  margin-top: 1.1rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 1.2;
+}
+.det-foto-carnet {
+  margin-top: .35rem;
+  font-size: .8rem;
+  color: var(--dorado);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+/* Estado badge en la zona foto */
+.det-estado {
+  margin-top: .85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border-radius: 20px;
+  padding: .35rem .9rem;
+  border: 2px solid;
+}
+.det-estado.activo {
+  background: rgba(22,163,74,.15);
+  color: #4ADE80;
+  border-color: rgba(22,163,74,.35);
+}
+.det-estado.inactivo {
+  background: rgba(192,57,43,.15);
+  color: #FC8B8B;
+  border-color: rgba(192,57,43,.35);
+}
+.det-estado::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.det-estado.activo::before  { background: #4ADE80; box-shadow: 0 0 6px #4ADE80; }
+.det-estado.inactivo::before { background: #FC8B8B; box-shadow: 0 0 6px #FC8B8B; }
+
+/* Datos personales bajo la foto */
+.det-datos-lista {
+  padding: 1.35rem 1.5rem;
+}
+.det-dato-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: .65rem 0;
+  border-bottom: 1px solid var(--border-soft);
+  gap: 1rem;
+}
+.det-dato-item:last-child { border-bottom: none; }
+.det-dato-label {
+  font-size: .75rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.det-dato-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* ══════════════════════════════
+   PANEL DERECHO — HISTORIAL
+══════════════════════════════ */
+.det-historial {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-top: 4px solid var(--acero);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(11,42,61,.07);
+  overflow: hidden;
+}
+.det-historial-head {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  background: var(--nube);
+}
+.det-historial-head i { font-size: 1.1rem; color: var(--acero); }
+.det-historial-title {
+  font-size: .88rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--marino);
+}
+
+/* Tabla historial de equipos */
+.det-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.det-table thead th {
+  background: var(--marino);
+  color: #FFFFFF;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .9rem 1.1rem;
+  border: none;
+  white-space: nowrap;
+  box-shadow: inset 0 -3px 0 var(--acero);
+}
+.det-table thead th:first-child { padding-left: 1.5rem; }
+.det-table thead th:last-child  { padding-right: 1.5rem; }
+
+.det-table tbody tr {
+  border-bottom: 1px solid var(--border-soft);
+  transition: background .1s;
+}
+.det-table tbody tr:last-child { border-bottom: none; }
+.det-table tbody tr:hover { background: #EBF0F6; }
+.det-table tbody tr:nth-child(even) { background: var(--nube); }
+.det-table tbody tr:nth-child(even):hover { background: #EBF0F6; }
+
+.det-table tbody td {
+  padding: .85rem 1.1rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+  border: none;
+}
+.det-table tbody td:first-child { padding-left: 1.5rem; font-weight: 700; }
+.det-table tbody td:last-child  { padding-right: 1.5rem; }
+
+/* Badge categoría */
+.det-cat-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(70,130,180,.1);
+  color: var(--acero);
+  border: 1px solid rgba(70,130,180,.25);
+  border-radius: 20px;
+  font-size: .82rem;
+  font-weight: 700;
+  padding: .25rem .8rem;
+  white-space: nowrap;
+}
+
+/* Fecha recibo */
+.det-fecha {
+  font-size: .95rem;
+  color: var(--text-soft);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Empty state */
+.det-table-empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--text-muted);
+  font-size: .95rem;
+}
+.det-table-empty i { font-size: 1.75rem; display: block; margin-bottom: .5rem; color: var(--plateado); }
+
+/* ══════════════════════════════
+   BARRA DE ACCIONES
+══════════════════════════════ */
+.det-actions {
+  margin-top: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  flex-wrap: wrap;
+  box-shadow: 0 1px 3px rgba(11,42,61,.05);
+  /* Abarca todo el ancho del grid */
+  grid-column: 1 / -1;
+}
+
+/* Base botón */
+.btn-det {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .9rem; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase;
+  border-radius: var(--radius); padding: .7rem 1.4rem;
+  border: 2px solid; cursor: pointer;
+  text-decoration: none; white-space: nowrap;
+  transition: background .13s, color .13s, border-color .13s,
+              box-shadow .13s, transform .1s;
+}
+
+/* Editar — marino sólido: acción principal */
+.btn-det.edit {
+  background: var(--marino);
+  color: #FFFFFF;
+  border-color: var(--marino);
+  box-shadow: 0 3px 10px rgba(11,42,61,.25);
+}
+.btn-det.edit:hover {
+  background: #0d3550;
+  border-color: #0d3550;
+  box-shadow: 0 5px 16px rgba(11,42,61,.32);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* Carnet PDF — dorado: acción secundaria valiosa */
+.btn-det.carnet {
+  background: var(--dorado);
+  color: var(--marino);
+  border-color: var(--dorado);
+  box-shadow: 0 3px 10px rgba(226,178,74,.3);
+}
+.btn-det.carnet:hover {
+  background: #d4a33a;
+  border-color: #d4a33a;
+  box-shadow: 0 5px 16px rgba(226,178,74,.38);
+  transform: translateY(-2px);
+  color: var(--marino);
+}
+
+/* Volver — neutro sin peso visual */
+.btn-det.back {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+  box-shadow: none;
+  margin-left: auto;
+}
+.btn-det.back:hover {
+  color: var(--marino);
+  border-color: var(--marino);
+  background: rgba(11,42,61,.04);
+  transform: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .det-grid { grid-template-columns: 1fr; }
+  .det-actions { grid-column: 1; margin-top: 0; }
+  .det-page { padding: 1rem 1rem 2rem; }
+  .det-title { font-size: 1.4rem; }
+  .det-foto-frame { width: 160px; height: 160px; }
+}

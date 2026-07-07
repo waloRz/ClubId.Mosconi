@@ -1,118 +1,174 @@
-
 @using Microsoft.AspNetCore.Mvc.Filters
 @using Microsoft.EntityFrameworkCore
 @using ClubId.Data
 @model ClubId.Models.ViewModels.JugadorDetallesViewModel
 
 @{
-    ViewData["Title"] = "Detalle del Jugador";
+  ViewData["Title"] = "Detalle del Jugador";
 }
 
-<div class="container py-4">
-    <h2 class="text-primary mb-4 fw-bold">Detalles del Jugador: @Model.Nombre @Model.Apellido</h2>
+@section Styles {
+  <link rel="stylesheet" href="~/css/detalle-jugador.css" asp-append-version="true" />
+}
 
-    <div class="row g-4">
-        
-        <div class="col-lg-4 col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Información Personal</h5>
-                </div>
-                <div class="card-body">
-                    
-                    <div class="mb-3 text-center">
-                        @if (!string.IsNullOrWhiteSpace(@Model.Foto))
-                        { 
-                            <img src="~/fotosPerfiles/@Model.Foto" class="img-fluid rounded-circle border border-5 border-light-subtle" 
-                                 alt="Foto de @Model.Nombre" 
-                                 style="width: 150px; height: 150px; object-fit: cover; margin-bottom: 15px;" /> 
-                        }
-                        else
-                        { 
-                            <div class="border rounded-circle p-5 text-center text-muted bg-light mx-auto" 
-                                 style="width: 150px; height: 150px; line-height: 50px;">
-                                <i class="bi bi-person-fill" style="font-size: 3rem;"></i>
-                            </div> 
-                        }
-                        <h4 class="mt-2">@Model.Nombre @Model.Apellido</h4>
-                        <p class="text-muted">Carnet #@Model.JugadorId</p>
-                    </div>
+<div class="det-page">
 
-                    <dl class="row small border-top pt-3">
-                        <dt class="col-sm-4 text-secondary">DNI:</dt>
-                        <dd class="col-sm-8 fw-semibold">@Model.Dni</dd>
-                        
-                        <dt class="col-sm-4 text-secondary">Nacimiento:</dt>
-                        <dd class="col-sm-8 fw-semibold">@Model.FechaNac.ToString("dd/MM/yyyy")</dd>
-                        
-                        <dt class="col-sm-4 text-secondary">Estado:</dt>
-                        <dd class="col-sm-8">
-                            @if (Model.Activo)
-                            {
-                                <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> Activo</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger"><i class="bi bi-x-circle-fill"></i> Inactivo</span>
-                            }
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-8 col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">Historial de Pertenencia a Equipos</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="ps-3">Equipo</th>
-                                    <th>Categoría</th>
-                                    <th style="width: 120px;">Fecha de Recibo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.HistorialEquipos != null && Model.HistorialEquipos.Any())
-                                {
-                                    @foreach (var p in Model.HistorialEquipos.OrderByDescending(x => x.FechaRecibo))
-                                    {
-                                        <tr>
-                                            <td class="ps-3 fw-semibold">@p.NombreEquipo</td>
-                                            <td><span class="badge bg-info text-dark">@p.NombreCat</span></td>
-                                            <td>@p.FechaRecibo.ToShortDateString()</td>
-                                        </tr> 
-                                    } 
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted py-4">
-                                            Este jugador no tiene un historial de equipos registrado.
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-12 mt-4 pt-3 border-top">
-            <a asp-action="Edit" asp-route-id="@Model.idJxEdit" class="btn btn-warning me-2">
-                <i class="bi bi-pencil-square"></i> Editar Información
-            </a> 
-            <a asp-action="GenerarCarnet" asp-route-idjugador="@Model.JugadorId" asp-route-idpjxe="0" target="_blank" class="btn btn-outline-info me-2">
-                <i class="bi bi-file-pdf"></i> Descargar Carnet PDF
-            </a>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Volver al Listado
-            </a>
-        </div>
+  <!-- ── Header ── -->
+  <div class="det-nav">
+    <div>
+      <div class="det-eyebrow">
+        <i class="bi bi-person-lines-fill me-1"></i> Ficha del jugador
+      </div>
+      <h2 class="det-title">
+        <span>@Model.Apellido</span>, @Model.Nombre
+      </h2>
     </div>
+    <a asp-action="Index" class="det-back">
+      <i class="bi bi-arrow-left"></i> Volver al listado
+    </a>
+  </div>
+
+  <div class="det-grid">
+
+    <!-- ══════════════════════════════
+         PANEL IZQUIERDO — PERFIL
+    ══════════════════════════════ -->
+    <div class="det-perfil">
+
+      <!-- Zona foto con fondo marino -->
+      <div class="det-foto-zona">
+        <div class="det-foto-frame">
+          @if (!string.IsNullOrWhiteSpace(Model.Foto))
+          {
+            <img src="~/fotosPerfiles/@Model.Foto" alt="Foto de @Model.Nombre @Model.Apellido" />
+          }
+          else
+          {
+            <div class="det-foto-empty">
+              <i class="bi bi-person-bounding-box"></i>
+              <span>Sin foto</span>
+            </div>
+          }
+        </div>
+
+        <p class="det-foto-nombre">@Model.Nombre @Model.Apellido</p>
+        <p class="det-foto-carnet">
+          <i class="bi bi-credit-card-2-front me-1"></i> Carnet #@Model.JugadorId
+        </p>
+
+        @if (Model.Activo)
+        {
+          <span class="det-estado activo">
+            <i class="bi bi-check-circle-fill"></i> Habilitado
+          </span>
+        }
+        else
+        {
+          <span class="det-estado inactivo">
+            <i class="bi bi-x-circle-fill"></i> Sancionado
+          </span>
+        }
+      </div>
+
+      <!-- Datos personales -->
+      <div class="det-datos-lista">
+        <div class="det-dato-item">
+          <span class="det-dato-label">DNI</span>
+          <span class="det-dato-value">@Model.Dni</span>
+        </div>
+
+        <div class="det-dato-item">
+          <span class="det-dato-label">Nacimiento</span>
+          <span class="det-dato-value">
+            @Model.FechaNac.ToString("dd/MM/yyyy")
+            @{
+              // Convertimos el día de hoy a DateOnly para que coincida con el tipo de tu modelo
+              var hoy = DateOnly.FromDateTime(DateTime.Today);
+              var edad = hoy.Year - Model.FechaNac.Year;
+
+              // Verificamos si en el año actual todavía no llegó la fecha de su cumpleaños
+              if (hoy < Model.FechaNac.AddYears(edad))
+              {
+                edad--;
+              }
+            }
+            <span class="text-muted ms-2">(@edad años)</span>
+          </span>
+        </div>
+
+        <div class="det-dato-item">
+          <span class="det-dato-label">N° Carnet</span>
+          <span class="det-dato-value">@Model.JugadorId</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         PANEL DERECHO — HISTORIAL
+    ══════════════════════════════ -->
+    <div class="det-historial">
+      <div class="det-historial-head">
+        <i class="bi bi-shield-shaded"></i>
+        <span class="det-historial-title">Historial de pertenencia a equipos</span>
+      </div>
+
+      <div class="table-responsive">
+        <table class="det-table">
+          <thead>
+            <tr>
+              <th>Equipo</th>
+              <th>Categoría</th>
+              <th>Fecha de recibo</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (Model.HistorialEquipos != null && Model.HistorialEquipos.Any())
+            {
+              @foreach (var p in Model.HistorialEquipos.OrderByDescending(x => x.FechaRecibo))
+              {
+                <tr>
+                  <td>@p.NombreEquipo</td>
+                  <td>
+                    <span class="det-cat-badge">@p.NombreCat</span>
+                  </td>
+                  <td>
+                    <span class="det-fecha">@p.FechaRecibo.ToShortDateString()</span>
+                  </td>
+                </tr>
+              }
+            }
+            else
+            {
+              <tr>
+                <td colspan="3">
+                  <div class="det-table-empty">
+                    <i class="bi bi-shield-slash"></i>
+                    Este jugador no tiene historial de equipos registrado.
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         BARRA DE ACCIONES
+    ══════════════════════════════ -->
+    <div class="det-actions">
+      <a asp-action="Edit" asp-route-id="@Model.idJxEdit" class="btn-det edit">
+        <i class="bi bi-pencil-square"></i> Editar jugador
+      </a>
+      <a asp-action="GenerarCarnet" asp-route-idjugador="@Model.JugadorId" asp-route-idpjxe="0" target="_blank"
+         class="btn-det carnet">
+        <i class="bi bi-file-earmark-pdf-fill"></i> Descargar carnet PDF
+      </a>
+      <a asp-action="Index" class="btn-det back">
+        <i class="bi bi-arrow-left"></i> Volver
+      </a>
+    </div>
+
+  </div><!-- /det-grid -->
+
 </div>

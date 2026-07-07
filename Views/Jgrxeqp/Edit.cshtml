@@ -7,216 +7,296 @@
   ViewData["Title"] = "Editar jugador";
 }
 
-<div class="container py-4">
-  <h2 class="mb-4 text-primary">
-    <i class="bi bi-pencil-square me-2"></i> Editar Jugador: @Model.Nombre @Model.Apellido
-  </h2>
+@section Styles {
+  <link rel="stylesheet" href="~/css/edit-jugador.css" asp-append-version="true" />
+}
 
-  <form asp-action="Edit" method="post" enctype="multipart/form-data" class="mt-3">
+<div class="edit-page">
+
+  <!-- ── Header ── -->
+  <div class="edit-header">
+    <div>
+      <div class="edit-eyebrow">Gestión de plantel</div>
+      <h2 class="edit-title">
+        Editando: <span>@Model.Apellido, @Model.Nombre</span>
+      </h2>
+      <p class="edit-subtitle">N° Carnet: @Model.Idjugador · DNI: @Model.Dni</p>
+    </div>
+    <a asp-action="Index" class="edit-back">
+      <i class="bi bi-arrow-left"></i> Volver al listado
+    </a>
+  </div>
+
+  <form asp-action="Edit" method="post" enctype="multipart/form-data" id="formEdit">
     <input type="hidden" asp-for="idjugadorxEquipo" />
 
-    <div class="row g-4">
+    <div class="edit-grid">
 
-      <div class="col-lg-6">
-        <div class="card shadow-sm h-100">
-          <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="bi bi-person-badge"></i> Datos Personales</h5>
-          </div>
-          <div class="card-body">
-            <div class="row g-3">
+      <!-- ══ PANEL: Datos personales ══ -->
+      <div class="edit-panel personal">
+        <div class="edit-panel-head">
+          <i class="bi bi-person-badge"></i>
+          <span class="edit-panel-head-title">Datos personales</span>
+        </div>
+        <div class="edit-panel-body">
 
-              <div class="col-md-6">
-                <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" maxlength="16" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-              </div>
-              <div class="col-md-6">
-                <label asp-for="Apellido" class="form-label"></label>
-                <input asp-for="Apellido" class="form-control" maxlength="14"/>
-                <span asp-validation-for="Apellido" class="text-danger"></span>
-              </div>
-
-              <div class="col-md-5">
-                <label asp-for="Dni" class="form-label"></label>
-                <input asp-for="Dni" class="form-control" id="DniInput" oninput="formatAndValidateDni(this)"
-                       maxlength="10" placeholder="XX.XXX.XXX" />
-                <span asp-validation-for="Dni" class="text-danger"></span>
-              </div>
-              <div class="col-md-7">
-                <label asp-for="FechaNac" class="form-label">Fecha Nacimiento</label>
-                <input asp-for="FechaNac" class="form-control" type="date" />
-                <span asp-validation-for="FechaNac" class="text-danger"></span>
-              </div>
-
-              <div class="col-12 border-top pt-3">
-                <h6 class="mb-3">Gestión de Estado</h6>
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" asp-for="Activo" role="switch" id="ActivoSwitch" />
-                  <label class="form-check-label fw-semibold" for="ActivoSwitch">
-                    @Html.DisplayNameFor(model => model.Activo)
-                    (<span class="text-muted">Estado actual: @(Model.Activo ? "Activo" : "Inactivo/Sancionado ")</span>)
-                  </label>
-                  <span asp-validation-for="Activo" class="text-danger"></span>
-                </div>
-              </div>
-
+          <div class="form-row">
+            <div class="form-field">
+              <label asp-for="Apellido"></label>
+              <input asp-for="Apellido" class="form-control" placeholder="Ej: Messi" id="Apellido" />
+              <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+            <div class="form-field">
+              <label asp-for="Nombre"></label>
+              <input asp-for="Nombre" class="form-control" placeholder="Ej: Lionel" id="Nombre" />
+              <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
           </div>
+
+          <div class="char-counter-wrap">
+            <span class="char-counter-label">
+              <i class="bi bi-card-text"></i> Espacio en carnet (Apellido + Nombre)
+            </span>
+            <span id="charCount" class="char-counter-value">0 / 26</span>
+          </div>
+          <span id="charWarning" class="char-warning">
+            <i class="bi bi-exclamation-circle me-1"></i>
+            Alcanzaste el límite máximo para imprimir el carnet
+          </span>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label asp-for="Dni"></label>
+              <div class="input-group-edit">
+                <span class="input-group-icon"><i class="bi bi-postcard"></i></span>
+                <input asp-for="Dni" class="form-control" id="DniInput"
+                       oninput="formatAndValidateDni(this)" maxlength="10" placeholder="XX.XXX.XXX" />
+              </div>
+              <span asp-validation-for="Dni" class="text-danger"></span>
+            </div>
+            <div class="form-field">
+              <label asp-for="FechaNac">Fecha de nacimiento</label>
+              <input asp-for="FechaNac" class="form-control" type="date" />
+              <span asp-validation-for="FechaNac" class="text-danger"></span>
+            </div>
+          </div>
+
+          <!-- Switch de estado con color semántico -->
+          <div class="estado-switch-wrap @(Model.Activo ? "is-activo" : "is-inactivo")" id="estadoWrap">
+            <input class="form-check-input" type="checkbox" asp-for="Activo"
+                   role="switch" id="ActivoSwitch" />
+            <div>
+              <span class="estado-label-title" id="estadoTitle">
+                @(Model.Activo ? "✓ Jugador habilitado" : "✗ Jugador sancionado / inactivo")
+              </span>
+              <span class="estado-label-sub">
+                @(Model.Activo
+                  ? "El jugador puede participar en partidos."
+                  : "El jugador NO puede participar en partidos.")
+              </span>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <div class="col-lg-6">
-        <div class="card shadow-sm h-100">
-          <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0"><i class="bi bi-person-workspace"></i> Datos de Afiliación</h5>
+      <!-- ══ PANEL: Afiliación y foto ══ -->
+      <div class="edit-panel afiliacion">
+        <div class="edit-panel-head">
+          <i class="bi bi-trophy"></i>
+          <span class="edit-panel-head-title">Afiliación y foto</span>
+        </div>
+        <div class="edit-panel-body">
+
+          <div class="form-row">
+            <div class="form-field">
+              <label asp-for="IdCategoria">Categoría</label>
+              <select asp-for="IdCategoria" class="form-select" asp-items="@Model.ListaCategoria">
+                <option value="">Seleccionar categoría</option>
+              </select>
+              <span asp-validation-for="IdCategoria" class="text-danger"></span>
+            </div>
+            <div class="form-field">
+              <label asp-for="IdEquipo">Equipo</label>
+              <select asp-for="IdEquipo" class="form-select" asp-items="@Model.ListaEquipos">
+                <option value="">Seleccionar equipo</option>
+              </select>
+              <span asp-validation-for="IdEquipo" class="text-danger"></span>
+            </div>
           </div>
-          <div class="card-body">
-            <div class="row g-3">
 
-              <div class="col-md-6">
-                <label asp-for="IdCategoria" class="control-label">Categoría</label>
-                <select asp-for="IdCategoria" class="form-select" asp-items="@Model.ListaCategoria">
-                  <option value="">Seleccione una CATEGORIA</option>
-                </select>
-                <span asp-validation-for="IdCategoria" class="text-danger"></span>
+          <div class="form-row">
+            <div class="form-field">
+              <label asp-for="FechaRecibo">Fecha de inscripción</label>
+              <input asp-for="FechaRecibo" class="form-control" type="date" />
+              <span asp-validation-for="FechaRecibo" class="text-danger"></span>
+            </div>
+            <div class="form-field">
+              <label asp-for="NroCarnetOld">N° Carnet anterior</label>
+              <div class="input-group-edit">
+                <span class="input-group-icon"><i class="bi bi-postcard"></i></span>
+                <input asp-for="NroCarnetOld" class="form-control" id="NroCarnetOld" />
               </div>
-              <div class="col-md-6">
-                <label asp-for="IdEquipo" class="control-label">Equipo</label>
-                <select asp-for="IdEquipo" class="form-select" asp-items="@Model.ListaEquipos">
-                  <option value="">Seleccione un EQUIPO</option>
-                </select>
-                <span asp-validation-for="IdEquipo" class="text-danger"></span>
-              </div>
+            </div>
+          </div>
 
-              <div class="col-6">
-                <label asp-for="FechaRecibo" class="form-label">Fecha de Inscripción</label>
-                <input asp-for="FechaRecibo" class="form-control" type="date" />
-                <span asp-validation-for="FechaRecibo" class="text-danger"></span>
-              </div>
-              <div class="col-md-6">
-                <label asp-for="NroCarnetOld" class="form-label fw-semibold">Carnet viejo</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-postcard"></i></span>
-                  <input asp-for="NroCarnetOld" class="form-control" id="NroCarnetOld" />
+          <!-- Foto: protagonista -->
+          <div class="foto-section">
+            <div class="foto-section-label">
+              <i class="bi bi-camera-fill"></i> Foto del jugador
+            </div>
+
+            <div class="foto-layout">
+
+              <!-- Upload -->
+              <div class="foto-upload-wrap">
+                <div class="foto-dropzone">
+                  <i class="bi bi-cloud-arrow-up foto-dropzone-icon"></i>
+                  <span class="foto-dropzone-text">Subir nueva foto</span>
+                  <input type="file" name="photo" class="form-control" accept="image/*" />
+                  <small>JPG, PNG o JPEG · Reemplaza la foto actual</small>
                 </div>
-                                
               </div>
-              <div class="col-12 border-top pt-3">
-                <h6 class="mb-3 text-primary"><i class="bi bi-camera-fill"></i> Gestión de Foto</h6>
 
-                <div class="row g-3">
-                  <div class="col-md-6 d-flex flex-column justify-content-center">
-                    <label class="form-label fw-semibold">Subir nueva Foto</label>
-                    <input type="file" name="photo" class="form-control mb-2" accept="image/*" />
-                    <small class="text-muted">
-                      <i class="bi bi-info-circle"></i> Si subes una nueva foto, la anterior será reemplazada
-                      automáticamente.
-                    </small>
-                  </div>
-
-                  <div class="col-md-6 text-center">
-                    <label class="form-label d-block fw-semibold text-secondary">Vista Actual</label>
-
-                    <div class="p-2 border rounded bg-light d-inline-block shadow-sm">
-                      @if (!string.IsNullOrWhiteSpace(@Model.Foto))
-                      {
-                        <img src="~/fotosPerfiles/@Model.Foto" class="img-fluid rounded" alt="foto actual"
-                             style="max-height: 280px; min-width: 200px; object-fit: contain; background-color: #fff;" />
-                      }
-                      else
-                      {
-                        <div class="d-flex align-items-center justify-content-center text-muted"
-                             style="height: 200px; width: 200px; background-color: #e9ecef;">
-                          <div class="text-center">
-                            <i class="bi bi-person-bounding-box fs-1"></i>
-                            <div class="mt-2">Sin foto</div>
-                          </div>
-                        </div>
-                      }
+              <!-- Vista actual — carnet grande -->
+              <div class="foto-preview-wrap">
+                <div class="foto-preview-frame">
+                  @if (!string.IsNullOrWhiteSpace(Model.Foto))
+                  {
+                    <img src="~/fotosPerfiles/@Model.Foto" alt="Foto actual del jugador" />
+                  }
+                  else
+                  {
+                    <div class="foto-preview-empty">
+                      <i class="bi bi-person-bounding-box"></i>
+                      <span>Sin foto</span>
                     </div>
-                  </div>
+                  }
                 </div>
+                <span class="foto-preview-caption">Foto actual</span>
               </div>
 
             </div>
           </div>
+
         </div>
       </div>
 
-      <div class="col-12 mt-4 pt-3 border-top">
-        <button type="submit" name="accion" value="guardar" class="btn btn-primary btn-lg me-2">
-          <i class="bi bi-save"></i> Guardar Cambios
-        </button>
+    </div><!-- /edit-grid -->
 
-        <button type="submit" name="accion" value="pase" class="btn btn-warning btn-lg me-2 text-dark fw-bold">
-          <i class="bi bi-arrow-left-right"></i> Guardar y realizar Pase
-        </button>
-
-        <a asp-action="Index" class="btn btn-secondary btn-lg">
-          <i class="bi bi-x-circle"></i> Cancelar
-        </a>
-      </div>
+    <!-- ══ ACCIONES ══ -->
+    <div class="edit-actions">
+      <button type="submit" name="accion" value="guardar" class="btn-edit save">
+        <i class="bi bi-floppy"></i> Guardar cambios
+      </button>
+      <button type="submit" name="accion" value="pase" class="btn-edit pase">
+        <i class="bi bi-arrow-left-right"></i> Guardar y realizar pase
+      </button>
+      <div class="edit-actions-divider"></div>
+      <a asp-action="Index" class="btn-edit cancel">
+        <i class="bi bi-x"></i> Cancelar
+      </a>
     </div>
+
   </form>
 </div>
 
 @section Scripts {
-  @{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
-  }
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
   <script>
-    // --- LÓGICA DE CASCADA DE DROPDOWNS ---
+    /* ── DNI format ── */
+    function formatAndValidateDni(input) {
+      let val = input.value.replace(/\D/g, '');
+      let fmt = '';
+      if (val.length > 0) fmt += val.substring(0, 2);
+      if (val.length > 2) fmt += '.' + val.substring(2, 5);
+      if (val.length > 5) fmt += '.' + val.substring(5, 8);
+      input.value = fmt.substring(0, 10);
+    }
+
     $(document).ready(function () {
-      // 1. Obtener las referencias a los selects
+
+      /* ── Cascada Categoría → Equipo ── */
       const categoriaSelect = $('#IdCategoria');
-      const equipoSelect = $('#IdEquipo');
+      const equipoSelect    = $('#IdEquipo');
 
-      // 2. Manejar el evento 'change' del select de Categoría
-      // Nota: Se eliminó el 'trigger' en la carga inicial para preservar la selección de edición.
-      categoriaSelect.change(function () {
-        const categoriaId = $(this).val();
-
-        // Limpiar y deshabilitar el select de Equipo mientras carga
-        equipoSelect.empty().prop('disabled', true);
-        equipoSelect.append('<option value="">Cargando...</option>');
-
-        if (categoriaId) {
-          // Realizar llamada AJAX
+      categoriaSelect.on('change', function () {
+        const id = $(this).val();
+        equipoSelect.empty().prop('disabled', true)
+          .append('<option value="">Cargando\u2026</option>');
+        if (id) {
           $.ajax({
-            url: '@Url.Action("GetEquiposPorCategoria", "Jgrxeqp")',
-            type: 'GET',
-            data: { idCategoria: categoriaId },
+            url:      '@Url.Action("GetEquiposPorCategoria", "Jgrxeqp")',
+            type:     'GET',
+            data:     { idCategoria: id },
             dataType: 'json',
             success: function (data) {
-              // Limpiar y agregar la opción por defecto
-              equipoSelect.empty().prop('disabled', false);
-              equipoSelect.append('<option value="">Seleccione un EQUIPO</option>');
-
+              equipoSelect.empty().prop('disabled', false)
+                .append('<option value="">Seleccionar equipo</option>');
               if (data.length > 0) {
-                // Agregar los nuevos equipos recibidos del Controller
-                $.each(data, function (key, equipo) {
-                  // Asegúrate de usar 'value' y 'text'
-                  equipoSelect.append('<option value="' + equipo.value + '">' + equipo.text + '</option>');
+                $.each(data, function (_, eq) {
+                  equipoSelect.append('<option value="' + eq.value + '">' + eq.text + '</option>');
                 });
               } else {
                 equipoSelect.append('<option value="">No hay equipos en esta categoría</option>');
               }
             },
             error: function () {
-              equipoSelect.empty().prop('disabled', false);
-              equipoSelect.append('<option value="">Error al cargar equipos</option>');
+              equipoSelect.empty().prop('disabled', false)
+                .append('<option value="">Error al cargar equipos</option>');
             }
           });
         } else {
-          // Si no se selecciona Categoría, limpiar el select de Equipo
-          equipoSelect.empty().prop('disabled', false);
-          equipoSelect.append('<option value="">Seleccione un EQUIPO</option>');
+          equipoSelect.empty().prop('disabled', false)
+            .append('<option value="">Seleccionar equipo</option>');
         }
       });
 
-      // Si estás usando jQuery Validation
       $.validator.unobtrusive.parse(document);
+
+      /* ── Switch de estado: visual reactivo ── */
+      const $switch = $('#ActivoSwitch');
+      const $wrap   = $('#estadoWrap');
+      const $title  = $('#estadoTitle');
+
+      function updateEstado(isActivo) {
+        $wrap.removeClass('is-activo is-inactivo')
+             .addClass(isActivo ? 'is-activo' : 'is-inactivo');
+        $title.text(isActivo
+          ? '\u2713 Jugador habilitado'
+          : '\u2717 Jugador sancionado / inactivo');
+      }
+
+      $switch.on('change', function () { updateEstado($(this).is(':checked')); });
+
+      /* ── Contador Apellido + Nombre ── */
+      const maxChars = 26;
+      const $apellido = $('#Apellido');
+      const $nombre   = $('#Nombre');
+      const $counter  = $('#charCount');
+      const $warning  = $('#charWarning');
+
+      function checkCombinedLength(e) {
+        let total = $apellido.val().length + $nombre.val().length;
+        if (total > maxChars) {
+          const excess = total - maxChars;
+          const $cur = $(e.target);
+          $cur.val($cur.val().slice(0, -excess));
+          total = $apellido.val().length + $nombre.val().length;
+          $counter.removeClass('warn').addClass('danger');
+          $warning.slideDown(150);
+        } else {
+          $counter.removeClass('warn danger');
+          if (total >= maxChars - 3) $counter.addClass('warn');
+          $warning.slideUp(150);
+        }
+        $counter.text(total + ' / ' + maxChars);
+      }
+
+      $apellido.on('input', checkCombinedLength);
+      $nombre.on('input', checkCombinedLength);
+      checkCombinedLength({ target: $apellido[0] });
     });
   </script>
 }

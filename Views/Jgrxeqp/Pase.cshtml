@@ -7,219 +7,232 @@
     ViewData["Title"] = "Pase de Jugador";
 }
 
-<div class="container py-4">
-    <h2 class="mb-4 text-warning">
-        <i class="bi bi-arrow-left-right me-2"></i> Transferencia de Jugador
-    </h2>
+@section Styles {
+<link rel="stylesheet" href="~/css/pase.css" asp-append-version="true" />
+}
 
-    @* --- SECCIÓN DE ALERTA SIMPLIFICADA --- *@
-    @if (!string.IsNullOrEmpty(Model.MensajeSancion))
-    {
-        <div class="alert shadow-lg border-start border-5 d-flex align-items-center animate__animated animate__pulse animate__infinite"
-             role="alert"
-             style="background-color: #fff3cd; border-color: #ffc107 !important; color: #856404; border-radius: 8px;">
-            <i class="bi bi-exclamation-triangle-fill fs-1 me-3 text-warning"></i>
+<div class="pase-page">
+
+  <div class="pase-header">
+    <div>
+      <div class="pase-eyebrow">Gestión de plantel</div>
+      <h2 class="pase-title">Transferencia de Jugador</h2>
+    </div>
+    <a asp-action="Index" class="pase-back">
+      <i class="bi bi-arrow-left"></i> Volver al listado
+    </a>
+  </div>
+
+  @if (!string.IsNullOrEmpty(Model.MensajeSancion))
+  {
+    <div class="pase-alert">
+      <i class="bi bi-exclamation-triangle-fill pase-alert-icon"></i>
+      <div>
+        <div class="pase-alert-title">Jugador con alerta activa</div>
+        <p class="pase-alert-body mb-0">
+          Observación pendiente: <strong>@Model.MensajeSancion.ToUpper()</strong>
+        </p>
+        <p class="pase-alert-note mb-0">
+          <i class="bi bi-info-circle"></i>
+          Verificá que la situación esté regularizada antes de imprimir el nuevo carnet.
+        </p>
+      </div>
+    </div>
+  }
+
+  <form asp-action="Pase" method="post" enctype="multipart/form-data" id="formPase">
+    <input type="hidden" asp-for="idjugadorxEquipo" />
+    <input type="hidden" asp-for="Foto" />
+
+    <div class="pase-grid">
+
+      <!-- PANEL IZQUIERDO: Datos actuales -->
+      <div class="pase-panel origin">
+        <div class="pase-panel-head">
+          <i class="bi bi-person-vcard"></i>
+          <span class="pase-panel-head-title">Datos actuales</span>
+        </div>
+        <div class="pase-panel-body">
+
+          <div class="pase-photo-wrap">
+            <img src="~/fotosPerfiles/@Model.Foto" class="pase-photo"
+                 onerror="this.src='/fotosPerfiles/default-user.webp';" alt="Foto" />
+            <br/>
+            <a asp-action="HistorialJugador" asp-controller="Sanciones"
+               asp-route-id="@Model.Idjugador" target="_blank" class="pase-historial-link">
+              <i class="bi bi-list-columns-reverse"></i> Historial de sanciones
+            </a>
+          </div>
+
+          <div class="field-row" style="margin-top:1.25rem;">
+            <div class="field-group">
+              <span class="field-label">Nombre</span>
+              <span class="field-value">@Model.Nombre</span>
+            </div>
+            <div class="field-group">
+              <span class="field-label">Apellido</span>
+              <span class="field-value">@Model.Apellido</span>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <span class="field-label">DNI</span>
+              <span class="field-value">@Model.Dni</span>
+            </div>
+            <div class="field-group">
+              <span class="field-label">Fecha de nacimiento</span>
+              <span class="field-value">@Model.FechaNac.ToString("dd/MM/yyyy")</span>
+            </div>
+          </div>
+
+          <input type="hidden" asp-for="Nombre" />
+          <input type="hidden" asp-for="Apellido" />
+          <input type="hidden" asp-for="Dni" />
+          <input type="hidden" asp-for="FechaNac" />
+
+        </div>
+      </div>
+
+      <!-- FLECHA CENTRAL -->
+      <div class="pase-arrow">
+        <span class="pase-arrow-icon"><i class="bi bi-arrow-left-right"></i></span>
+        <span class="pase-arrow-label">pase</span>
+      </div>
+
+      <!-- PANEL DERECHO: Nuevo fichaje -->
+      <div class="pase-panel dest">
+        <div class="pase-panel-head">
+          <i class="bi bi-calendar-check"></i>
+          <span class="pase-panel-head-title">Nuevo fichaje</span>
+        </div>
+        <div class="pase-panel-body">
+
+          <div class="form-field fecha">
+            <label asp-for="FechaRecibo">Fecha del pase</label>
+            <input asp-for="FechaRecibo" class="form-control" type="date" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>Nueva categoría</label>
+              <select asp-for="IdCategoria" class="form-select" asp-items="@Model.ListaCategoria">
+                <option value="">Seleccionar categoría</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Nuevo equipo</label>
+              <select asp-for="IdEquipo" class="form-select" asp-items="@Model.ListaEquipos">
+                <option value="">Seleccionar equipo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pase-switch-wrap">
+            <input class="form-check-input" type="checkbox" asp-for="Activo"
+                   role="switch" id="ActivoSwitch" />
             <div>
-                <h4 class="alert-heading fw-bold mb-1">¡ATENCIÓN: JUGADOR CON ALERTA!</h4>
-                <p class="mb-0 fs-5">
-                    Este jugador tiene una observación pendiente: <strong>@Model.MensajeSancion.ToUpper()</strong>.
-                    <br />
-                    <span class="text-dark opacity-75 small">
-                        <i class="bi bi-info-circle me-1"></i> Verifique que se haya regularizado la situación antes de imprimir el nuevo carnet.
-                    </span>
-                </p>
-            </div>        
-        </div>
-    }
-
-    <form asp-action="Pase" method="post" enctype="multipart/form-data" class="mt-4" id="formPase">
-        <input type="hidden" asp-for="idjugadorxEquipo" />
-        <input type="hidden" asp-for="Foto" />
-
-        <div class="row g-4">
-            @* Lado Izquierdo: Datos actuales *@
-            <div class="col-lg-6">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0 fw-bold"><i class="bi bi-person-circle"></i> Datos Actuales</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Nombre</label>
-                                <input asp-for="Nombre" class="form-control bg-light" readonly />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Apellido</label>
-                                <input asp-for="Apellido" class="form-control bg-light" readonly />
-                            </div>
-                            <div class="col-12 text-center my-3">
-                                <a asp-action="HistorialJugador" asp-controller="Sanciones" asp-route-id="@Model.Idjugador" 
-                                   target="_blank" class="btn btn-outline-danger btn-sm">
-                                    <i class="bi bi-list-columns-reverse me-2"></i> Ver Historial Completo
-                                </a>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">DNI</label>
-                                <input asp-for="Dni" class="form-control bg-light" readonly />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Fecha Nacimiento</label>
-                                <input asp-for="FechaNac" class="form-control bg-light" type="date" readonly />
-                            </div>
-                            <div class="col-12 mt-4 text-center">
-                                <div class="p-2 border rounded bg-white shadow-sm d-inline-block">
-                                    <img src="~/fotosPerfiles/@Model.Foto" class="img-fluid rounded" 
-                                         style="max-height: 180px;" onerror="this.src='/fotosPerfiles/default-user.webp';" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <span class="pase-switch-label-title">Jugador habilitado</span>
+              <span class="pase-switch-label-sub">Activa al jugador para competir en el nuevo equipo.</span>
             </div>
+          </div>
 
-            @* Lado Derecho: Nuevo Fichaje *@
-            <div class="col-lg-6">
-                <div class="card shadow-lg h-100 border-warning border-3">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0 fw-bold"><i class="bi bi-calendar-event"></i> Datos del Nuevo Fichaje</h5>
-                    </div>
-                    <div class="card-body bg-warning bg-opacity-10">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label asp-for="FechaRecibo" class="form-label fw-semibold fs-5">Fecha del Pase</label>
-                                <input asp-for="FechaRecibo" class="form-control form-control-lg" type="date" required />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label fw-semibold">Nueva Categoría</label>
-                                <select asp-for="IdCategoria" class="form-select" asp-items="@Model.ListaCategoria">
-                                    <option value="">Seleccione CATEGORIA</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label fw-semibold">Nuevo Equipo</label>
-                                <select asp-for="IdEquipo" class="form-select" asp-items="@Model.ListaEquipos">
-                                    <option value="">Seleccione EQUIPO</option>
-                                </select>
-                            </div>
-                            <div class="col-12 mt-4 pt-3 border-top border-warning">
-                                <div class="form-check form-switch p-3 bg-white border rounded">
-                                    <input class="form-check-input ms-0 me-3" type="checkbox" asp-for="Activo" role="switch" id="ActivoSwitch" />
-                                    <label class="form-check-label fw-bold" for="ActivoSwitch">
-                                        Jugador Activo
-                                        <small class="d-block text-muted fw-normal">Habilita al jugador para jugar en el nuevo equipo.</small>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
+      </div>
 
-        <div class="col-12 mt-4 pt-3 border-top text-end">
-            <a asp-action="Index" class="btn btn-secondary btn-lg me-2">Cancelar</a>
-            <button type="submit" name="proximaAccion" value="guardar" id="btnTransferir" 
-                    class="btn btn-primary btn-lg me-2" disabled onclick="enviarPase('guardar')">
-                <i class="bi bi-check-circle"></i> Guardar
-            </button>
-            <button type="submit" name="proximaAccion" value="imprimir" id="btnTransferirImprimir" 
-                    class="btn btn-success btn-lg fw-bold" disabled onclick="enviarPase('imprimir')">
-                <i class="bi bi-printer-fill"></i> Guardar e Imprimir Carnet
-            </button>
-        </div>
-    </form>
+    </div>
+
+    <div class="pase-actions">
+      <a asp-action="Index" class="btn-pase cancel">
+        <i class="bi bi-x"></i> Cancelar
+      </a>
+      <button type="submit" name="proximaAccion" value="guardar"
+              id="btnTransferir" class="btn-pase save" disabled
+              onclick="enviarPase('guardar')">
+        <i class="bi bi-check-lg"></i> Guardar
+      </button>
+      <button type="submit" name="proximaAccion" value="imprimir"
+              id="btnTransferirImprimir" class="btn-pase print" disabled
+              onclick="enviarPase('imprimir')">
+        <i class="bi bi-printer-fill"></i> Guardar e imprimir carnet
+      </button>
+    </div>
+
+  </form>
 </div>
 
-            @section Scripts {
-                @{
-                    await Html.RenderPartialAsync("_ValidationScriptsPartial");
-                }
+@section Scripts {
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
-                <script>
-                   
-                    $(document).ready(function () {
-                        const categoriaSelect = $('#IdCategoria');
-                        const equipoSelect = $('#IdEquipo');
-                        const fechaInput = $('#FechaRecibo');
-                        const btn1 = $('#btnTransferir');
-                        const btn2 = $('#btnTransferirImprimir');
+  <script>
+    $(document).ready(function () {
+      const categoriaSelect = $('#IdCategoria');
+      const equipoSelect    = $('#IdEquipo');
+      const fechaInput      = $('#FechaRecibo');
+      const btn1 = $('#btnTransferir');
+      const btn2 = $('#btnTransferirImprimir');
 
-                        // 1. Valores iniciales para comparar cambios
-                        let valoresIniciales = {
-                            categoria: categoriaSelect.val(),
-                            equipo: equipoSelect.val(),
-                            fecha: fechaInput.val()
-                        };
+      let valoresIniciales = {
+        categoria: categoriaSelect.val(),
+        equipo:    equipoSelect.val(),
+        fecha:     fechaInput.val()
+      };
 
-                        // 2. Función de validación de botones
-                        function verificarCambios() {
-                            const catActual = categoriaSelect.val();
-                            const eqActual = equipoSelect.val();
-                            const fechaActual = fechaInput.val();
+      function verificarCambios() {
+        const catActual   = categoriaSelect.val();
+        const eqActual    = equipoSelect.val();
+        const fechaActual = fechaInput.val();
+        const huboCambio  = catActual !== valoresIniciales.categoria ||
+                            eqActual  !== valoresIniciales.equipo    ||
+                            fechaActual !== valoresIniciales.fecha;
+        const completo = catActual !== '' && eqActual !== '' && fechaActual !== '';
+        const habilitar = huboCambio && completo;
+        btn1.prop('disabled', !habilitar);
+        btn2.prop('disabled', !habilitar);
+      }
 
-                            const huboCambio = catActual !== valoresIniciales.categoria ||
-                                eqActual !== valoresIniciales.equipo ||
-                                fechaActual !== valoresIniciales.fecha;
-                
-                            const completo = catActual !== "" && eqActual !== "" && fechaActual !== "";
-
-                            // Habilitamos o deshabilitamos ambos botones
-                            const deshabilitar = !(huboCambio && completo);
-                            btn1.prop('disabled', deshabilitar);
-                            btn2.prop('disabled', deshabilitar);
-                        }
-
-                        // 3. Cascada de Dropdowns
-                        categoriaSelect.change(function () {
-                            const categoriaId = $(this).val();
-                            equipoSelect.empty().prop('disabled', true).append('<option value="">Buscando equipos...</option>');
-
-                            if (categoriaId) {
-                                $.ajax({
-                                    url: '@Url.Action("GetEquiposPorCategoria", "Jgrxeqp")',
-                                    type: 'GET',
-                                    data: { idCategoria: categoriaId },
-                                    success: function (data) {
-                                        equipoSelect.empty().prop('disabled', false).append('<option value="">Seleccione un EQUIPO</option>');
-                                        $.each(data, function (key, equipo) {
-                                            equipoSelect.append('<option value="' + equipo.value + '">' + equipo.text + '</option>');
-                                        });
-                                        verificarCambios();
-                                    }
-                                });
-                            } else {
-                                equipoSelect.empty().prop('disabled', false).append('<option value="">Seleccione un EQUIPO</option>');
-                                verificarCambios();
-                            }
-                        });
-
-                        // 4. Listeners para habilitar botones
-                        categoriaSelect.on('change', verificarCambios);
-                        equipoSelect.on('change', verificarCambios);
-                        fechaInput.on('change keyup input', verificarCambios);
-
-                        // Trigger inicial si ya hay datos (por ejemplo al volver de un error de validación)
-                        if (categoriaSelect.val() !== "" && equipoSelect.children('option').length <= 1) {
-                            categoriaSelect.trigger('change');
-                        }
-                    });
-
-                    // Busca esta función en tus Scripts al final de Pase.cshtml y reemplázala:
-                    function enviarPase(accion) {
-                        const form = document.getElementById('formPase');
-    
-                        if (accion === 'imprimir') {
-                            form.target = "_blank"; // Esto abre la respuesta del controlador (el PDF) en pestaña nueva
-        
-                            // IMPORTANTE: Después de enviar el formulario, redirigimos la pestaña 
-                            // actual al Index para que el usuario vea la lista actualizada.
-                            setTimeout(function () {
-                                window.location.href = '@Url.Action("Index", "Jgrxeqp")';
-                            }, 1000);
-                        } else {
-                            form.target = "_self"; // Comportamiento normal en la misma pestaña
-                        }
-                    }
-                </script>
+      categoriaSelect.on('change', function () {
+        const categoriaId = $(this).val();
+        equipoSelect.empty().prop('disabled', true)
+          .append('<option value="">Buscando equipos\u2026</option>');
+        if (categoriaId) {
+          $.ajax({
+            url:  '@Url.Action("GetEquiposPorCategoria", "Jgrxeqp")',
+            type: 'GET',
+            data: { idCategoria: categoriaId },
+            success: function (data) {
+              equipoSelect.empty().prop('disabled', false)
+                .append('<option value="">Seleccionar equipo</option>');
+              $.each(data, function (_, eq) {
+                equipoSelect.append('<option value="' + eq.value + '">' + eq.text + '</option>');
+              });
+              verificarCambios();
             }
+          });
+        } else {
+          equipoSelect.empty().prop('disabled', false)
+            .append('<option value="">Seleccionar equipo</option>');
+          verificarCambios();
+        }
+      });
+
+      equipoSelect.on('change', verificarCambios);
+      fechaInput.on('change keyup input', verificarCambios);
+
+      if (categoriaSelect.val() !== '' && equipoSelect.children('option').length <= 1) {
+        categoriaSelect.trigger('change');
+      }
+    });
+
+    function enviarPase(accion) {
+      const form = document.getElementById('formPase');
+      if (accion === 'imprimir') {
+        form.target = '_blank';
+        setTimeout(function () {
+          window.location.href = '@Url.Action("Index", "Jgrxeqp")';
+        }, 1000);
+      } else {
+        form.target = '_self';
+      }
+    }
+  </script>
+}

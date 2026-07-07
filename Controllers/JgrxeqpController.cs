@@ -21,65 +21,69 @@ namespace ClubId.Controllers
         public JgrxeqpController(IImageService imageService, LigabdContext context, IWebHostEnvironment env)
         {
             _context = context;
-            _imageService = imageService;
-            QuestPDF.Settings.License = LicenseType.Community;
+            _imageService = imageService;            
             _env = env;
+            QuestPDF.Settings.License = LicenseType.Community;
         }
 
-        public async Task<IActionResult> Index(string? q)
-        {
-            // 1. Construcción de la query base (mantenemos tu lógica de joins)
-            var query = from je in _context.Jgrxequipos
-                        join ult in (
-                            from jxe in _context.Jgrxequipos
-                            group jxe by jxe.Idjugador into g
-                            select new { Idjugador = g.Key, FechaReciboMasReciente = g.Max(je => je.FechaRecibo) }
-                        ) on new { je.Idjugador, je.FechaRecibo } equals new { ult.Idjugador, FechaRecibo = ult.FechaReciboMasReciente }
-                        join Jugadore in _context.Jugadores on je.Idjugador equals Jugadore.Idjugador
-                        join Equipo in _context.Equipos on je.IdEquipo equals Equipo.IdEquipo
-                        join Categoria in _context.Categorias on je.IdCategorias equals Categoria.IdCategorias
-                        select new JugadorPorEquipoViewModel
-                        {
-                            Idjugador = je.IdjugadorNavigation.Idjugador,
-                            Dni = je.IdjugadorNavigation.Dni,
-                            Nombre = je.IdjugadorNavigation.Nombre,
-                            Apellido = je.IdjugadorNavigation.Apellido,
-                            FechaRecibo = je.FechaRecibo,
-                            Activo = je.IdjugadorNavigation.Activo,
-                            Foto = je.IdjugadorNavigation.Foto,
-                            NombreCat = je.IdCategoriasNavigation.NombreCat,
-                            NombreEq = je.IdEquipoNavigation.NombreEq,
-                            idjugadorxEquipo = je.IdJxE
-                        };
+      public async Task<IActionResult> Index(string? q)
+{
+    // 1. Construcción de la query base
+    var query = from je in _context.Jgrxequipos
+                join ult in (
+                    from jxe in _context.Jgrxequipos
+                    group jxe by jxe.Idjugador into g
+                    select new { Idjugador = g.Key, FechaReciboMasReciente = g.Max(je => je.FechaRecibo) }
+                ) on new { je.Idjugador, je.FechaRecibo } equals new { ult.Idjugador, FechaRecibo = ult.FechaReciboMasReciente }
+                join Jugadore in _context.Jugadores on je.Idjugador equals Jugadore.Idjugador
+                join Equipo in _context.Equipos on je.IdEquipo equals Equipo.IdEquipo
+                join Categoria in _context.Categorias on je.IdCategorias equals Categoria.IdCategorias
+                select new JugadorPorEquipoViewModel
+                {
+                    Idjugador = je.IdjugadorNavigation.Idjugador,
+                    Dni = je.IdjugadorNavigation.Dni,
+                    Nombre = je.IdjugadorNavigation.Nombre,
+                    Apellido = je.IdjugadorNavigation.Apellido,
+                    FechaRecibo = je.FechaRecibo,
+                    Activo = je.IdjugadorNavigation.Activo,
+                    Foto = je.IdjugadorNavigation.Foto,
+                    NombreCat = je.IdCategoriasNavigation.NombreCat,
+                    NombreEq = je.IdEquipoNavigation.NombreEq,
+                    idjugadorxEquipo = je.IdJxE
+                };
 
-            // 2. Aplicar filtros de búsqueda
-            if (!string.IsNullOrEmpty(q))
-            {
-                // Normalizamos el término de búsqueda: quitamos puntos y pasamos a minúsculas
-                string qNormalizado = q.Replace(".", "").ToLower();
+    // 2. Filtros de búsqueda
+    if (!string.IsNullOrEmpty(q))
+    {
+        string qNormalizado = q.Replace(".", "").ToLower().Trim();
 
-                query = query.Where(vm =>
-                    // Búsqueda por Nombre o Apellido (Case Insensitive)
-                    vm.Nombre.ToLower().Contains(qNormalizado) ||
-                    vm.Apellido.ToLower().Contains(qNormalizado) ||
+        query = query.Where(vm =>
+            vm.Nombre.ToLower().Contains(qNormalizado) ||
+            vm.Apellido.ToLower().Contains(qNormalizado) ||
+            (vm.Nombre.ToLower() + " " + vm.Apellido.ToLower()).Contains(qNormalizado) ||
+            (vm.Apellido.ToLower() + " " + vm.Nombre.ToLower()).Contains(qNormalizado) ||
+            vm.Dni.Replace(".", "").Contains(qNormalizado) ||
+            vm.Idjugador.ToString() == qNormalizado
+        );
+    }
 
-                    // Búsqueda por DNI: Quitamos los puntos del DNI de la BD para comparar
-                    vm.Dni.Replace(".", "").Contains(qNormalizado) ||
+    // 3. Ordenamos siempre por fecha, sin importar si hay búsqueda o no
+    query = query.OrderByDescending(vm => vm.FechaRecibo);
 
-                    // Búsqueda por ID exacto
-                    vm.Idjugador.ToString() == qNormalizado
-                );
-            }
+    // 4. LA CONDICIÓN CLAVE: Si "q" está vacío (es el inicio normal), limitamos a 20
+    if (string.IsNullOrEmpty(q))
+    {
+        query = query.Take(20);
+    }
 
-            // 3. Orden y paginado
-            var ultimoRecibosPorJugador = await query
-                .OrderByDescending(vm => vm.FechaRecibo)
-                .Take(12)
-                .ToListAsync();
+    // 5. Ejecutamos la consulta final en la base de datos
+    var ultimoRecibosPorJugador = await query.ToListAsync();
 
-            return View(ultimoRecibosPorJugador);
-        }
+    // Guardamos la query actual para la vista
+    ViewBag.Query = q;
 
+    return View(ultimoRecibosPorJugador);
+}
         public async Task<IActionResult> Details(int id)
         {
             var jugador = await _context.Jugadores
@@ -224,8 +228,7 @@ namespace ClubId.Controllers
                 .Include(j => j.IdjugadorNavigation)
                     .Include(j => j.IdCategoriasNavigation)
                         .Include(j => j.IdCategoriasNavigation)
-                .OrderByDescending(x => x.FechaRecibo).FirstOrDefaultAsync(m => m.IdJxE == idpjxe || m.Idjugador == idjugador);
-            //.FirstOrDefaultAsync(m => m.IdJxE == idpjxe || m.Idjugador == idjugador);
+                .OrderByDescending(x => x.FechaRecibo).FirstOrDefaultAsync(m => m.IdJxE == idpjxe || m.Idjugador == idjugador);         
 
             if (jugador == null)
             {
@@ -246,7 +249,6 @@ namespace ClubId.Controllers
                 Color = jugador.IdCategoriasNavigation.Color,
             };
 
-            //      var document = new CarnetDocument(viewModel);
             var document = new CarnetDocument(viewModel, _env.WebRootPath);
             byte[] pdfBytes = document.GeneratePdf();
 

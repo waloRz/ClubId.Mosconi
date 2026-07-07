@@ -1,0 +1,341 @@
+/* ═══════════════════════════════════════
+   CREATE.CSS — Alta de nuevo jugador
+   Paleta: #0B2A3D #4682B4 #F5F7FA #E2B24A #C4CBD3
+═══════════════════════════════════════ */
+
+:root {
+  --marino:      #0B2A3D;
+  --acero:       #4682B4;
+  --nube:        #F5F7FA;
+  --dorado:      #E2B24A;
+  --plateado:    #C4CBD3;
+  --bg-base:     #F5F7FA;
+  --bg-surface:  #FFFFFF;
+  --text-primary:#0B2A3D;
+  --text-soft:   #3D5166;
+  --text-muted:  #7A8A99;
+  --border:      #C4CBD3;
+  --border-soft: #DCE1E7;
+  --radius:      8px;
+}
+
+/* ── Página ── */
+.create-page {
+  padding: 2rem 2rem 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.create-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.create-eyebrow {
+  font-size: .78rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--acero);
+  font-weight: 700;
+  margin-bottom: .3rem;
+}
+.create-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--marino);
+  letter-spacing: -.02em;
+  margin: 0;
+}
+.create-back {
+  font-size: .88rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  transition: color .13s, border-color .13s, background .13s;
+  white-space: nowrap;
+  align-self: center;
+}
+.create-back:hover {
+  color: var(--marino);
+  border-color: var(--acero);
+  background: rgba(70,130,180,.05);
+}
+
+/* ── Grid de dos paneles ── */
+.create-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* ── Paneles ── */
+.create-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(11,42,61,.06);
+  overflow: hidden;
+}
+
+/* Header panel — marino sólido (firma del sistema) */
+.create-panel-head {
+  padding: 1rem 1.35rem;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+}
+.create-panel-head i { font-size: 1.1rem; }
+.create-panel-head-title {
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.create-panel-body { padding: 1.5rem 1.35rem; }
+
+/* Panel personal: marino como autoridad */
+.create-panel.personal .create-panel-head {
+  background: var(--marino);
+}
+.create-panel.personal .create-panel-head i,
+.create-panel.personal .create-panel-head-title {
+  color: #FFFFFF;
+}
+
+/* Panel afiliación: dorado como acción importante */
+.create-panel.afiliacion {
+  border-color: rgba(226,178,74,.35);
+}
+.create-panel.afiliacion .create-panel-head {
+  background: rgba(226,178,74,.08);
+  border-bottom-color: rgba(226,178,74,.2);
+}
+.create-panel.afiliacion .create-panel-head i,
+.create-panel.afiliacion .create-panel-head-title {
+  color: #B8892A;
+}
+
+/* ── Campos de formulario ── */
+.form-field { margin-bottom: 1.1rem; }
+.form-field label,
+.form-field .field-label {
+  font-size: .78rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: .4rem;
+  display: block;
+}
+.form-field .form-control,
+.form-field .form-select {
+  background: var(--nube);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  padding: .6rem .9rem;
+  transition: border-color .13s, box-shadow .13s;
+  width: 100%;
+}
+.form-field .form-control:focus,
+.form-field .form-select:focus {
+  outline: none;
+  border-color: var(--acero);
+  box-shadow: 0 0 0 3px rgba(70,130,180,.15);
+  background: #fff;
+}
+.form-field .form-select option { background: #fff; }
+.form-field .text-danger {
+  font-size: .82rem;
+  display: block;
+  margin-top: .3rem;
+  color: #C0392B;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+
+/* ── DNI input group ── */
+.dni-group { display: flex; align-items: stretch; }
+.dni-icon {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--nube);
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: var(--radius) 0 0 var(--radius);
+  padding: 0 .85rem;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+.dni-group .form-control { border-radius: 0 var(--radius) var(--radius) 0; }
+
+/* ── Contador de caracteres ── */
+.char-counter-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .6rem .9rem;
+  border-radius: var(--radius);
+  background: var(--nube);
+  border: 1px solid var(--border-soft);
+  margin-bottom: 1.1rem;
+}
+.char-counter-label {
+  font-size: .82rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+.char-counter-value {
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--acero);
+  transition: color .15s;
+  min-width: 3.5rem;
+  text-align: right;
+}
+.char-counter-value.warn   { color: var(--dorado); }
+.char-counter-value.danger { color: #C0392B; }
+
+.char-warning {
+  display: none;
+  font-size: .82rem;
+  font-weight: 600;
+  color: #C0392B;
+  margin-top: -.6rem;
+  margin-bottom: 1.1rem;
+  padding-left: .1rem;
+}
+
+/* ── Switch activo ── */
+.create-switch-wrap {
+  margin-top: .5rem;
+  background: var(--nube);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+}
+.create-switch-wrap .form-check-input {
+  width: 2.6em; height: 1.4em;
+  flex-shrink: 0; cursor: pointer;
+  background-color: var(--border);
+  border-color: var(--border);
+}
+.create-switch-wrap .form-check-input:checked {
+  background-color: var(--acero);
+  border-color: var(--acero);
+}
+.switch-label-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+  line-height: 1.2;
+}
+.switch-label-sub {
+  font-size: .85rem;
+  color: var(--text-muted);
+  margin-top: .15rem;
+  display: block;
+}
+
+/* ── Dropzone de foto ── */
+.photo-dropzone {
+  margin-top: 1.35rem;
+  border: 2px dashed var(--plateado);
+  border-radius: 10px;
+  padding: 1.5rem 1.25rem 1.25rem;
+  text-align: center;
+  background: var(--nube);
+  transition: border-color .15s, background .15s;
+}
+.photo-dropzone:hover {
+  border-color: var(--acero);
+  background: rgba(70,130,180,.03);
+}
+.photo-dropzone-icon {
+  font-size: 2rem;
+  color: var(--text-muted);
+  margin-bottom: .6rem;
+  display: block;
+}
+.photo-dropzone-label {
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--text-soft);
+  display: block;
+  margin-bottom: .85rem;
+}
+.photo-dropzone .form-control {
+  background: #fff;
+  font-size: .95rem;
+}
+.photo-dropzone small {
+  color: var(--text-muted);
+  display: block;
+  margin-top: .5rem;
+  font-size: .82rem;
+}
+
+/* ── Barra de acciones ── */
+.create-actions {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+.btn-create {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-size: .9rem; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase;
+  border-radius: var(--radius); padding: .7rem 1.5rem;
+  border: 1px solid; cursor: pointer;
+  text-decoration: none; white-space: nowrap;
+  transition: background .13s, color .13s, border-color .13s, opacity .13s;
+}
+.btn-create:disabled { opacity: .5; cursor: not-allowed; }
+.btn-create.cancel {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+.btn-create.cancel:hover {
+  color: var(--marino);
+  border-color: var(--marino);
+  background: rgba(11,42,61,.04);
+}
+.btn-create.save {
+  background: var(--marino);
+  color: #FFFFFF;
+  border-color: var(--marino);
+}
+.btn-create.save:not(:disabled):hover {
+  background: #0d3550;
+  border-color: #0d3550;
+}
+
+@media (max-width: 800px) {
+  .create-grid { grid-template-columns: 1fr; }
+  .form-row    { grid-template-columns: 1fr; }
+  .create-page { padding: 1rem 1rem 2rem; }
+}

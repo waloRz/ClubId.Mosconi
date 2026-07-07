@@ -1,0 +1,362 @@
+/* ═══════════════════════════════════════
+   HISTORIAL-JUGADOR.CSS — Expediente disciplinario
+   Paleta: #0B2A3D #4682B4 #F5F7FA #E2B24A #C4CBD3
+   + Rojo disciplinario: #C0392B · Verde limpio: #16A34A
+═══════════════════════════════════════ */
+
+:root {
+  --marino:      #0B2A3D;
+  --acero:       #4682B4;
+  --nube:        #F5F7FA;
+  --dorado:      #E2B24A;
+  --plateado:    #C4CBD3;
+  --verde:       #16A34A;
+  --rojo:        #C0392B;
+  --bg-base:     #F5F7FA;
+  --bg-surface:  #FFFFFF;
+  --text-primary:#0B2A3D;
+  --text-soft:   #3D5166;
+  --text-muted:  #7A8A99;
+  --border:      #C4CBD3;
+  --border-soft: #DCE1E7;
+  --radius:      8px;
+}
+
+/* ── Página ── */
+.hist-page {
+  padding: 2rem 2rem 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Header de navegación ── */
+.hist-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+.hist-eyebrow {
+  font-size: .78rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  font-weight: 700;
+}
+.hist-back {
+  font-size: .88rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  transition: color .13s, border-color .13s;
+  white-space: nowrap;
+}
+.hist-back:hover { color: var(--marino); border-color: var(--acero); }
+
+/* ══════════════════════════════
+   TARJETA DE PERFIL
+══════════════════════════════ */
+.hist-perfil {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(11,42,61,.07);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  /* Firma: banda marina en el top */
+  border-top: 4px solid var(--marino);
+}
+
+.hist-perfil-inner {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+/* Columna foto */
+.hist-foto-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.75rem;
+  /* Firma: línea dorada vertical a la derecha */
+  border-right: 4px solid var(--dorado);
+  flex-shrink: 0;
+  background: var(--nube);
+}
+
+/* Foto formato carnet */
+.hist-foto-frame {
+  width: 160px;
+  height: 200px;
+  border-radius: 10px;
+  border: 3px solid var(--border);
+  overflow: hidden;
+  background: var(--plateado);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(11,42,61,.12);
+}
+.hist-foto-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hist-foto-empty {
+  text-align: center;
+  color: var(--text-muted);
+}
+.hist-foto-empty i { font-size: 3rem; display: block; margin-bottom: .35rem; }
+.hist-foto-empty span { font-size: .8rem; }
+
+.hist-foto-caption {
+  margin-top: .65rem;
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Columna datos */
+.hist-datos-col {
+  flex: 1;
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hist-nombre {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--marino);
+  letter-spacing: -.02em;
+  margin: 0 0 .15rem;
+  line-height: 1.1;
+}
+
+.hist-carnet-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  background: rgba(70,130,180,.1);
+  color: var(--acero);
+  border: 1px solid rgba(70,130,180,.25);
+  border-radius: 5px;
+  font-size: .8rem;
+  font-weight: 700;
+  padding: .2rem .6rem;
+  margin-bottom: 1.1rem;
+  letter-spacing: .03em;
+}
+
+.hist-datos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem 1.5rem;
+}
+.hist-dato { }
+.hist-dato-label {
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  display: block;
+  margin-bottom: .25rem;
+}
+.hist-dato-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+}
+
+/* ══════════════════════════════
+   TABLA DE HISTORIAL
+══════════════════════════════ */
+.hist-table-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(11,42,61,.07);
+  overflow: hidden;
+  /* Firma: banda roja — mismo lenguaje que boletines */
+  border-top: 4px solid var(--rojo);
+}
+
+.hist-table-head {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  background: var(--nube);
+}
+.hist-table-head i { font-size: 1.1rem; color: var(--rojo); }
+.hist-table-title {
+  font-size: .88rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--marino);
+}
+
+/* Tabla */
+.hist-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.hist-table thead th {
+  background: var(--marino);
+  color: #FFFFFF;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .9rem 1.1rem;
+  border: none;
+  white-space: nowrap;
+  box-shadow: inset 0 -3px 0 var(--rojo);
+}
+.hist-table thead th:first-child { padding-left: 1.5rem; }
+.hist-table thead th:last-child  { padding-right: 1.5rem; text-align: right; }
+
+.hist-table tbody tr {
+  border-bottom: 1px solid var(--border-soft);
+  transition: background .1s;
+}
+.hist-table tbody tr:last-child { border-bottom: none; }
+.hist-table tbody tr:hover { background: #EBF0F6; }
+.hist-table tbody tr:nth-child(even) { background: var(--nube); }
+.hist-table tbody tr:nth-child(even):hover { background: #EBF0F6; }
+
+.hist-table tbody td {
+  padding: .9rem 1.1rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+  border: none;
+}
+.hist-table tbody td:first-child { padding-left: 1.5rem; }
+.hist-table tbody td:last-child  { padding-right: 1.5rem; text-align: right; }
+
+/* Fecha sanción */
+.hist-fecha {
+  font-weight: 700;
+  color: var(--marino);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+/* Badge equipo */
+.hist-equipo-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(11,42,61,.06);
+  color: var(--marino);
+  border: 1px solid rgba(11,42,61,.14);
+  border-radius: 20px;
+  font-size: .82rem;
+  font-weight: 700;
+  padding: .25rem .8rem;
+  white-space: nowrap;
+}
+
+/* Detalle sanción — rojo intenso, peso visual máximo */
+.hist-sancion {
+  font-weight: 800;
+  color: var(--rojo);
+  font-size: 1rem;
+}
+
+/* Informe — muted pero legible */
+.hist-informe {
+  font-size: .92rem;
+  color: var(--text-soft);
+  max-width: 300px;
+  line-height: 1.45;
+}
+
+/* ── Botón Reporte PDF — acción sólida, color intenso ── */
+.btn-reporte {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: .5rem 1.1rem;
+  border-radius: var(--radius);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 2px solid var(--rojo);
+  background: var(--rojo);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(192,57,43,.3);
+  transition: background .13s, box-shadow .13s, transform .1s;
+}
+.btn-reporte:hover {
+  background: #a93226;
+  border-color: #a93226;
+  box-shadow: 0 4px 14px rgba(192,57,43,.4);
+  transform: translateY(-1px);
+  color: #fff;
+}
+
+/* ── Estado vacío — sin sanciones ── */
+.hist-empty {
+  text-align: center;
+  padding: 3.5rem 1rem;
+}
+.hist-empty-icon {
+  font-size: 3rem;
+  color: var(--verde);
+  display: block;
+  margin-bottom: .65rem;
+}
+.hist-empty-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--verde);
+  margin-bottom: .35rem;
+}
+.hist-empty-sub {
+  font-size: .95rem;
+  color: var(--text-muted);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .hist-page { padding: 1rem 1rem 2rem; }
+  .hist-perfil-inner { flex-direction: column; }
+  .hist-foto-col {
+    border-right: none;
+    border-bottom: 4px solid var(--dorado);
+    padding: 1.5rem 1rem;
+    flex-direction: row;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  .hist-foto-frame { width: 100px; height: 125px; }
+  .hist-datos-grid { grid-template-columns: 1fr 1fr; }
+  .hist-nombre { font-size: 1.4rem; }
+  .hist-datos-col { padding: 1.25rem; }
+}
+@media (max-width: 500px) {
+  .hist-datos-grid { grid-template-columns: 1fr; }
+}

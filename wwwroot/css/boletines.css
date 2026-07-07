@@ -1,0 +1,312 @@
+/* ═══════════════════════════════════════
+   BOLETINES.CSS — Gestión de Sanciones
+   Paleta base + rojo disciplinario
+═══════════════════════════════════════ */
+
+:root {
+  --marino:      #0B2A3D;
+  --acero:       #4682B4;
+  --nube:        #F5F7FA;
+  --dorado:      #E2B24A;
+  --plateado:    #C4CBD3;
+  --rojo:        #C0392B;
+  --rojo-suave:  #E74C3C;
+  --bg-base:     #F5F7FA;
+  --bg-surface:  #FFFFFF;
+  --text-primary:#0B2A3D;
+  --text-soft:   #3D5166;
+  --text-muted:  #7A8A99;
+  --border:      #C4CBD3;
+  --border-soft: #DCE1E7;
+  --radius:      8px;
+}
+
+/* ── Página ── */
+.bol-page {
+  padding: 2rem 2rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.bol-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.bol-header-left { display: flex; align-items: center; gap: 1rem; }
+
+/* Ícono de tarjeta roja */
+.bol-icon-wrap {
+  width: 52px; height: 52px;
+  background: var(--rojo);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(192,57,43,.3);
+}
+.bol-icon-wrap i { color: #fff; font-size: 1.5rem; }
+
+.bol-eyebrow {
+  font-size: .78rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  font-weight: 700;
+  margin-bottom: .2rem;
+}
+.bol-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--marino);
+  letter-spacing: -.02em;
+  margin: 0;
+  line-height: 1.1;
+}
+.bol-subtitle {
+  font-size: .9rem;
+  color: var(--text-muted);
+  margin-top: .25rem;
+}
+
+/* Botón Nuevo Boletín */
+.btn-nuevo-bol {
+  background: var(--rojo);
+  color: #FFFFFF;
+  border: none;
+  font-weight: 700;
+  font-size: .9rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: .7rem 1.4rem;
+  border-radius: var(--radius);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  transition: background .13s, transform .1s, box-shadow .13s;
+  white-space: nowrap;
+  align-self: center;
+  box-shadow: 0 2px 8px rgba(192,57,43,.25);
+}
+.btn-nuevo-bol:hover {
+  background: #a93226;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(192,57,43,.35);
+}
+
+/* ── Card contenedor ── */
+.bol-card {
+  background: var(--bg-surface);
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 1px 4px rgba(11,42,61,.07);
+  overflow: hidden;
+  /* FIRMA: banda roja superior — tarjeta roja de árbitro */
+  border-top: 4px solid var(--rojo);
+}
+
+/* ── DataTables overrides ── */
+/* Buscador */
+.dataTables_wrapper .dataTables_filter {
+  padding: 1rem 1.25rem .75rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+.dataTables_wrapper .dataTables_filter label {
+  font-size: .9rem;
+  color: var(--text-soft);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.dataTables_wrapper .dataTables_filter input {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: .45rem .85rem;
+  font-size: .95rem;
+  color: var(--text-primary);
+  background: var(--nube);
+  transition: border-color .13s, box-shadow .13s;
+  margin-left: .5rem;
+  width: 240px;
+}
+.dataTables_wrapper .dataTables_filter input:focus {
+  outline: none;
+  border-color: var(--rojo);
+  box-shadow: 0 0 0 3px rgba(192,57,43,.12);
+}
+
+/* Footer (info + paginación) */
+.dataTables_wrapper .dataTables_info {
+  font-size: .88rem;
+  color: var(--text-muted);
+  padding: .85rem 1.25rem;
+}
+.dataTables_wrapper .dataTables_paginate {
+  padding: .75rem 1.25rem;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  border-radius: 6px !important;
+  font-size: .88rem;
+  font-weight: 600;
+  padding: .3rem .75rem !important;
+  color: var(--text-soft) !important;
+  border: 1px solid transparent !important;
+  transition: background .13s, color .13s;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: var(--nube) !important;
+  border-color: var(--border) !important;
+  color: var(--marino) !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  background: var(--marino) !important;
+  border-color: var(--marino) !important;
+  color: #fff !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+  opacity: .4;
+}
+
+/* ── Tabla ── */
+#tablaBoletines {
+  width: 100% !important;
+  border-collapse: collapse;
+}
+
+/* Cabecera: marino + acento rojo inferior */
+#tablaBoletines thead th {
+  background: var(--marino) !important;
+  color: #FFFFFF !important;
+  font-size: .8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase !important;
+  padding: 1rem 1.1rem !important;
+  border: none !important;
+  white-space: nowrap;
+  box-shadow: inset 0 -3px 0 var(--rojo);
+}
+#tablaBoletines thead th:first-child { padding-left: 1.5rem !important; }
+#tablaBoletines thead th:last-child  { padding-right: 1.5rem !important; text-align: right; }
+
+/* Filas */
+#tablaBoletines tbody tr {
+  border-bottom: 1px solid var(--border-soft);
+  transition: background .1s;
+}
+#tablaBoletines tbody tr:hover { background: #EBF0F6 !important; }
+#tablaBoletines tbody tr:last-child { border-bottom: none; }
+
+#tablaBoletines tbody td {
+  padding: .9rem 1.1rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+  border: none;
+}
+#tablaBoletines tbody td:first-child { padding-left: 1.5rem; }
+#tablaBoletines tbody td:last-child  { padding-right: 1.5rem; text-align: right; }
+
+/* Filas alternas */
+#tablaBoletines tbody tr:nth-child(even) { background: var(--nube); }
+
+/* Fecha en negrita marino */
+.bol-fecha {
+  font-weight: 700;
+  color: var(--marino);
+  font-size: 1rem;
+}
+
+/* Badge número de fecha */
+.bol-badge-fecha {
+  display: inline-flex; align-items: center;
+  background: rgba(226,178,74,.12);
+  color: #B8892A;
+  border: 1px solid rgba(226,178,74,.35);
+  border-radius: 20px;
+  font-size: .82rem;
+  font-weight: 700;
+  padding: .25rem .75rem;
+  white-space: nowrap;
+}
+
+/* Categoría */
+.bol-categoria {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+/* Comunicado truncado */
+.bol-comunicado {
+  font-size: .9rem;
+  color: var(--text-muted);
+  max-width: 260px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* ── Botones de acción ── */
+.bol-actions { display: inline-flex; gap: .4rem; justify-content: flex-end; }
+.bol-btn {
+  font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  border-radius: 6px; padding: .38rem .7rem;
+  text-decoration: none; display: inline-flex; align-items: center; gap: .3rem;
+  border: 1px solid; transition: background .13s, color .13s, border-color .13s;
+  white-space: nowrap;
+}
+.bol-btn.pdf {
+  color: var(--acero);
+  border-color: rgba(70,130,180,.35);
+  background: rgba(70,130,180,.07);
+}
+.bol-btn.pdf:hover { background: var(--acero); color: #fff; border-color: var(--acero); }
+
+.bol-btn.edit {
+  color: #B8892A;
+  border-color: rgba(226,178,74,.4);
+  background: rgba(226,178,74,.08);
+}
+.bol-btn.edit:hover { background: var(--dorado); color: var(--marino); border-color: var(--dorado); }
+
+.bol-btn.del {
+  color: var(--rojo);
+  border-color: rgba(192,57,43,.3);
+  background: rgba(192,57,43,.06);
+}
+.bol-btn.del:hover { background: var(--rojo); color: #fff; border-color: var(--rojo); }
+
+/* ── Estado vacío ── */
+.bol-empty {
+  text-align: center;
+  padding: 3.5rem 1rem;
+}
+.bol-empty-icon {
+  font-size: 2.5rem;
+  color: var(--plateado);
+  margin-bottom: .75rem;
+  display: block;
+}
+.bol-empty-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-soft);
+  margin-bottom: .35rem;
+}
+.bol-empty-sub { font-size: .95rem; color: var(--text-muted); }
+
+@media (max-width: 900px) {
+  .bol-page { padding: 1rem 1rem 2rem; }
+  .bol-title { font-size: 1.4rem; }
+  .bol-actions { flex-wrap: wrap; }
+  .dataTables_wrapper .dataTables_filter input { width: 160px; }
+}

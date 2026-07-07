@@ -4,75 +4,91 @@
     ViewData["Title"] = "Gestión de Categorías";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Listado de Categorías</h2>
-        @* Botón para crear nueva categoría *@
-        <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm">
-            <i class="bi bi-plus-lg"></i> Nueva Categoría
-        </a>
-    </div>
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.css" />
+    <link rel="stylesheet" href="~/css/categorias.css" asp-append-version="true" />
+}
 
-    <table class="table table-striped table-hover align-middle" id="tablaCategorias">
-        <thead class="table-dark">
-            <tr>
-                <th style="width: 50px">ID</th>
-                <th>Nombre</th>
-                <th style="width: 200px;">Color Carnet</th>
-                <th>Estado</th>
-                <th class="text-end" style="width: 150px;">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td align="center">@item.IdCategoria</td>
-                    <td class="fw-bold">@item.NombreCat</td>
-                    <td>
-                        @* Cuadradito de color *@
-                        <div style="width: 40px; height: 25px; background-color: @item.Color; 
-                                    border: 1px solid #dee2e6; border-radius: 4px; 
-                                    box-shadow: 0 1px 3px rgba(0,0,0,0.2);" 
-                             title="@item.Color">
-                        </div>
-                    </td>
-                    <td> 
-                        @if (item.EstadoCat) 
-                        {
-                            <span class="badge bg-success">Activa</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">Inactiva</span>
-                        }
-                    </td>
-                    <td class="text-end">
-                        <a asp-action="Edit" asp-route-id="@item.IdCategoria" class="btn btn-warning btn-sm" title="Editar">
-                            <i class="bi bi-pencil"></i> Editar
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
+<div class="cat-page">
+
+  <!-- ── Header ── -->
+  <div class="cat-header">
+    <div>
+      <div class="cat-eyebrow">
+        <i class="bi bi-tags-fill me-1"></i> Configuración
+      </div>
+      <h2 class="cat-title">Categorías</h2>
+      <p class="cat-subtitle">Administrá las categorías y sus colores de carnet.</p>
+    </div>
+    <a asp-action="Create" class="btn-nueva-cat">
+      <i class="bi bi-plus-lg"></i> Nueva categoría
+    </a>
+  </div>
+
+  <!-- ── Card tabla ── -->
+  <div class="cat-card">
+    <table id="tablaCategorias" class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th style="width:60px">ID</th>
+          <th>Nombre</th>
+          <th style="width:200px">Color carnet</th>
+          <th style="width:120px">Estado</th>
+          <th style="width:130px">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var item in Model)
+        {
+          <tr>
+            <td>
+              <span class="cat-id-chip">@item.IdCategoria</span>
+            </td>
+            <td>
+              <span class="cat-nombre">@item.NombreCat</span>
+            </td>
+            <td>
+              <div class="cat-color-wrap">
+                <div class="cat-color-swatch" style="background-color: @item.Color;"
+                     title="@item.Color"></div>
+                <span class="cat-color-hex">@item.Color</span>
+              </div>
+            </td>
+            <td>
+              @if (item.EstadoCat)
+              {
+                <span class="cat-estado activa">Activa</span>
+              }
+              else
+              {
+                <span class="cat-estado inactiva">Inactiva</span>
+              }
+            </td>
+            <td>
+              <a asp-action="Edit" asp-route-id="@item.IdCategoria"
+                 class="btn-editar-cat" title="Editar categoría">
+                <i class="bi bi-pencil"></i> Editar
+              </a>
+            </td>
+          </tr>
+        }
+      </tbody>
     </table>
+  </div>
+
 </div>
 
 @section Scripts {
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.css"/>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.js"></script>
-
+    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#tablaCategorias').DataTable({
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
                 },
-                lengthMenu: [
-                    [5, 10, 25, 50, -1],
-                    [5, 10, 25, 50, "Todos"]
-                ],
-                order: [[1, 'asc']], 
+                dom: '<"d-flex justify-content-between align-items-center flex-wrap"lf>rt<"d-flex justify-content-between align-items-center flex-wrap p-3"ip>',
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]],
+                order: [[1, 'asc']],
                 searching: true,
                 paging: true,
                 lengthChange: true

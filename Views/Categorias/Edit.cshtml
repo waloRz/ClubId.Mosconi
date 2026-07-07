@@ -4,46 +4,125 @@
     ViewData["Title"] = "Modificar Categoría";
 }
 
-<h3>Modificar Categoría</h3>
+@section Styles {
+    <link rel="stylesheet" href="~/css/edit-categoria.css" asp-append-version="true" />
+}
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <input type="hidden" asp-for="IdCategoria" />
+<div class="ecat-page">
 
-            <div class="form-group mb-3">
-                <label asp-for="NombreCat" class="control-label">Nombre de la Categoría</label>
-                <input asp-for="NombreCat" class="form-control" />
-                <span asp-validation-for="NombreCat" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="Color" class="control-label">Color del Marco del Carnet</label>
-                <div class="d-flex align-items-center gap-2">
-                    <input asp-for="Color" type="color" class="form-control form-control-color shadow-sm" 
-                           id="ColorPicker" title="Elegí el color del carnet" />
-                    <small class="text-muted">Elegí el color que identificará a la categoría.</small>
-                </div>
-                <span asp-validation-for="Color" class="text-danger"></span>
-            </div>
-
-            <div class="form-group form-check mb-3">
-                <input class="form-check-input" type="checkbox" asp-for="EstadoCat" id="EstadoCat" />
-                <label class="form-check-label" for="EstadoCat">
-                    @Html.DisplayNameFor(model => model.EstadoCat)
-                </label>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Guardar Cambios" class="btn btn-warning" />
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-            </div>
-        </form>
+  <!-- ── Header ── -->
+  <div class="ecat-header">
+    <div>
+      <div class="ecat-eyebrow">
+        <i class="bi bi-tags-fill me-1"></i> Configuración
+      </div>
+      <h2 class="ecat-title">Modificar categoría</h2>
     </div>
+    <a asp-action="Index" class="ecat-back">
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  <!-- ── Card ── -->
+  <div class="ecat-card">
+    <div class="ecat-card-head">
+      <i class="bi bi-tag-fill"></i>
+      <span class="ecat-card-head-title">Datos de la categoría</span>
+    </div>
+    <div class="ecat-card-body">
+
+      <form asp-action="Edit">
+        <input type="hidden" asp-for="IdCategoria" />
+
+        <div asp-validation-summary="ModelOnly" class="ecat-validation" role="alert"></div>
+
+        <!-- Nombre -->
+        <div class="ecat-field">
+          <label asp-for="NombreCat">Nombre de la categoría</label>
+          <input asp-for="NombreCat" class="form-control" placeholder="Ej: Primera División" />
+          <span asp-validation-for="NombreCat" class="text-danger"></span>
+        </div>
+
+        <!-- Color -->
+        <div class="ecat-field">
+          <label asp-for="Color">Color del marco del carnet</label>
+          <div class="ecat-color-row">
+            <input asp-for="Color" type="color"
+                   class="ecat-color-picker"
+                   id="ColorPicker"
+                   title="Elegí el color del carnet" />
+            <div class="ecat-color-preview">
+              <div class="ecat-color-swatch" id="colorSwatch"></div>
+              <span class="ecat-color-hex" id="colorHex"></span>
+            </div>
+          </div>
+          <p class="ecat-color-hint">
+            <i class="bi bi-info-circle me-1"></i>
+            Este color se usará en el borde del carnet impreso para identificar la categoría.
+          </p>
+          <span asp-validation-for="Color" class="text-danger"></span>
+        </div>
+
+        <!-- Estado -->
+        <div class="ecat-switch-wrap" id="estadoWrap">
+          <input class="form-check-input" type="checkbox" asp-for="EstadoCat"
+                 role="switch" id="EstadoCat" />
+          <div>
+            <span class="ecat-switch-label-title" id="estadoTitle"></span>
+            <span class="ecat-switch-label-sub">Determina si la categoría está disponible en el sistema.</span>
+          </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="ecat-actions">
+          <button type="submit" class="btn-ecat save">
+            <i class="bi bi-floppy"></i> Guardar cambios
+          </button>
+          <a asp-action="Index" class="btn-ecat cancel">
+            <i class="bi bi-x"></i> Cancelar
+          </a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+  <script>
+    $(document).ready(function () {
+
+      /* ── Color picker: preview en tiempo real ── */
+      const $picker  = $('#ColorPicker');
+      const $swatch  = $('#colorSwatch');
+      const $hexText = $('#colorHex');
+
+      function updateColor(val) {
+        $swatch.css('background-color', val);
+        $hexText.text(val.toUpperCase());
+      }
+
+      // Inicializar con el valor actual del modelo
+      updateColor($picker.val());
+      $picker.on('input change', function () { updateColor($(this).val()); });
+
+      /* ── Switch estado: visual reactivo ── */
+      const $switch = $('#EstadoCat');
+      const $wrap   = $('#estadoWrap');
+      const $title  = $('#estadoTitle');
+
+      function updateEstado(isActiva) {
+        $wrap.removeClass('is-activa is-inactiva')
+             .addClass(isActiva ? 'is-activa' : 'is-inactiva');
+        $title.text(isActiva ? '\u2713 Categoría activa' : '\u2717 Categoría inactiva');
+      }
+
+      updateEstado($switch.is(':checked'));
+      $switch.on('change', function () { updateEstado($(this).is(':checked')); });
+
+    });
+  </script>
 }
