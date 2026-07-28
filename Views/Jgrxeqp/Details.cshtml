@@ -103,7 +103,7 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════
+  <!-- ══════════════════════════════
          PANEL DERECHO — HISTORIAL
     ══════════════════════════════ -->
     <div class="det-historial">
@@ -119,6 +119,7 @@
               <th>Equipo</th>
               <th>Categoría</th>
               <th>Fecha de recibo</th>
+              <th class="text-center">Acción</th> <!-- Nueva columna -->
             </tr>
           </thead>
           <tbody>
@@ -134,13 +135,24 @@
                   <td>
                     <span class="det-fecha">@p.FechaRecibo.ToShortDateString()</span>
                   </td>
+                  <!-- Botón para imprimir carnet de este equipo específico -->
+                  <td class="text-center">
+                    <a asp-action="GenerarCarnet" 
+                       asp-route-idjugador="@Model.JugadorId" 
+                       asp-route-idpjxe="@p.idJxE" 
+                       target="_blank"
+                       class="btn btn-sm btn-outline-danger" 
+                       title="Imprimir carnet de este equipo">
+                      <i class="bi bi-printer"></i>
+                    </a>
+                  </td>
                 </tr>
               }
             }
             else
             {
               <tr>
-                <td colspan="3">
+                <td colspan="4"> <!-- Cambiamos el colspan a 4 -->
                   <div class="det-table-empty">
                     <i class="bi bi-shield-slash"></i>
                     Este jugador no tiene historial de equipos registrado.
@@ -152,7 +164,6 @@
         </table>
       </div>
     </div>
-
     <!-- ══════════════════════════════
          BARRA DE ACCIONES
     ══════════════════════════════ -->

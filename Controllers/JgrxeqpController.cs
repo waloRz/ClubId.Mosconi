@@ -222,13 +222,31 @@ namespace ClubId.Controllers
         }
 
         public async Task<IActionResult> GenerarCarnet(int idjugador, int idpjxe)  //es el idJxE       
-        {//genera carnet desde el INDEX  y tiene en cuenta la fecha del recibo, es decir toma el ultimo           
-            var jugador = await _context.Jgrxequipos
-             .Include(x => x.IdEquipoNavigation)
-                .Include(j => j.IdjugadorNavigation)
-                    .Include(j => j.IdCategoriasNavigation)
-                        .Include(j => j.IdCategoriasNavigation)
-                .OrderByDescending(x => x.FechaRecibo).FirstOrDefaultAsync(m => m.IdJxE == idpjxe || m.Idjugador == idjugador);         
+        {
+            // 1. Preparamos la consulta base con todos los Includes (quité un Include duplicado de categorías)
+    var queryBase = _context.Jgrxequipos
+        .Include(x => x.IdEquipoNavigation)
+        .Include(j => j.IdjugadorNavigation)
+        .Include(j => j.IdCategoriasNavigation);
+
+    Jgrxequipo? jugador = null; // o el nombre exacto de tu modelo, ej: Jgrxequipo
+
+    // 2. Evaluamos qué carnet pidió la vista
+    if (idpjxe == 0)
+    {
+        // CASO A: Quiere el último carnet (el actual)
+        jugador = await queryBase
+            .Where(m => m.Idjugador == idjugador)
+            .OrderByDescending(x => x.FechaRecibo)
+            .FirstOrDefaultAsync();
+    }
+    else
+    {
+        // CASO B: Quiere un carnet específico del historial
+        // Usamos && (AND) por seguridad, para asegurarnos de que ese historial realmente pertenezca a este jugador
+        jugador = await queryBase
+            .FirstOrDefaultAsync(m => m.Idjugador == idjugador && m.IdJxE == idpjxe  );
+    }
 
             if (jugador == null)
             {
@@ -489,7 +507,7 @@ namespace ClubId.Controllers
                 return RedirectToAction("GenerarCarnet", "Jgrxeqp", new
                 {
                     idpjxe = registroIntermedio.IdJxE,
-                    idjugador = 0
+                    idjugador = registroIntermedio.Idjugador //0
                 });
             }
 
